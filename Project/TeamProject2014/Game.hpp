@@ -1,9 +1,11 @@
 #pragma once
 
+#include <string>
+
 #include <SDL.h>
 #include <SDL_opengl.h>
 
-#include <string>
+#include "Player.hpp"
 
 class Game
 {
@@ -14,6 +16,9 @@ class Game
 		bool quit;
 		SDL_Window *window;
 		SDL_GLContext glContext;
+
+		// temporary, TODO: delete
+		Player *player;
 
 	public:
 		Game();

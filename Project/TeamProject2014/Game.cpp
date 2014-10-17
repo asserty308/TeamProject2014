@@ -33,6 +33,9 @@ void Game::init()
 
 	// 4:3 resolution (800 x 600)
 	glOrtho(0.0, 4.f, 0.0, 3.f, -1.0, 1.0);
+
+	// temporary, TODO: delete
+	player = new Player(Vector2(2.0f, 1.5f), Vector2(1.f, 0.f));
 }
 
 // Event-related functions
@@ -65,6 +68,11 @@ void Game::renderFrame()
 {
 	glColor3f(1.f, 0.f, 0.f);
 	glRectf(1.f, 2.f, 3.f, 1.f);
+
+	// temporary, TODO: delete
+	if (player)
+		player->render();
+
 	SDL_GL_SwapWindow(window);
 }
 
