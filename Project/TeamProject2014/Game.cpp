@@ -7,11 +7,12 @@ Game::Game()
 	windowWidth = 800;
 	windowHeight = 600;
 	quit = false;
+	g_pLogfile->log("start game");
 }
 
 Game::~Game()
 {
-
+	g_pLogfile->log("quit game");
 }
 
 /*

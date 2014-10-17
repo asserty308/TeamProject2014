@@ -83,6 +83,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Transform.cpp" />
@@ -90,7 +91,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="Logger.hpp" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="Singleton.hpp" />
     <ClInclude Include="Transform.hpp" />
     <ClInclude Include="Vector2.hpp" />
   </ItemGroup>

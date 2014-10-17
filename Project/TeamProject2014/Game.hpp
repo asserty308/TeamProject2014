@@ -6,6 +6,7 @@
 #include <SDL_opengl.h>
 
 #include "Player.hpp"
+#include "Logger.hpp"
 
 class Game
 {
