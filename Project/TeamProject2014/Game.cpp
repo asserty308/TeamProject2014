@@ -1,5 +1,6 @@
 #include "Game.hpp"
 
+
 std::string Game::GAME_TITLE = "Alpha Strike";
 
 Game::Game()
@@ -37,6 +38,9 @@ void Game::init()
 
 	// temporary, TODO: delete
 	player = new Player(Vector2(2.0f, 1.5f), Vector2(1.f, 0.f));
+
+	//Init modules
+	g_pTimer->init();
 }
 
 // Event-related functions
@@ -62,6 +66,7 @@ void Game::eventLoop()
 
 void Game::gameLoop()
 {
+	g_pTimer->update();
 	renderFrame();
 }
 

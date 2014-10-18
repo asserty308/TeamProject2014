@@ -7,6 +7,7 @@
 
 #include "Player.hpp"
 #include "Logger.hpp"
+#include "Timer.h"
 
 class Game
 {
