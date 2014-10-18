@@ -54,6 +54,11 @@ void Game::eventLoop()
 		{
 			switch (event.type)
 			{
+				case SDL_KEYUP:
+				case SDL_KEYDOWN:
+					g_pInputObserver->fireChange(&event.key);
+					break;
+
 				case SDL_QUIT:
 					quit = true;
 					break;
