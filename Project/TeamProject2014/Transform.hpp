@@ -7,6 +7,7 @@ class Transform
 	protected:
 		Vector2 position;
 		Vector2 forward;
+		Vector2 boost;
 		float velocity;
 
 	public:

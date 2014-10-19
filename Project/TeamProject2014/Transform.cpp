@@ -65,5 +65,5 @@ void Transform::rotate(float angle)
 
 void Transform::updatePosition(float deltaTime)
 {
-	position += forward * velocity * deltaTime;
+	position += boost * velocity * deltaTime;
 }

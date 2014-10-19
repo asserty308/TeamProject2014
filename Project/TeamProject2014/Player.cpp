@@ -7,6 +7,7 @@ Player::Player(Vector2 position, Vector2 forward)
 {
 	this->position = position;
 	this->forward = forward;
+	this->boost = forward;
 	this->velocity = 0.f;
 
 	g_pInputObserver->addListener(this);
@@ -16,15 +17,28 @@ void Player::inputReceived(SDL_KeyboardEvent *key)
 {
 	if (key->keysym.sym == SDLK_w)
 	{
+		this->boost = this->forward; //boosting will update the boost vector
 		setVelocity(getVelocity() + .025f);
 
 		if (getVelocity() > 1.f)
 			setVelocity(1.f);
 	}
 	else if (key->keysym.sym == SDLK_a)
+	{
 		rotate(5.f);
+		setVelocity(getVelocity() - .01f);
+
+		if (getVelocity() <= 0.f)
+			setVelocity(0.f);
+	}
 	else if (key->keysym.sym == SDLK_d)
+	{
 		rotate(-5.f);
+		setVelocity(getVelocity() - .01f);
+
+		if (getVelocity() <= 0.f)
+			setVelocity(0.f);
+	}
 }
 
 void Player::render()
