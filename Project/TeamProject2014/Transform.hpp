@@ -9,7 +9,6 @@ class Transform
 		Vector2 forward;
 		Vector2 acceleration;
 		Vector2 velocity;
-		float accelFactor;
 
 	public:
 		Transform(Vector2 position, Vector2 forward, Vector2 velocity);

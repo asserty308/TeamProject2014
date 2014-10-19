@@ -8,6 +8,7 @@ class Player : public Transform, public Inputlistener
 {
 	private:
 		bool accelerating;
+		float accelFactor;
 
 	public:
 		Player(Vector2 position, Vector2 forward);
