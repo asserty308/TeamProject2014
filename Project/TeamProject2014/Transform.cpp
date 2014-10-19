@@ -1,3 +1,6 @@
+#define _USE_MATH_DEFINES
+#include <cmath>
+
 #include "Transform.hpp"
 
 Transform::Transform(Vector2 position, Vector2 forward, float velocity)
@@ -47,7 +50,20 @@ void Transform::setVelocity(float velocity)
 	this->velocity = velocity;
 }
 
-void Transform::updatePosition()
+void Transform::rotate(float angle)
 {
-	position += forward * velocity;
+	float theta = angle * M_PI / 180.0;
+
+	float c = cos(theta);
+	float s = sin(theta);
+
+	forward.setX(forward.getX() * c - forward.getY() * s);
+	forward.setY(forward.getX() * s + forward.getY() * c);
+
+	forward.normalize();
+}
+
+void Transform::updatePosition(float deltaTime)
+{
+	position += forward * velocity * deltaTime;
 }

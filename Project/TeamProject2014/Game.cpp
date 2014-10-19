@@ -1,6 +1,5 @@
 #include "Game.hpp"
 
-
 std::string Game::GAME_TITLE = "Alpha Strike";
 
 Game::Game()
@@ -72,11 +71,19 @@ void Game::eventLoop()
 void Game::gameLoop()
 {
 	g_pTimer->update();
+
+	if (player)
+		player->updatePosition(g_pTimer->getDeltaTime());
+
 	renderFrame();
 }
 
 void Game::renderFrame()
 {
+	// draw a fullscreen black rectangle to clear the frame
+	glColor3f(0.f, 0.f, 0.f);
+	glRectf(0.f, 0.f, 4.f, 3.f);
+
 	glColor3f(1.f, 0.f, 0.f);
 	glRectf(1.f, 2.f, 3.f, 1.f);
 

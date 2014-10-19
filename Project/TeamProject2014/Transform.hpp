@@ -21,5 +21,7 @@ class Transform
 		float getVelocity() const;
 		void setVelocity(float velocity);
 
-		void updatePosition();
+		void rotate(float angle);
+
+		void updatePosition(float deltaTime);
 };
