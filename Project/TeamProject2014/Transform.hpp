@@ -12,8 +12,6 @@ class Transform
 
 	public:
 		Transform(Vector2 position, Vector2 forward, Vector2 velocity);
-		Transform(Vector2 position, Vector2 forward);
-		Transform();
 
 		Vector2 getPosition() const;
 		void setPosition(Vector2 position);

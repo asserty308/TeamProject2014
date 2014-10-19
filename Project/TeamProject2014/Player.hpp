@@ -7,7 +7,10 @@
 class Player : public Transform, public Inputlistener
 {
 	private:
-		bool accelerating;
+		static const float ACCELERATION;
+		static const float TURN_SPEED;
+
+		bool isThrustKeyDown, isLeftKeyDown, isRightKeyDown;
 		float accelFactor;
 
 	public:
