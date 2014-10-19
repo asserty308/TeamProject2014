@@ -3,13 +3,10 @@
 #include "InputObserver.h"
 #include "Player.hpp"
 
-Player::Player(Vector2 position, Vector2 forward)
+Player::Player(Vector2 position, Vector2 forward) : Transform(position, forward, Vector2(0.0f, 0.0f))
 {
-	this->position = position;
-	this->forward = forward;
-	this->boost = forward;
-	this->velocity = 0.f;
-
+	accelerating = false;
+	accelFactor = 0.25f;
 	g_pInputObserver->addListener(this);
 }
 
@@ -17,27 +14,26 @@ void Player::inputReceived(SDL_KeyboardEvent *key)
 {
 	if (key->keysym.sym == SDLK_w)
 	{
-		this->boost = this->forward; //boosting will update the boost vector
-		setVelocity(getVelocity() + .025f);
-
-		if (getVelocity() > 1.f)
-			setVelocity(1.f);
+		setAcceleration(forward * accelFactor);
+		if(key->type == SDL_KEYDOWN){
+			accelerating = true;
+		}else if(key->type == SDL_KEYUP){
+			accelerating = false;
+		}
 	}
 	else if (key->keysym.sym == SDLK_a)
 	{
 		rotate(5.f);
-		setVelocity(getVelocity() - .01f);
-
-		if (getVelocity() <= 0.f)
-			setVelocity(0.f);
 	}
 	else if (key->keysym.sym == SDLK_d)
 	{
 		rotate(-5.f);
-		setVelocity(getVelocity() - .01f);
+	}
+}
 
-		if (getVelocity() <= 0.f)
-			setVelocity(0.f);
+void Player::update(){
+	if(!accelerating){
+		setAcceleration(Vector2(0.0f, 0.0f));
 	}
 }
 

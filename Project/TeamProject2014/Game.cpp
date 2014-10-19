@@ -72,8 +72,10 @@ void Game::gameLoop()
 {
 	g_pTimer->update();
 
-	if (player)
+	if (player){
 		player->updatePosition(g_pTimer->getDeltaTime());
+		player->update();
+	}
 
 	renderFrame();
 }

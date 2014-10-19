@@ -7,11 +7,12 @@ class Transform
 	protected:
 		Vector2 position;
 		Vector2 forward;
-		Vector2 boost;
-		float velocity;
+		Vector2 acceleration;
+		Vector2 velocity;
+		float accelFactor;
 
 	public:
-		Transform(Vector2 position, Vector2 forward, float velocity);
+		Transform(Vector2 position, Vector2 forward, Vector2 velocity);
 		Transform(Vector2 position, Vector2 forward);
 		Transform();
 
@@ -19,8 +20,10 @@ class Transform
 		void setPosition(Vector2 position);
 		Vector2 getForward() const;
 		void setForward(Vector2 forward);
-		float getVelocity() const;
-		void setVelocity(float velocity);
+		Vector2 getVelocity() const;
+		void setVelocity(Vector2 velocity);
+		Vector2 getAcceleration() const;
+		void setAcceleration(Vector2 velocity);
 
 		void rotate(float angle);
 
