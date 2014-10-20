@@ -83,9 +83,11 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Gameplaystate.cpp" />
     <ClCompile Include="InputObserver.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Pausestate.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="Timer.cpp" />
@@ -94,9 +96,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.hpp" />
+    <ClInclude Include="Gameplaystate.h" />
+    <ClInclude Include="Gamestate.h" />
     <ClInclude Include="Inputlistener.h" />
     <ClInclude Include="InputObserver.h" />
     <ClInclude Include="Logger.hpp" />
+    <ClInclude Include="Pausestate.h" />
     <ClInclude Include="Player.hpp" />
     <ClInclude Include="Rocket.hpp" />
     <ClInclude Include="Singleton.hpp" />

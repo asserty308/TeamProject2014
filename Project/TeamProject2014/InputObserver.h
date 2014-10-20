@@ -15,7 +15,13 @@ public:
 	void addListener(Inputlistener *l);
 	void removeListener(Inputlistener *l);
 
+	void setListener(Inputlistener *l, Inputlistener *value);
+
+	bool isListening(Inputlistener *l);
+
 	void fireChange(SDL_KeyboardEvent *key);
+
+	
 	
 private:
 	std::vector<Inputlistener*> listener;

@@ -42,6 +42,12 @@
     <ClCompile Include="Rocket.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Gameplaystate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Pausestate.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Game.hpp">
@@ -72,6 +78,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Rocket.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gamestate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Gameplaystate.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Pausestate.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

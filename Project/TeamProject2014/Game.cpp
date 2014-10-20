@@ -8,10 +8,17 @@ Game::Game()
 	windowHeight = 600;
 	quit = false;
 	g_pLogfile->log("start game");
+
+	gameplayState = new Gameplaystate(this);
+	pauseState = new Pausestate(this);
+
+	setState(gameplayState);
 }
 
 Game::~Game()
 {
+	delete gameplayState;
+	delete pauseState;
 	g_pLogfile->log("quit game");
 }
 
@@ -35,11 +42,9 @@ void Game::init()
 	// 4:3 resolution (800 x 600)
 	glOrtho(0.0, 4.f, 0.0, 3.f, -1.0, 1.0);
 
-	// temporary, TODO: delete
-	player = new Player(Vector2(2.0f, 1.5f), Vector2(1.f, 0.f));
-
 	//Init modules
 	g_pTimer->init();
+	currentState->init();
 }
 
 // Event-related functions
@@ -72,33 +77,38 @@ void Game::gameLoop()
 {
 	g_pTimer->update();
 
-	if (player){
-		player->updatePosition(g_pTimer->getDeltaTime());
-		player->update();
-	}
+	currentState->update();
 
 	renderFrame();
 }
 
 void Game::renderFrame()
 {
-	// draw a fullscreen black rectangle to clear the frame
-	glColor3f(0.f, 0.f, 0.f);
-	glRectf(0.f, 0.f, 4.f, 3.f);
-
-	glColor3f(1.f, 0.f, 0.f);
-	glRectf(1.f, 2.f, 3.f, 1.f);
-
-	// temporary, TODO: delete
-	if (player)
-		player->render();
-
+	currentState->render();
 	SDL_GL_SwapWindow(window);
 }
 
 void Game::cleanup()
 {
+	currentState->quit();
 	SDL_GL_DeleteContext(glContext);
 	SDL_DestroyWindow(window);
 	SDL_Quit();
+}
+
+void Game::setState(Gamestate *state){
+	if(g_pInputObserver->isListening(currentState)){
+		g_pInputObserver->setListener(currentState, state);
+	}else{
+		g_pInputObserver->addListener(state);
+	}
+	this->currentState = state;
+}
+
+Gameplaystate* Game::getGameplayState(){
+	return gameplayState;
+}
+
+Pausestate* Game::getPauseState(){
+	return pauseState;
 }
