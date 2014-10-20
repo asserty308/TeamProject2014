@@ -187,6 +187,11 @@ void Logger::functionResult(const char *name, bool result)
 
 void Logger::log(const char *text)
 {
+	time_t time;
+	std::time(&time);
+
+	textout(std::ctime(&time));
+	textout(": ");
 	textout(text);
 	textout("<br>");
 }

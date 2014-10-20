@@ -2,14 +2,18 @@
 #include "Logger.hpp"
 #include "InputObserver.h"
 #include "Player.hpp"
+#include "Timer.h";
 
 const float Player::ACCELERATION = .38f;
-const float Player::TURN_SPEED = 5.f;
+const float Player::TURN_SPEED = 100.f;
 
 Player::Player(Vector2 position, Vector2 forward) : Transform(position, forward, Vector2(0.0f, 0.0f))
 {
 	isThrustKeyDown = isLeftKeyDown = isRightKeyDown = false;
+	isRocketLaunched = renderRocket = false;
 	g_pInputObserver->addListener(this);
+
+	rocket = nullptr;
 }
 
 void Player::inputReceived(SDL_KeyboardEvent *key)
@@ -20,6 +24,8 @@ void Player::inputReceived(SDL_KeyboardEvent *key)
 		isLeftKeyDown = (key->type == SDL_KEYDOWN);
 	else if (key->keysym.sym == SDLK_d)
 		isRightKeyDown = (key->type == SDL_KEYDOWN);
+	else if (key->keysym.sym == SDLK_SPACE)
+		isRocketLaunched = (key->type == SDL_KEYDOWN); //pressing 'space' will launch the rocket
 }
 
 void Player::update()
@@ -30,9 +36,11 @@ void Player::update()
 		setAcceleration(Vector2(0.0f, 0.0f));
 
 	if (isLeftKeyDown && !isRightKeyDown)
-		rotate(TURN_SPEED);
+		rotate(TURN_SPEED * g_pTimer->getDeltaTime());
 	else if (isRightKeyDown && !isLeftKeyDown)
-		rotate(-TURN_SPEED);
+		rotate(-TURN_SPEED * g_pTimer->getDeltaTime());
+
+	handleRocket();
 
 	if (getPosition().getX() < 0.f)
 	{
@@ -77,4 +85,35 @@ void Player::render()
 	glVertex2f(getPosition().getX() + getForward().getX() * .075f, getPosition().getY() + getForward().getY() * .075f);
 
 	glEnd();
+
+	if (renderRocket)
+		rocket->render();
+}
+
+void Player::handleRocket()
+{
+	if (isRocketLaunched && rocket == nullptr)
+	{
+		rocket = new Rocket(getPosition(), getForward());
+	}
+	else if (isRocketLaunched && rocket != nullptr)
+	{
+		rocket->update();
+		renderRocket = true;
+	}
+	else if (!isRocketLaunched && rocket != nullptr)
+	{
+		//if rocket is on screen, let it fly until it's out of screen
+		if (rocket->getPosition().getX() > 0.f && rocket->getPosition().getX() < 4.f &&
+			rocket->getPosition().getY() > 0.f && rocket->getPosition().getY() < 3.f)
+		{
+			rocket->update();
+		}
+		else
+		{
+			renderRocket = false;
+			delete rocket;
+			rocket = nullptr;
+		}
+	}
 }

@@ -1,8 +1,6 @@
 #pragma once
 
-#include "Transform.hpp"
-#include "Inputlistener.h"
-
+#include "Rocket.hpp"
 
 class Player : public Transform, public Inputlistener
 {
@@ -11,7 +9,10 @@ class Player : public Transform, public Inputlistener
 		static const float TURN_SPEED;
 
 		bool isThrustKeyDown, isLeftKeyDown, isRightKeyDown;
+		bool isRocketLaunched, renderRocket; //rocket-specific
 		float accelFactor;
+
+		Rocket *rocket;
 
 	public:
 		Player(Vector2 position, Vector2 forward);
@@ -20,4 +21,6 @@ class Player : public Transform, public Inputlistener
 
 		void update();
 		void render();
+
+		void handleRocket();
 };

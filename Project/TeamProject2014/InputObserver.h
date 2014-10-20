@@ -1,5 +1,5 @@
 #pragma once
-#include "singleton.hpp"
+#include "Singleton.hpp"
 #include "Inputlistener.h"
 #include <SDL.h>
 #include <vector>

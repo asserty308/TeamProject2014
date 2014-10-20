@@ -87,6 +87,7 @@
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
     <ClCompile Include="Vector2.cpp" />
@@ -97,6 +98,7 @@
     <ClInclude Include="InputObserver.h" />
     <ClInclude Include="Logger.hpp" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="Rocket.hpp" />
     <ClInclude Include="Singleton.hpp" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.hpp" />
