@@ -1,11 +1,15 @@
 #include "Rocket.hpp"
 
 const float Rocket::TURN_SPEED = 60.f;
-const float Rocket::ACCELERATION = .5f;
+const float Rocket::TURN_ACCELERATION = 0.5f;
 
 Rocket::Rocket(Vector2 position, Vector2 forward) : Transform(position, forward, Vector2(0.f, 0.f))
 {
 	g_pInputObserver->addListener(this);
+
+	controllable = true;
+	leftKeyDown = false;
+	rightKeyDown = false;
 }
 
 Rocket::~Rocket()
@@ -18,8 +22,14 @@ void Rocket::inputReceived(SDL_KeyboardEvent *key)
 	switch (key->keysym.sym)
 	{
 		case SDLK_a:
+			leftKeyDown = (key->type == SDL_KEYDOWN);
 			break;
 		case SDLK_d:
+			rightKeyDown = (key->type == SDL_KEYDOWN);
+			break;
+		case SDLK_SPACE:
+			if (key->type == SDL_KEYUP)
+				controllable = false;
 			break;
 		default:
 			break;
@@ -28,7 +38,19 @@ void Rocket::inputReceived(SDL_KeyboardEvent *key)
 
 void Rocket::update()
 {
-	setAcceleration(forward * ACCELERATION);
+	if (controllable)
+	{
+		if (leftKeyDown && !rightKeyDown)
+		{
+			rotate(TURN_SPEED * g_pTimer->getDeltaTime());
+		}
+		else if (!leftKeyDown && rightKeyDown)
+		{
+			rotate(-TURN_SPEED * g_pTimer->getDeltaTime());
+		}
+	}
+
+	setAcceleration(forward * TURN_ACCELERATION);
 
 	updatePosition(g_pTimer->getDeltaTime());
 }

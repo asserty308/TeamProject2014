@@ -9,8 +9,10 @@
 class Rocket : public Transform, public Inputlistener
 {
 	private:
-		static const float ACCELERATION;
+		static const float TURN_ACCELERATION;
 		static const float TURN_SPEED;
+
+		bool controllable, leftKeyDown, rightKeyDown;
 
 	public:
 		Rocket(Vector2 position, Vector2 forward);

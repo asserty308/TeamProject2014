@@ -30,15 +30,18 @@ void Player::inputReceived(SDL_KeyboardEvent *key)
 
 void Player::update()
 {
-	if (isThrustKeyDown)
-		setAcceleration(forward * ACCELERATION);
-	else
-		setAcceleration(Vector2(0.0f, 0.0f));
+	if (!isRocketLaunched)
+	{
+		if (isThrustKeyDown)
+			setAcceleration(forward * ACCELERATION);
+		else
+			setAcceleration(Vector2(0.0f, 0.0f));
 
-	if (isLeftKeyDown && !isRightKeyDown)
-		rotate(TURN_SPEED * g_pTimer->getDeltaTime());
-	else if (isRightKeyDown && !isLeftKeyDown)
-		rotate(-TURN_SPEED * g_pTimer->getDeltaTime());
+		if (isLeftKeyDown && !isRightKeyDown)
+			rotate(TURN_SPEED * g_pTimer->getDeltaTime());
+		else if (isRightKeyDown && !isLeftKeyDown)
+			rotate(-TURN_SPEED * g_pTimer->getDeltaTime());
+	}
 
 	handleRocket();
 
@@ -95,6 +98,7 @@ void Player::handleRocket()
 	if (isRocketLaunched && rocket == nullptr)
 	{
 		rocket = new Rocket(getPosition(), getForward());
+		rocket->setVelocity(getVelocity());
 	}
 	else if (isRocketLaunched && rocket != nullptr)
 	{
