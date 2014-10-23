@@ -1,8 +1,7 @@
 #include "Pausestate.h"
 
 
-Pausestate::Pausestate(Game *game){
-	this->game = game;
+Pausestate::Pausestate(){
 }
 
 void Pausestate::init(){
@@ -24,7 +23,7 @@ void Pausestate::quit(){
 
 void Pausestate::inputReceived(SDL_KeyboardEvent *key){
 	if(key->keysym.sym == SDLK_p && key->type == SDL_KEYUP){
-		game->setState(game->getGameplayState());
+		g_pGame->setState(g_pGame->getGameplayState());
 	}
 }
 

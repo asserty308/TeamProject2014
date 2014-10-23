@@ -11,42 +11,48 @@
 #include "Gamestate.h"
 #include "Gameplaystate.h"
 #include "Pausestate.h"
+#include "Singleton.hpp"
+
+#define g_pGame Game::Get()
 
 //forward declarations
 class Gameplaystate; 
 class Pausestate;
 
-class Game
+class Game : public Singleton < Game >
 {
-	private:
-		static std::string GAME_TITLE;
+private:
+	static std::string GAME_TITLE;
 
-		int windowWidth, windowHeight;
-		bool quit;
-		SDL_Window *window;
-		SDL_GLContext glContext;
+	int windowWidth, windowHeight;
+	bool quit;
+	SDL_Window *window;
+	SDL_GLContext glContext;
 
-		Gamestate *currentState;
+	Gamestate *currentState;
 
-		Gameplaystate *gameplayState;
-		Pausestate *pauseState;
-		
+	Gameplaystate *gameplayState;
+	Pausestate *pauseState;
 
-	public:
-		Game();
-		~Game();
 
-		void init();
+public:
+	Game();
+	~Game();
 
-		void eventLoop();
-		void gameLoop();
-		void renderFrame();
+	void init();
 
-		void cleanup();
+	void eventLoop();
+	void gameLoop();
+	void renderFrame();
 
-		void setState(Gamestate *state);
+	void cleanup();
 
-		Gameplaystate* getGameplayState();
-		Pausestate* getPauseState();
+	void setState(Gamestate *state);
+
+	Gameplaystate* getGameplayState();
+	Pausestate* getPauseState();
+
+	int getWindowWidth();
+	int getWindowHeight();
 };
 

@@ -9,8 +9,8 @@ Game::Game()
 	quit = false;
 	g_pLogfile->log("start game");
 
-	gameplayState = new Gameplaystate(this);
-	pauseState = new Pausestate(this);
+	gameplayState = new Gameplaystate();
+	pauseState = new Pausestate();
 
 	setState(gameplayState);
 }
@@ -39,8 +39,7 @@ void Game::init()
 	window = SDL_CreateWindow(GAME_TITLE.c_str(), SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, windowWidth, windowHeight, contextFlags);
 	glContext = SDL_GL_CreateContext(window);
 
-	// 4:3 resolution (800 x 600)
-	glOrtho(0.0, 4.f, 0.0, 3.f, -1.0, 1.0);
+	glOrtho(0.f, windowWidth, windowHeight, 0.f, -1.0, 1.0);
 
 	//Init modules
 	g_pTimer->init();
@@ -111,4 +110,14 @@ Gameplaystate* Game::getGameplayState(){
 
 Pausestate* Game::getPauseState(){
 	return pauseState;
+}
+
+int Game::getWindowWidth()
+{
+	return windowWidth;
+}
+
+int Game::getWindowHeight()
+{
+	return windowHeight;
 }

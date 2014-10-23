@@ -2,9 +2,10 @@
 #include "Logger.hpp"
 #include "InputObserver.h"
 #include "Player.hpp"
-#include "Timer.h";
+#include "Timer.h"
+#include "Game.hpp"
 
-const float Player::ACCELERATION = .38f;
+const float Player::ACCELERATION = 38.f;
 const float Player::TURN_SPEED = 100.f;
 
 Player::Player(Vector2 position, Vector2 forward) : Transform(position, forward, Vector2(0.0f, 0.0f))
@@ -30,6 +31,8 @@ void Player::inputReceived(SDL_KeyboardEvent *key)
 
 void Player::update()
 {
+	g_pLogfile->fTextout("x: %f", getPosition().getX());
+	g_pLogfile->fTextout("y: %f", getPosition().getY());
 	if (!isRocketLaunched)
 	{
 		if (isThrustKeyDown)
@@ -38,9 +41,9 @@ void Player::update()
 			setAcceleration(Vector2(0.0f, 0.0f));
 
 		if (isLeftKeyDown && !isRightKeyDown)
-			rotate(TURN_SPEED * g_pTimer->getDeltaTime());
-		else if (isRightKeyDown && !isLeftKeyDown)
 			rotate(-TURN_SPEED * g_pTimer->getDeltaTime());
+		else if (isRightKeyDown && !isLeftKeyDown)
+			rotate(TURN_SPEED * g_pTimer->getDeltaTime());
 	}
 
 	handleRocket();
@@ -50,9 +53,9 @@ void Player::update()
 		position.setX(0.f);
 		velocity.setX(-velocity.getX() * .25f);
 	}
-	else if (getPosition().getX() > 4.f)
+	else if (getPosition().getX() > g_pGame->getWindowWidth())
 	{
-		position.setX(4.f);
+		position.setX(g_pGame->getWindowWidth());
 		velocity.setX(-velocity.getX() * .25f);
 	}
 
@@ -61,9 +64,9 @@ void Player::update()
 		position.setY(0.f);
 		velocity.setY(-velocity.getY() *.25f);
 	}
-	else if (getPosition().getY() > 3.f)
+	else if (getPosition().getY() > g_pGame->getWindowHeight())
 	{
-		position.setY(3.f);
+		position.setY(g_pGame->getWindowHeight());
 		velocity.setY(-velocity.getY() *.25f);
 	}
 }
@@ -79,13 +82,13 @@ void Player::render()
 	for (int i = 0; i < 36; ++i)
 	{
 		float angle = (i * M_PI / 180.0) * 10.0;
-		glVertex2f(getPosition().getX() + sin(angle) * .05f, getPosition().getY() + cos(angle) * .05f);
+		glVertex2f(getPosition().getX() + sin(angle) * 10.f, getPosition().getY() + cos(angle) * 10.f);
 		angle = ((i + 1) * M_PI / 180.0) * 10.0;
-		glVertex2f(getPosition().getX() + sin(angle) * .05f, getPosition().getY() + cos(angle) * .05f);
+		glVertex2f(getPosition().getX() + sin(angle) * 10.f, getPosition().getY() + cos(angle) * 10.f);
 	}
 
-	glVertex2f(getPosition().getX() + getForward().getX() * .025f, getPosition().getY() + getForward().getY() * .025f);
-	glVertex2f(getPosition().getX() + getForward().getX() * .075f, getPosition().getY() + getForward().getY() * .075f);
+	glVertex2f(getPosition().getX() + getForward().getX() * 5.f, getPosition().getY() + getForward().getY() * 5.f);
+	glVertex2f(getPosition().getX() + getForward().getX() * 15.f, getPosition().getY() + getForward().getY() * 15.f);
 
 	glEnd();
 
@@ -98,7 +101,7 @@ void Player::handleRocket()
 	if (isRocketLaunched && rocket == nullptr)
 	{
 		rocket = new Rocket(getPosition(), getForward());
-		rocket->setVelocity(getVelocity());
+		rocket->setVelocity(getVelocity() * 2.f);
 	}
 	else if (isRocketLaunched && rocket != nullptr)
 	{
@@ -108,8 +111,8 @@ void Player::handleRocket()
 	else if (!isRocketLaunched && rocket != nullptr)
 	{
 		//if rocket is on screen, let it fly until it's out of screen
-		if (rocket->getPosition().getX() > 0.f && rocket->getPosition().getX() < 4.f &&
-			rocket->getPosition().getY() > 0.f && rocket->getPosition().getY() < 3.f)
+		if (rocket->getPosition().getX() > 0.f && rocket->getPosition().getX() < g_pGame->getWindowWidth() &&
+			rocket->getPosition().getY() < g_pGame->getWindowHeight() && rocket->getPosition().getY() > 0.f)
 		{
 			rocket->update();
 		}

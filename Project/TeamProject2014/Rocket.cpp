@@ -1,7 +1,7 @@
 #include "Rocket.hpp"
 
 const float Rocket::TURN_SPEED = 60.f;
-const float Rocket::TURN_ACCELERATION = 0.5f;
+const float Rocket::TURN_ACCELERATION = 50.f;
 
 Rocket::Rocket(Vector2 position, Vector2 forward) : Transform(position, forward, Vector2(0.f, 0.f))
 {
@@ -42,11 +42,11 @@ void Rocket::update()
 	{
 		if (leftKeyDown && !rightKeyDown)
 		{
-			rotate(TURN_SPEED * g_pTimer->getDeltaTime());
+			rotate(-TURN_SPEED * g_pTimer->getDeltaTime());
 		}
 		else if (!leftKeyDown && rightKeyDown)
 		{
-			rotate(-TURN_SPEED * g_pTimer->getDeltaTime());
+			rotate(TURN_SPEED * g_pTimer->getDeltaTime());
 		}
 	}
 
@@ -57,7 +57,7 @@ void Rocket::update()
 
 void Rocket::render()
 {
-	float r = 0.02f;
+	float r = 5;
 
 	glColor3f(0.f, 0.f, 1.f);
 

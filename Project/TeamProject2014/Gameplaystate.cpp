@@ -1,8 +1,8 @@
 #include "Gameplaystate.h"
+#include "Game.hpp"
 
 
-Gameplaystate::Gameplaystate(Game *game){
-	this->game = game;
+Gameplaystate::Gameplaystate(){
 }
 
 Gameplaystate::~Gameplaystate(){
@@ -10,7 +10,7 @@ Gameplaystate::~Gameplaystate(){
 }
 
 void Gameplaystate::init(){
-	player = new Player(Vector2(2.0f, 1.5f), Vector2(1.f, 0.f));
+	player = new Player(Vector2(g_pGame->getWindowWidth() / 2.f, g_pGame->getWindowHeight() / 2.f), Vector2(1.f, 0.f));
 }
 
 void Gameplaystate::update(){
@@ -21,12 +21,10 @@ void Gameplaystate::update(){
 }
 
 void Gameplaystate::render(){
-	// draw a fullscreen black rectangle to clear the frame
-	glColor3f(0.f, 0.f, 0.f);
-	glRectf(0.f, 0.f, 4.f, 3.f);
-
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	
 	glColor3f(1.f, 0.f, 0.f);
-	glRectf(1.f, 2.f, 3.f, 1.f);
+	glRectf(100, 100, g_pGame->getWindowWidth() - 100.f, g_pGame->getWindowHeight() - 100.f);
 
 	// temporary
 	if (player)
@@ -39,6 +37,6 @@ void Gameplaystate::quit(){
 
 void Gameplaystate::inputReceived(SDL_KeyboardEvent *key){
 	if(key->keysym.sym == SDLK_p && key->type == SDL_KEYUP){
-		game->setState(game->getPauseState());
+		g_pGame->setState(g_pGame->getPauseState());
 	}
 }

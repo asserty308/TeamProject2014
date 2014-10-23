@@ -2,13 +2,11 @@
 #include "gamestate.h"
 #include "Game.hpp"
 
-class Game; //forward declaration
-
 class Pausestate :
 	public Gamestate
 {
 public:
-	Pausestate(Game *game);
+	Pausestate();
 
 	virtual void init();
 	virtual void update();
@@ -18,7 +16,5 @@ public:
 	virtual void inputReceived(SDL_KeyboardEvent *key);
 
 private:
-	Game *game;
-	
 };
 
