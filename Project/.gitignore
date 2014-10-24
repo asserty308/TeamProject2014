@@ -13,3 +13,6 @@ build/
 bld/
 [Bb]in/
 [Oo]bj/
+
+# Also ignore logfile
+Logfile.html

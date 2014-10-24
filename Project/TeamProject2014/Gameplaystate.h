@@ -2,6 +2,7 @@
 #include "gamestate.h"
 #include "Player.hpp"
 #include "Pausestate.h"
+#include "Map.hpp"
 
 class Gameplaystate :
 	public Gamestate
@@ -18,7 +19,7 @@ public:
 	virtual void inputReceived(SDL_KeyboardEvent *key);
 
 private:
-	// temporary
 	Player *player;
+	Map *map;
 };
 
