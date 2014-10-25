@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Rocket.hpp"
+#include "Sprite.hpp"
 
 class Player : public Transform, public Inputlistener
 {
@@ -13,6 +14,7 @@ class Player : public Transform, public Inputlistener
 		float accelFactor;
 
 		Rocket *rocket;
+		Sprite *sprite;
 
 	public:
 		Player(Vector2 position, Vector2 forward);

@@ -34,7 +34,6 @@ private:
 	Gameplaystate *gameplayState;
 	Pausestate *pauseState;
 
-
 public:
 	Game();
 	~Game();

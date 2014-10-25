@@ -1,6 +1,6 @@
 #include "Gameplaystate.h"
 #include "Game.hpp"
-
+#include "SpriteRenderer.hpp"
 
 Gameplaystate::Gameplaystate(){
 }
@@ -41,6 +41,8 @@ void Gameplaystate::render(){
 	// temporary
 	if (player)
 		player->render();
+
+	g_pSpriteRenderer->renderScene();
 }
 
 void Gameplaystate::quit(){

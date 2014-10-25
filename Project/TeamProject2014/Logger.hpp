@@ -35,5 +35,6 @@ class Logger : public Singleton<Logger>
 		void log(const char *text);
 		void log(int color, const char *text);
 		void log(int color, bool list, const char *text);
+		void fLog(const char *text, ...);
 		void functionResult(const char *name, bool result);
 };

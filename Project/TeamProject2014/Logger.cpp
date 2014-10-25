@@ -207,3 +207,17 @@ void Logger::log(int color, bool list, const char *text)
 	textout(color, list, text);
 	textout("<br>");
 }
+
+void Logger::fLog(const char *text, ...)
+{
+	char buffer[MAX_BUFFER];
+	va_list pArgList;			//arguments
+
+	//create a string from arguments
+	va_start(pArgList, text);
+	vsprintf(buffer, text, pArgList);
+	va_end(pArgList);
+
+	textout(buffer);
+	textout("<br>");
+}

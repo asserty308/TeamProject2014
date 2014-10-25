@@ -4,6 +4,7 @@
 #include "Player.hpp"
 #include "Timer.h"
 #include "Game.hpp"
+#include "SpriteRenderer.hpp"
 
 const float Player::ACCELERATION = 38.f;
 const float Player::TURN_SPEED = 100.f;
@@ -13,6 +14,9 @@ Player::Player(Vector2 position, Vector2 forward) : Transform(position, forward,
 	isThrustKeyDown = isLeftKeyDown = isRightKeyDown = false;
 	isRocketLaunched = renderRocket = false;
 	g_pInputObserver->addListener(this);
+
+	//create test sprite
+	sprite = new Sprite("fighter4.png", position, Vector2(200.f, 150.f));
 
 	rocket = nullptr;
 }
@@ -31,8 +35,6 @@ void Player::inputReceived(SDL_KeyboardEvent *key)
 
 void Player::update()
 {
-	g_pLogfile->fTextout("x: %f", getPosition().getX());
-	g_pLogfile->fTextout("y: %f", getPosition().getY());
 	if (!isRocketLaunched)
 	{
 		if (isThrustKeyDown)
