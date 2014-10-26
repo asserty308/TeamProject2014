@@ -10,7 +10,7 @@ class Sprite
 	private:
 		GLuint textureID;
 		Vector2 position, dimensions;
-		//unsigned char* img;
+		unsigned char* img;
 
 	public:
 		Sprite();

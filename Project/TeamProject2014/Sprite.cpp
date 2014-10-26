@@ -1,6 +1,7 @@
 #include "Sprite.hpp"
 #include "Logger.hpp"
 #include "SpriteRenderer.hpp"
+#include "Timer.h"
 
 Sprite::Sprite()
 {
@@ -14,6 +15,7 @@ Sprite::Sprite(const char* path, Vector2 position, Vector2 dimensions)
 {
 	this->position = position;
 	this->dimensions = dimensions;
+
 	loadFromFile(path);
 }
 
@@ -42,30 +44,25 @@ void Sprite::render()
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glPushMatrix();
-
+	//TODO: only rotate when it should rotate
+	glTranslatef(position.getX(), position.getY(), 0.f);
+	glRotatef(clock() * 0.1f, 0.f, 0.f, 1.f);
+	glTranslatef(-position.getX(), -position.getY(), 0.f);
 	glBegin(GL_QUADS);
 		//top right
 		glTexCoord2f(1.f, 1.f);
-		glVertex2f(position.getX() + dimensions.getX() / 2, position.getY() + dimensions.getY() / 2);
+		glVertex2f(position.getX() + (dimensions.getX() / 2.f), position.getY() - (dimensions.getY() / 2.f));
 		//bottom right
 		glTexCoord2f(1.f, 0.f);
-		glVertex2f(position.getX() + dimensions.getX() / 2, position.getY() - dimensions.getY() / 2);
+		glVertex2f(position.getX() + (dimensions.getX() / 2.f), position.getY() + (dimensions.getY() / 2.f));
 		//bottom left
 		glTexCoord2f(0.f, 0.f);
-		glVertex2f(dimensions.getX() - dimensions.getX() / 2, position.getY() - dimensions.getY() / 2);
+		glVertex2f(position.getX() - (dimensions.getX() / 2.f), position.getY() + (dimensions.getY() / 2.f));
 		//top left
 		glTexCoord2f(0.f, 1.f);
-		glVertex2f(dimensions.getX() - dimensions.getX() / 2, position.getY() + dimensions.getY() / 2);
+		glVertex2f(position.getX() - (dimensions.getX() / 2.f), position.getY() - (dimensions.getY() / 2.f));
 	glEnd();
-
 	glPopMatrix();
-
-	/*glMatrixMode(GL_TEXTURE);
-	glLoadIdentity();
-	glTranslatef(0.5f, 0.5f, 0.f);
-	glRotatef(90.f, 0.f, 0.f, 0.5f);
-	glTranslatef(-0.5f, -0.5f, 0.f);
-	glMatrixMode(GL_MODELVIEW);*/
 
 	glDisable(GL_TEXTURE_2D);
 }
