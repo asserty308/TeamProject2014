@@ -5,11 +5,9 @@ int main(int argc, char* args[])
 	g_pLogfile->createLogfile();
 	g_pLogfile->writeTopic("Alpha Strike", 2);
 
-	Game game;
-	
-	game.init();
-	game.eventLoop();
-	game.cleanup();
+	g_pGame->init();
+	g_pGame->eventLoop();
+	g_pGame->cleanup();
 
 	return 0;
 }

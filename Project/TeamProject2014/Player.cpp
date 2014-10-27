@@ -1,24 +1,35 @@
 #include <SDL_opengl.h>
 #include "Logger.hpp"
 #include "InputObserver.h"
+#include "CollisionObserver.h"
 #include "Player.hpp"
 #include "Timer.h"
 #include "Game.hpp"
 #include "SpriteRenderer.hpp"
+#include "CircleBoundingBox.h"
 
 const float Player::ACCELERATION = 38.f;
 const float Player::TURN_SPEED = 100.f;
 
-Player::Player(Vector2 position, Vector2 forward) : Transform(position, forward, Vector2(0.0f, 0.0f))
+Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(0.0f, 0.0f))
 {
 	isThrustKeyDown = isLeftKeyDown = isRightKeyDown = false;
 	isRocketLaunched = renderRocket = false;
+	
 	g_pInputObserver->addListener(this);
+	g_pCollisionObserver->addListener(this);
+
+	boundingBox = new CircleBoundingBox(position, 10.0f);
 
 	//create test sprite
 	sprite = new Sprite("fighter4.png", position, Vector2(200.f, 150.f));
 
 	rocket = nullptr;
+}
+
+Player::~Player(){
+	delete sprite;
+	delete boundingBox;
 }
 
 void Player::inputReceived(SDL_KeyboardEvent *key)
@@ -31,6 +42,10 @@ void Player::inputReceived(SDL_KeyboardEvent *key)
 		isRightKeyDown = (key->type == SDL_KEYDOWN);
 	else if (key->keysym.sym == SDLK_SPACE)
 		isRocketLaunched = (key->type == SDL_KEYDOWN); //pressing 'space' will launch the rocket
+}
+
+void Player::CollisionDetected(TransformCollidable *other, Vector2 penetration){
+	velocity += penetration * -1 * 15.0f;
 }
 
 void Player::update()

@@ -82,6 +82,10 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="CircleBoundingBox.cpp" />
+    <ClCompile Include="CollisionObserver.cpp" />
+    <ClCompile Include="DebugCollider.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Gameplaystate.cpp" />
     <ClCompile Include="InputObserver.cpp" />
@@ -96,9 +100,14 @@
     <ClCompile Include="SpriteRenderer.cpp" />
     <ClCompile Include="Timer.cpp" />
     <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TransformCollidable.cpp" />
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="CircleBoundingBox.h" />
+    <ClInclude Include="CollisionObserver.h" />
+    <ClInclude Include="DebugCollider.h" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Gameplaystate.h" />
     <ClInclude Include="Gamestate.h" />
@@ -115,6 +124,7 @@
     <ClInclude Include="SpriteRenderer.hpp" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.hpp" />
+    <ClInclude Include="TransformCollidable.h" />
     <ClInclude Include="Vector2.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

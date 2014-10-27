@@ -24,5 +24,5 @@ class Transform
 
 		void rotate(float angle);
 
-		void updatePosition(float deltaTime);
+		virtual void updatePosition(float deltaTime);
 };

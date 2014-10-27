@@ -3,6 +3,7 @@
 #include "Player.hpp"
 #include "Pausestate.h"
 #include "Map.hpp"
+#include "DebugCollider.h"
 
 class Gameplaystate :
 	public Gamestate
@@ -21,5 +22,9 @@ public:
 private:
 	Player *player;
 	Map *map;
+
+	//TEMP
+	DebugCollider *dbc;
+	//TEMP
 };
 

@@ -13,8 +13,7 @@ void Pausestate::update(){
 }
 
 void Pausestate::render(){
-	glColor3f(0.f, 0.f, 0.f);
-	glRectf(0.f, 0.f, 4.f, 3.f);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 
 void Pausestate::quit(){

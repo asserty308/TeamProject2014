@@ -1,5 +1,6 @@
 #include "Gameplaystate.h"
 #include "Game.hpp"
+#include "CollisionObserver.h"
 #include "SpriteRenderer.hpp"
 
 Gameplaystate::Gameplaystate(){
@@ -7,6 +8,8 @@ Gameplaystate::Gameplaystate(){
 
 Gameplaystate::~Gameplaystate(){
 	delete player;
+	delete dbc;
+	delete map;
 }
 
 void Gameplaystate::init(){
@@ -23,13 +26,21 @@ void Gameplaystate::init(){
 	map->addObstacle(obstacle);
 
 	player = new Player(map->getPlayerSpawn(), Vector2(1.f, 0.f));
+
+	//TEMP
+	dbc = new DebugCollider(Vector2(600, 400), Vector2(1.f, 0.f), 20.0f);
+	//TEMP
 }
 
 void Gameplaystate::update(){
+
+	g_pCollisionObserver->checkCollisionRoutine();
+
 	if (player){
 		player->updatePosition(g_pTimer->getDeltaTime());
 		player->update();
 	}
+
 }
 
 void Gameplaystate::render(){
@@ -41,6 +52,9 @@ void Gameplaystate::render(){
 	// temporary
 	if (player)
 		player->render();
+
+	dbc->render();
+
 
 	g_pSpriteRenderer->renderScene();
 }
