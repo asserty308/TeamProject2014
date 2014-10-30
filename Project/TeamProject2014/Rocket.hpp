@@ -9,16 +9,20 @@
 class Rocket : public Transform, public Inputlistener
 {
 	private:
-		static const float TURN_ACCELERATION;
-		static const float TURN_SPEED;
+		static const float SPEED;
+		//static const float TURN_ACCELERATION;
+		//static const float TURN_SPEED;
 
-		bool controllable, leftKeyDown, rightKeyDown;
+		bool controllable;
+		bool isLeftKeyDown, isRightKeyDown;
 
 	public:
 		Rocket(Vector2 position, Vector2 forward);
 		~Rocket();
 
 		virtual void inputReceived(SDL_KeyboardEvent *key);
+
+		bool getControllable();
 
 		void update();
 		void render();

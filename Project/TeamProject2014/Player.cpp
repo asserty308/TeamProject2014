@@ -8,13 +8,13 @@
 #include "SpriteRenderer.hpp"
 #include "CircleBoundingBox.h"
 
-const float Player::ACCELERATION = 38.f;
-const float Player::TURN_SPEED = 100.f;
+const float Player::TOP_SPEED = 70.f;
+const float Player::ACCELERATION = 120.f;
+const float Player::TURN_SPEED = 174.f;
 
 Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(0.0f, 0.0f))
 {
-	isThrustKeyDown = isLeftKeyDown = isRightKeyDown = false;
-	isRocketLaunched = renderRocket = false;
+	isThrustKeyDown = isLeftKeyDown = isRightKeyDown = isFirePressed = false;
 	
 	g_pInputObserver->addListener(this);
 	g_pCollisionObserver->addListener(this);
@@ -41,7 +41,7 @@ void Player::inputReceived(SDL_KeyboardEvent *key)
 	else if (key->keysym.sym == SDLK_d)
 		isRightKeyDown = (key->type == SDL_KEYDOWN);
 	else if (key->keysym.sym == SDLK_SPACE)
-		isRocketLaunched = (key->type == SDL_KEYDOWN); //pressing 'space' will launch the rocket
+		isFirePressed = (key->type == SDL_KEYDOWN);
 }
 
 void Player::CollisionDetected(TransformCollidable *other, Vector2 penetration){
@@ -50,7 +50,8 @@ void Player::CollisionDetected(TransformCollidable *other, Vector2 penetration){
 
 void Player::update()
 {
-	if (!isRocketLaunched)
+	if (rocket == nullptr || !rocket->getControllable())
+	// only control the player if there is no rocket or it's not controlled
 	{
 		if (isThrustKeyDown)
 			setAcceleration(forward * ACCELERATION);
@@ -64,6 +65,13 @@ void Player::update()
 	}
 
 	handleRocket();
+
+	if (velocity.getLength() > TOP_SPEED)
+	// cap max speed if we are going to fast
+	{
+		velocity.normalize();
+		velocity = velocity * TOP_SPEED;
+	}
 
 	if (getPosition().getX() < 0.f)
 	{
@@ -109,33 +117,25 @@ void Player::render()
 
 	glEnd();
 
-	if (renderRocket)
+	if (rocket != nullptr)
 		rocket->render();
 }
 
 void Player::handleRocket()
 {
-	if (isRocketLaunched && rocket == nullptr)
+	if (isFirePressed && rocket == nullptr)
 	{
 		rocket = new Rocket(getPosition(), getForward());
-		rocket->setVelocity(getVelocity() * 2.f);
+		//rocket->setVelocity(getVelocity() * 2.f);
 	}
-	else if (isRocketLaunched && rocket != nullptr)
-	{
-		rocket->update();
-		renderRocket = true;
-	}
-	else if (!isRocketLaunched && rocket != nullptr)
+	else if (rocket != nullptr)
 	{
 		//if rocket is on screen, let it fly until it's out of screen
 		if (rocket->getPosition().getX() > 0.f && rocket->getPosition().getX() < g_pGame->getWindowWidth() &&
 			rocket->getPosition().getY() < g_pGame->getWindowHeight() && rocket->getPosition().getY() > 0.f)
-		{
 			rocket->update();
-		}
 		else
 		{
-			renderRocket = false;
 			delete rocket;
 			rocket = nullptr;
 		}

@@ -17,6 +17,7 @@ class Transform
 		void setPosition(Vector2 position);
 		Vector2 getForward() const;
 		void setForward(Vector2 forward);
+		Vector2 getRight() const;
 		Vector2 getVelocity() const;
 		void setVelocity(Vector2 velocity);
 		Vector2 getAcceleration() const;

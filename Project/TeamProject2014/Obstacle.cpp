@@ -9,7 +9,7 @@ void Obstacle::addVertex(Vector2 vertex)
 
 void Obstacle::render()
 {
-	glColor3f(1.f, .5f, 0.f);
+	glColor3f(0.f, 0.f, 1.f);
 
 	glBegin(GL_POLYGON);
 
@@ -18,7 +18,7 @@ void Obstacle::render()
 
 	glEnd();
 
-	glColor3f(1.f, 0.f, 0.f);
+	glColor3f(1.f, 0.f, 1.f);
 	glLineWidth(3.f);
 
 	glBegin(GL_LINES);

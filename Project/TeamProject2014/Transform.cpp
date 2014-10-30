@@ -31,6 +31,11 @@ void Transform::setForward(Vector2 forward)
 	this->forward = forward;
 }
 
+Vector2 Transform::getRight() const
+{
+	return Vector2(forward.getY(), -forward.getX());
+}
+
 Vector2 Transform::getVelocity() const
 {
 	return velocity;
@@ -53,7 +58,7 @@ void Transform::setAcceleration(Vector2 acceleration)
 
 void Transform::rotate(float angle)
 {
-	float theta = angle * M_PI / 180.0;
+	float theta = (angle * M_PI) / 180.f;
 
 	float c = cos(theta);
 	float s = sin(theta);

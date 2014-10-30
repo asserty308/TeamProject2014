@@ -33,9 +33,14 @@ void Vector2::setY(float y)
 	this->y = y;
 }
 
+float Vector2::getLength()
+{
+	return sqrtf(x * x + y * y);
+}
+
 void Vector2::normalize()
 {
-	float lengthReciprocal = 1.f / sqrtf(x * x + y * y);
+	float lengthReciprocal = 1.f / getLength();
 	x *= lengthReciprocal;
 	y *= lengthReciprocal;
 }

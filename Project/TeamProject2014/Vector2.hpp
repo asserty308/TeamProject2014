@@ -14,6 +14,7 @@ class Vector2
 		float getY() const;
 		void setY(float y);
 
+		float getLength();
 		void normalize();
 
 		Vector2 operator+(const Vector2& right) const;

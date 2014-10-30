@@ -7,11 +7,11 @@
 class Player : public TransformCollidable, public Inputlistener
 {
 	private:
+		static const float TOP_SPEED;
 		static const float ACCELERATION;
 		static const float TURN_SPEED;
 
-		bool isThrustKeyDown, isLeftKeyDown, isRightKeyDown;
-		bool isRocketLaunched, renderRocket; //rocket-specific
+		bool isThrustKeyDown, isLeftKeyDown, isRightKeyDown, isFirePressed;
 		float accelFactor;
 
 		Rocket *rocket;

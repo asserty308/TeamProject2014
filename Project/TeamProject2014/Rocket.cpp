@@ -1,15 +1,16 @@
+#include "Logger.hpp"
 #include "Rocket.hpp"
 
-const float Rocket::TURN_SPEED = 60.f;
-const float Rocket::TURN_ACCELERATION = 50.f;
+const float Rocket::SPEED = 200.f;
+//const float Rocket::TURN_SPEED = 60.f;
+//const float Rocket::TURN_ACCELERATION = 50.f;
 
 Rocket::Rocket(Vector2 position, Vector2 forward) : Transform(position, forward, Vector2(0.f, 0.f))
 {
 	g_pInputObserver->addListener(this);
 
 	controllable = true;
-	leftKeyDown = false;
-	rightKeyDown = false;
+	isLeftKeyDown = isRightKeyDown = false;
 }
 
 Rocket::~Rocket()
@@ -19,50 +20,66 @@ Rocket::~Rocket()
 
 void Rocket::inputReceived(SDL_KeyboardEvent *key)
 {
-	switch (key->keysym.sym)
+	if (!controllable)
+		return;
+
+	if (key->type == SDL_KEYDOWN)
 	{
-		case SDLK_a:
-			leftKeyDown = (key->type == SDL_KEYDOWN);
-			break;
-		case SDLK_d:
-			rightKeyDown = (key->type == SDL_KEYDOWN);
-			break;
-		case SDLK_SPACE:
-			if (key->type == SDL_KEYUP)
-				controllable = false;
-			break;
-		default:
-			break;
+		if (key->keysym.sym == SDLK_a && !isLeftKeyDown)
+		{
+			rotate(/*-TURN_SPEED * g_pTimer->getDeltaTime()*/90.f);
+			isLeftKeyDown = true;
+			g_pLogfile->fTextout("rotate left");
+		}
+		else if (key->keysym.sym == SDLK_d && !isRightKeyDown)
+		{
+			rotate(/*-TURN_SPEED * g_pTimer->getDeltaTime()*/-90.f);
+			isRightKeyDown = true;
+			g_pLogfile->fTextout("rotate right");
+		}
 	}
+	else if (key->type == SDL_KEYUP)
+	{
+		if (key->keysym.sym == SDLK_SPACE)
+			controllable = false;
+		else if (key->keysym.sym == SDLK_a)
+			isLeftKeyDown = false;
+		else if (key->keysym.sym == SDLK_d)
+			isRightKeyDown = false;
+	}
+}
+
+bool Rocket::getControllable()
+{
+	return controllable;
 }
 
 void Rocket::update()
 {
-	if (controllable)
-	{
-		if (leftKeyDown && !rightKeyDown)
-		{
-			rotate(-TURN_SPEED * g_pTimer->getDeltaTime());
-		}
-		else if (!leftKeyDown && rightKeyDown)
-		{
-			rotate(TURN_SPEED * g_pTimer->getDeltaTime());
-		}
-	}
+	//setAcceleration(forward * TURN_ACCELERATION);
 
-	setAcceleration(forward * TURN_ACCELERATION);
+	// make sure the velocity of the rocket is constant
+	// and always towards the current forward vector
+	setVelocity(forward * SPEED);
+
+	g_pLogfile->fTextout("x: %f y: %f", forward.getX(), forward.getY());
 
 	updatePosition(g_pTimer->getDeltaTime());
 }
 
 void Rocket::render()
 {
-	float r = 5;
-
 	glColor3f(0.f, 0.f, 1.f);
-
 	glLineWidth(2.f);
 
+	glBegin(GL_POLYGON);
+	glVertex2f(position.getX() + forward.getX() * 10.f, position.getY() + forward.getY() * 10.f);
+	glVertex2f(position.getX() - forward.getX() * 10.f - getRight().getX() * 6.f, position.getY() - forward.getY() * 10.f - getRight().getY() * 6.f);
+	glVertex2f(position.getX() - forward.getX() * 6.f, position.getY() - forward.getY() * 6.f);
+	glVertex2f(position.getX() - forward.getX() * 10.f + getRight().getX() * 6.f, position.getY() - forward.getY() * 10.f + getRight().getY() * 6.f);
+	glEnd();
+
+	/*
 	glBegin(GL_LINES);
 
 	for (int i = 0; i < 36; ++i)
@@ -74,4 +91,5 @@ void Rocket::render()
 	}
 
 	glEnd();
+	*/
 }
