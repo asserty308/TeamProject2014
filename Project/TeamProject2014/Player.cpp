@@ -10,7 +10,7 @@
 
 const float Player::TOP_SPEED = 70.f;
 const float Player::ACCELERATION = 120.f;
-const float Player::TURN_SPEED = 174.f;
+const float Player::TURN_SPEED = 188.f;
 
 Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(0.0f, 0.0f))
 {

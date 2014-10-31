@@ -63,9 +63,10 @@ void Transform::rotate(float angle)
 	float c = cos(theta);
 	float s = sin(theta);
 
-	forward.setX(forward.getX() * c - forward.getY() * s);
-	forward.setY(forward.getX() * s + forward.getY() * c);
+	float newX = forward.getX() * c - forward.getY() * s;
+	float newY = forward.getX() * s + forward.getY() * c;
 
+	forward = Vector2(newX, newY);
 	forward.normalize();
 }
 

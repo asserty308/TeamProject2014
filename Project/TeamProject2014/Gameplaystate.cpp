@@ -25,7 +25,7 @@ void Gameplaystate::init(){
 	obstacle.addVertex(Vector2(90.f, 140.f));
 	map->addObstacle(obstacle);
 
-	player = new Player(map->getPlayerSpawn(), Vector2(1.f, 0.f));
+	player = new Player(map->getPlayerSpawn(), Vector2(0.f, -1.f));
 
 	//TEMP
 	dbc = new DebugCollider(Vector2(600, 400), Vector2(1.f, 0.f), 20.0f);
