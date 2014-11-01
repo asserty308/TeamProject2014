@@ -1,7 +1,7 @@
 #include "Logger.hpp"
 #include "Rocket.hpp"
 
-const float Rocket::SPEED = 250.f;
+const float Rocket::SPEED = 400.f;
 //const float Rocket::TURN_SPEED = 60.f;
 //const float Rocket::TURN_ACCELERATION = 50.f;
 
@@ -27,12 +27,12 @@ void Rocket::inputReceived(SDL_KeyboardEvent *key)
 	{
 		if (key->keysym.sym == SDLK_a && !isLeftKeyDown)
 		{
-			rotate(/*-TURN_SPEED * g_pTimer->getDeltaTime()*/-90.f);
+			rotate(/*-TURN_SPEED * g_pTimer->getDeltaTime()*/-45.f);
 			isLeftKeyDown = true;
 		}
 		else if (key->keysym.sym == SDLK_d && !isRightKeyDown)
 		{
-			rotate(/*-TURN_SPEED * g_pTimer->getDeltaTime()*/90.f);
+			rotate(/*-TURN_SPEED * g_pTimer->getDeltaTime()*/45.f);
 			isRightKeyDown = true;
 		}
 	}
