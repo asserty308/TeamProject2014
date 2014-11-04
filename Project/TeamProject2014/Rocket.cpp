@@ -60,8 +60,6 @@ void Rocket::update()
 	// and always towards the current forward vector
 	setVelocity(forward * SPEED);
 
-	g_pLogfile->fTextout("x: %f y: %f", forward.getX(), forward.getY());
-
 	updatePosition(g_pTimer->getDeltaTime());
 }
 

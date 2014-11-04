@@ -1,0 +1,18 @@
+<?xml version="1.0" ?>
+
+<Map>
+	<PlayerSpawn x="100" y="100"/>
+	<Obstacle>
+		<Vertex x="250" y="250"/>
+		<Vertex x="350" y="250"/>
+		<Vertex x="350" y="350"/>
+		<Vertex x="250" y="350"/>
+	</Obstacle>
+
+	<Obstacle>
+		<Vertex x="550" y="250"/>
+		<Vertex x="650" y="250"/>
+		<Vertex x="650" y="350"/>
+		<Vertex x="550" y="350"/>
+	</Obstacle>
+</Map>
