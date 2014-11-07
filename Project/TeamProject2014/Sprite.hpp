@@ -10,6 +10,7 @@ class Sprite
 	private:
 		GLuint textureID;
 		Vector2 position, dimensions;
+		float angle;
 		unsigned char* img;
 
 	public:
@@ -19,5 +20,9 @@ class Sprite
 
 		void loadFromFile(const char* path);
 		void render();
+
+		void addAngle(float r);
+		void setPosition(Vector2 newPos);
+		Vector2 getPosition();
 };
 

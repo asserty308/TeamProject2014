@@ -1,7 +1,6 @@
 #include "Sprite.hpp"
 #include "Logger.hpp"
 #include "SpriteRenderer.hpp"
-#include "Timer.h"
 
 Sprite::Sprite()
 {
@@ -15,6 +14,7 @@ Sprite::Sprite(const char* path, Vector2 position, Vector2 dimensions)
 {
 	this->position = position;
 	this->dimensions = dimensions;
+	angle = 180.f;
 
 	loadFromFile(path);
 }
@@ -44,10 +44,12 @@ void Sprite::render()
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glPushMatrix();
+
 	//TODO: only rotate when it should rotate
 	glTranslatef(position.getX(), position.getY(), 0.f);
-	glRotatef(clock() * 0.1f, 0.f, 0.f, 1.f);
+	glRotatef(angle, 0.f, 0.f, 1.f);
 	glTranslatef(-position.getX(), -position.getY(), 0.f);
+
 	glBegin(GL_QUADS);
 		//top right
 		glTexCoord2f(1.f, 1.f);
@@ -65,4 +67,19 @@ void Sprite::render()
 	glPopMatrix();
 
 	glDisable(GL_TEXTURE_2D);
+}
+
+void Sprite::addAngle(float r)
+{
+	angle += r;
+}
+
+void Sprite::setPosition(Vector2 newPos)
+{
+	position = newPos;
+}
+
+Vector2 Sprite::getPosition()
+{
+	return position;
 }

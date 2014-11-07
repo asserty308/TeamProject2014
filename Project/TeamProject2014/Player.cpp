@@ -21,7 +21,7 @@ Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position
 
 	boundingBox = new CircleBoundingBox(position, 10.0f);
 
-	//create test sprite
+	//create sprite
 	sprite = new Sprite("fighter4.png", position, Vector2(200.f, 150.f));
 
 	rocket = nullptr;
@@ -59,9 +59,15 @@ void Player::update()
 			setAcceleration(Vector2(0.0f, 0.0f));
 
 		if (isLeftKeyDown && !isRightKeyDown)
+		{
 			rotate(-TURN_SPEED * g_pTimer->getDeltaTime());
+			sprite->addAngle(-TURN_SPEED * g_pTimer->getDeltaTime());
+		}
 		else if (isRightKeyDown && !isLeftKeyDown)
+		{
 			rotate(TURN_SPEED * g_pTimer->getDeltaTime());
+			sprite->addAngle(TURN_SPEED * g_pTimer->getDeltaTime());
+		}
 	}
 
 	handleRocket();
@@ -94,11 +100,14 @@ void Player::update()
 		position.setY(g_pGame->getWindowHeight());
 		velocity.setY(-velocity.getY() *.25f);
 	}
+
+	//set sprite position to player position
+	sprite->setPosition(position);
 }
 
 void Player::render()
 {
-	glColor3f(0.f, 1.f, 0.f);
+	/*glColor3f(0.f, 1.f, 0.f);
 	
 	glLineWidth(2.f);
 
@@ -115,7 +124,7 @@ void Player::render()
 	glVertex2f(getPosition().getX() + getForward().getX() * 5.f, getPosition().getY() + getForward().getY() * 5.f);
 	glVertex2f(getPosition().getX() + getForward().getX() * 15.f, getPosition().getY() + getForward().getY() * 15.f);
 
-	glEnd();
+	glEnd();*/
 
 	if (rocket != nullptr)
 		rocket->render();
