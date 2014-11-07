@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include "AudioController.hpp"
 
 std::string Game::GAME_TITLE = "Alpha Strike";
 
@@ -44,6 +45,8 @@ void Game::init()
 	//Init modules
 	g_pTimer->init();
 	currentState->init();
+
+	g_pAudioController->playMusic();
 }
 
 // Event-related functions
