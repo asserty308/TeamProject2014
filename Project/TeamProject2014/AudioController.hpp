@@ -12,17 +12,22 @@ class AudioController : public Singleton<AudioController>
 		MusicPlayer musicPlayer;
 		SoundPlayer soundPlayer;
 
-		//float masterVolume;
+		float masterVolume;
 
 	public:
 		AudioController();
 		~AudioController();
 
-		void playMusic();
-		//void playSound();
-
+		//music related functions
+		void playMusic(const char* path, bool loop);
 		void stopMusic();
-		/*void stopSound();
-		void stopAudio();*/
+
+		//sound related functions
+		void addSound(const char* path);
+		void removeSound(const char* path);
+		void playSound();
+		void stopSound();
+
+		void stopAudio();
 };
 

@@ -1,19 +1,21 @@
 #pragma once
-#include <vector>
+#include <map>
 #include <SDL_mixer.h>
 #include "AudioBase.hpp"
 
-class SoundPlayer /*: public AudioBase*/
+class SoundPlayer : public AudioBase
 {
 	private:
-		std::vector<Mix_Chunk*> sounds;
+		Uint8 maxChannels, usedChannels;
+		std::map<const char*, Mix_Chunk*> sounds;
 
 	public:
 		SoundPlayer();
 		~SoundPlayer();
 
-		/*void play(bool loop);
+		void play(bool loop);
 		void stop();
-		void loadFromFile(const char* path);*/
+		void loadFromFile(const char* path);
+		void removeSoundByFile(const char* path);
 };
 

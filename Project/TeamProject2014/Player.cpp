@@ -7,6 +7,7 @@
 #include "Game.hpp"
 #include "SpriteRenderer.hpp"
 #include "CircleBoundingBox.h"
+#include "AudioController.hpp"
 
 const float Player::TOP_SPEED = 70.f;
 const float Player::ACCELERATION = 120.f;
@@ -25,11 +26,19 @@ Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position
 	sprite = new Sprite("fighter4.png", position, Vector2(200.f, 150.f));
 
 	rocket = nullptr;
+
+	g_pAudioController->addSound("Audio/Sounds/spaceship-ambience.wav");
 }
 
-Player::~Player(){
+Player::~Player()
+{
+	g_pAudioController->removeSound("Audio/Sounds/spaceship-ambience.wav");
+
 	delete sprite;
 	delete boundingBox;
+
+	sprite = nullptr;
+	boundingBox = nullptr;
 }
 
 void Player::inputReceived(SDL_KeyboardEvent *key)
@@ -103,6 +112,9 @@ void Player::update()
 
 	//set sprite position to player position
 	sprite->setPosition(position);
+
+	//play sound while player is alive
+	g_pAudioController->playSound();
 }
 
 void Player::render()

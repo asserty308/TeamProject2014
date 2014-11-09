@@ -3,6 +3,7 @@
 #include "Game.hpp"
 #include "MapParser.h"
 #include "SpriteRenderer.hpp"
+#include "AudioController.hpp"
 
 Gameplaystate::Gameplaystate()
 {
@@ -16,6 +17,10 @@ Gameplaystate::~Gameplaystate()
 	delete player;
 	delete dbc;
 	delete map;
+
+	player = nullptr;
+	map = nullptr;
+	dbc = nullptr;
 }
 
 void Gameplaystate::init()
@@ -32,6 +37,9 @@ void Gameplaystate::init()
 	//TEMP
 	dbc = new DebugCollider(Vector2(600, 400), Vector2(1.f, 0.f), 20.0f);
 	//TEMP
+
+	//initialize and play music
+	g_pAudioController->playMusic("Audio/Music/space2a.wav", true);
 }
 
 void Gameplaystate::update()
@@ -42,7 +50,6 @@ void Gameplaystate::update()
 		player->updatePosition(g_pTimer->getDeltaTime());
 		player->update();
 	}
-
 }
 
 void Gameplaystate::render()
@@ -68,6 +75,11 @@ void Gameplaystate::quit()
 
 void Gameplaystate::inputReceived(SDL_KeyboardEvent *key)
 {
-	if(key->keysym.sym == SDLK_p && key->type == SDL_KEYUP)
+	if (key->keysym.sym == SDLK_p && key->type == SDL_KEYUP)
+	{
 		g_pGame->setState(g_pGame->getPauseState());
+
+		//tmp location because init() is not called on state-changes
+		g_pAudioController->playMusic("Audio/Music/science-0f-22mi.wav", true);
+	}
 }
