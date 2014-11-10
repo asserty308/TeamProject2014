@@ -5,6 +5,7 @@
 void Obstacle::addVertex(Vector2 vertex)
 {
 	vertices.push_back(vertex);
+	static_cast<PolygonBoundingBox*>(boundingBox)->addVertex(vertex);
 }
 
 void Obstacle::render()

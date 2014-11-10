@@ -40,7 +40,7 @@ Map *MapParser::loadMap(std::string filename)
 			}
 			else if (strcmp(element->Name(), "Obstacle") == 0)
 			{
-				Obstacle obstacle;
+				Obstacle* obstacle = new Obstacle;
 
 				XMLElement *vertexElement = element->FirstChildElement();
 
@@ -51,7 +51,7 @@ Map *MapParser::loadMap(std::string filename)
 						float x, y;
 						vertexElement->QueryFloatAttribute("x", &x);
 						vertexElement->QueryFloatAttribute("y", &y);
-						obstacle.addVertex(Vector2(x, y));
+						obstacle->addVertex(Vector2(x, y));
 					}
 
 					vertexElement = vertexElement->NextSiblingElement();

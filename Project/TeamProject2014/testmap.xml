@@ -15,4 +15,18 @@
 		<Vertex x="650" y="350"/>
 		<Vertex x="550" y="350"/>
 	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="200" y="500"/>
+		<Vertex x="400" y="500"/>
+		<Vertex x="400" y="600"/>
+		<Vertex x="200" y="600"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="400" y="500"/>
+		<Vertex x="400" y="400"/>
+		<Vertex x="450" y="400"/>
+		<Vertex x="450" y="500"/>
+	</Obstacle>
 </Map>

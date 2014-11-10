@@ -1,4 +1,5 @@
 #include "SpriteRenderer.hpp"
+#include <SDL_opengl.h>
 
 
 SpriteRenderer::SpriteRenderer()
@@ -28,4 +29,6 @@ void SpriteRenderer::renderScene()
 	{
 		s->render();
 	}
+
 }
+

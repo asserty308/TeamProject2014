@@ -10,7 +10,7 @@ protected:
 public:
 	BoundingBox(Vector2 position);
 
-	Vector2 getPosition();
+	virtual Vector2 getPosition() = 0;
 
 	void setPosition(Vector2 position);
 

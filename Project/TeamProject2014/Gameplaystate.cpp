@@ -14,7 +14,6 @@ Gameplaystate::Gameplaystate()
 Gameplaystate::~Gameplaystate()
 {
 	delete player;
-	delete dbc;
 	delete map;
 }
 
@@ -29,9 +28,6 @@ void Gameplaystate::init()
 
 	player = new Player(playerSpawn, Vector2(0.f, -1.f));
 
-	//TEMP
-	dbc = new DebugCollider(Vector2(600, 400), Vector2(1.f, 0.f), 20.0f);
-	//TEMP
 }
 
 void Gameplaystate::update()
@@ -55,8 +51,6 @@ void Gameplaystate::render()
 	// temporary
 	if (player)
 		player->render();
-
-	dbc->render();
 
 	g_pSpriteRenderer->renderScene();
 }

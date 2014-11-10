@@ -12,5 +12,9 @@ public:
 	float getRadius(){
 		return radius;
 	}
+
+	virtual Vector2 getPosition(){
+		return position;
+	};
 };
 

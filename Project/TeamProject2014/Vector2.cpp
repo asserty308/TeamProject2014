@@ -45,6 +45,18 @@ void Vector2::normalize()
 	y *= lengthReciprocal;
 }
 
+float Vector2::dotProduct(Vector2 a, Vector2 b){
+	return a.x * b.x + a.y * b.y;
+}
+
+Vector2 Vector2::projectVector(Vector2 a, Vector2 b){
+	float adotb = dotProduct(a, b);
+	float bdotb = dotProduct(b, b);
+	float dotDivision = adotb / bdotb;
+
+	return b * dotDivision;
+}
+
 Vector2 Vector2::operator+(const Vector2& right) const
 {
 	return Vector2(x + right.x, y + right.y);
@@ -78,3 +90,5 @@ Vector2 Vector2::operator*(const float& right) const
 {
 	return Vector2(x * right, y * right);
 }
+
+

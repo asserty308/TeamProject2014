@@ -9,6 +9,8 @@ Game::Game()
 	windowHeight = 600;
 	quit = false;
 	g_pLogfile->log("start game");
+	g_pCollisionObserver->setxAxis(Vector2(windowWidth, 0));
+	g_pCollisionObserver->setyAxis(Vector2(0, windowHeight));
 
 	gameplayState = new Gameplaystate();
 	pauseState = new Pausestate();
