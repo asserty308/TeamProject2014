@@ -46,6 +46,9 @@ void Gameplaystate::update()
 {
 	g_pCollisionObserver->checkCollisionRoutine();
 
+	//play all sounds currently active
+	g_pAudioController->playSound();
+
 	if (player){
 		player->updatePosition(g_pTimer->getDeltaTime());
 		player->update();

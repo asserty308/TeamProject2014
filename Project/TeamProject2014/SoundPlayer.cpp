@@ -45,12 +45,18 @@ void SoundPlayer::removeSoundByFile(const char* path)
 		for (int i = 0; i < sounds.size(); i++)
 		{
 			/*compare the length (bytes) of each file
-			  and delete the match*/
+			  and stop the channel*/
 			if (it->second->alen == cmpIT->second->alen)
-				sounds.erase(it);
+			{
+				Mix_HaltChannel(i);
+				usedChannels--;
+				break;
+			}
 
-			cmpIT++;
+			++cmpIT;
 		}
+
+		sounds.erase(it);
 	}
 }
 

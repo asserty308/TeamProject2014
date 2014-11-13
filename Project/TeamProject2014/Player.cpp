@@ -27,12 +27,12 @@ Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position
 
 	rocket = nullptr;
 
-	g_pAudioController->addSound("Audio/Sounds/spaceship-ambience.wav");
+	//g_pAudioController->addSound("Audio/Sounds/spaceship-ambience.wav");
 }
 
 Player::~Player()
 {
-	g_pAudioController->removeSound("Audio/Sounds/spaceship-ambience.wav");
+	//g_pAudioController->removeSound("Audio/Sounds/spaceship-ambience.wav");
 
 	delete sprite;
 	delete boundingBox;
@@ -112,9 +112,6 @@ void Player::update()
 
 	//set sprite position to player position
 	sprite->setPosition(position);
-
-	//play sound while player is alive
-	g_pAudioController->playSound();
 }
 
 void Player::render()

@@ -1,5 +1,6 @@
 #include "Logger.hpp"
 #include "Rocket.hpp"
+#include "AudioController.hpp"
 
 const float Rocket::SPEED = 400.f;
 //const float Rocket::TURN_SPEED = 60.f;
@@ -11,11 +12,15 @@ Rocket::Rocket(Vector2 position, Vector2 forward) : Transform(position, forward,
 
 	controllable = true;
 	isLeftKeyDown = isRightKeyDown = false;
+
+	g_pAudioController->addSound("Audio/Sounds/sci-fi-rocket-launch-01.wav");
 }
 
 Rocket::~Rocket()
 {
 	g_pInputObserver->removeListener(this);
+
+	g_pAudioController->removeSound("Audio/Sounds/sci-fi-rocket-launch-01.wav");
 }
 
 void Rocket::inputReceived(SDL_KeyboardEvent *key)
