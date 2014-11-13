@@ -98,6 +98,7 @@
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Pausestate.cpp" />
     <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PolygonBoundingBox.cpp" />
     <ClCompile Include="Rocket.cpp" />
     <ClCompile Include="SoundPlayer.cpp" />
     <ClCompile Include="Sprite.cpp" />
@@ -126,6 +127,7 @@
     <ClInclude Include="Obstacle.hpp" />
     <ClInclude Include="Pausestate.h" />
     <ClInclude Include="Player.hpp" />
+    <ClInclude Include="PolygonBoundingBox.h" />
     <ClInclude Include="Rocket.hpp" />
     <ClInclude Include="Singleton.hpp" />
     <ClInclude Include="SoundPlayer.hpp" />

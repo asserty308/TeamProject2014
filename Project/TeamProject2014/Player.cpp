@@ -20,7 +20,7 @@ Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position
 	g_pInputObserver->addListener(this);
 	g_pCollisionObserver->addListener(this);
 
-	boundingBox = new CircleBoundingBox(position, 10.0f);
+	boundingBox = new CircleBoundingBox(position, 25.0f);
 
 	//create sprite
 	sprite = new Sprite("fighter4.png", position, Vector2(200.f, 150.f));

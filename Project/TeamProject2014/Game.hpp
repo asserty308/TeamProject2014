@@ -8,6 +8,7 @@
 #include "Logger.hpp"
 #include "Timer.h"
 #include "InputObserver.h"
+#include "CollisionObserver.h"
 #include "Gamestate.h"
 #include "Gameplaystate.h"
 #include "Pausestate.h"
