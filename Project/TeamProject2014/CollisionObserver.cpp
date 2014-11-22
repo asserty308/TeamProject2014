@@ -93,8 +93,12 @@ bool CollisionObserver::checkCircleVsPolygon(CircleBoundingBox *lhs, PolygonBoun
 	Vector2 penetration;
 
 	Vector2 c = lhs->getPosition();
-	
-	//placeholder
+
+	//Voronoi regions for AABBs
+	int voroHori = 0; 
+	int voroVerti = 0;
+
+	//placeholder for later use
 	Vector2 v;
 	Vector2 t;
 
@@ -115,18 +119,6 @@ bool CollisionObserver::checkCircleVsPolygon(CircleBoundingBox *lhs, PolygonBoun
 	Vector2 vMaxY = Vector2(0, 0);
 	Vector2 vMinY = Vector2(0, 0);
 
-	//Polygonvertex that is the nearest to the Circle
-	Vector2 nearest;
-	
-	for (int j = 0; j < rhs->getVerticesCount(); j++){
-		t = rhs->getVertex(j);
-		Vector2 distance = t - c;
-		if (distance.getX() * distance.getX() + distance.getY() * distance.getY() <
-			(nearest - c).getX() * (nearest - c).getX() + (nearest - c).getY() * (nearest - c).getY()){
-			nearest = t;
-		}
-	}
-
 	for (int i = 0; i < rhs->getVerticesCount(); i++){
 		v = rhs->getVertex(i);
 		if (v.getX() > vMaxX.getX()){
@@ -143,30 +135,23 @@ bool CollisionObserver::checkCircleVsPolygon(CircleBoundingBox *lhs, PolygonBoun
 		}
 	}
 
-	Vector2 vProjMaxX = Vector2::projectVector(vMaxX, xAxis);;
-	Vector2 vProjMinX = Vector2::projectVector(vMinX, xAxis);;
-	Vector2 vProjMaxY = Vector2::projectVector(vMaxY, yAxis);;
-	Vector2 vProjMinY = Vector2::projectVector(vMinY, yAxis);;
+	Vector2 vProjMaxX = Vector2::projectVector(vMaxX, xAxis);
+	Vector2 vProjMinX = Vector2::projectVector(vMinX, xAxis);
+	Vector2 vProjMaxY = Vector2::projectVector(vMaxY, yAxis);
+	Vector2 vProjMinY = Vector2::projectVector(vMinY, yAxis);
 
-	//Axis that runs through the nearest vertex and the circle center
-	Vector2 vToCAxis = nearest - c;
-	Vector2 vToCAxisNorm = vToCAxis;
-	vToCAxisNorm.normalize();
+	if (c.getX() < vMinX.getX()){
+		voroHori = -1;
+	} else if (c.getX() > vMaxX.getX()){
+		voroHori = 1;
+	}
 
+	if (c.getY() < vMinY.getY()){
+		voroVerti = -1;
+	} else if (c.getY() > vMaxY.getY()){
+		voroVerti = 1;
+	}
 
-	//Polygonvertices to be projected upon the axis
-	int neighbor1 = (rhs->getIndex(nearest) + 1) % rhs->getVerticesCount();
-	int neighbor2 = (rhs->getIndex(nearest) - 1) < 0 ? rhs->getVerticesCount()-1 : (rhs->getIndex(nearest) - 1);
-
-	Vector2 nearestProj = Vector2::projectVector(nearest, vToCAxis);
-	Vector2 nearestProjMin = Vector2::projectVector(rhs->getVertex(neighbor1), vToCAxis);
-	Vector2 nearestProjMax = Vector2::projectVector(rhs->getVertex(neighbor2), vToCAxis);
-
-	//Circlevertices to be projected upon the axis
-	Vector2 cNearOnAx = c + (vToCAxisNorm * lhs->getRadius());
-	Vector2 cFarOnAx = c - (vToCAxisNorm * lhs->getRadius());
-	Vector2 cNearOnProjAx = Vector2::projectVector(cNearOnAx, vToCAxis);
-	Vector2 cFarOnProjAx = Vector2::projectVector(cFarOnAx, vToCAxis);
 
 	//Check on x- and y-Axis if overlapping occurs
 	if (cRightOnX.getX() > vMinX.getX() && cLeftOnX.getX() < vMaxX.getX() &&
@@ -177,22 +162,51 @@ bool CollisionObserver::checkCircleVsPolygon(CircleBoundingBox *lhs, PolygonBoun
 
 		penetration = std::abs(penCan1.getX()) < std::abs(penCan2.getY()) ? penCan1 : penCan2;
 
+		if (voroHori == 0 || voroVerti == 0){
+			p->setX(penetration.getX());
+			p->setY(penetration.getY());
+			return true;
+		}
+
+		//Polygonvertex that is the nearest to the Circle
+		Vector2 nearest;
+		for (int j = 0; j < rhs->getVerticesCount(); j++){
+			t = rhs->getVertex(j);
+			Vector2 distance = t - c;
+			if (distance.getX() * distance.getX() + distance.getY() * distance.getY() <
+				(nearest - c).getX() * (nearest - c).getX() + (nearest - c).getY() * (nearest - c).getY()){
+				nearest = t;
+			}
+		}
+
+		//Axis that runs through the nearest vertex and the circle center
+		Vector2 vToCAxis = nearest - c;
+		Vector2 vToCAxisNorm = vToCAxis;
+		vToCAxisNorm.normalize();
+
+		Vector2 nearestProj = Vector2::projectVector(nearest, vToCAxis);
+
+		//Circlevertices to be projected upon the axis
+		Vector2 cNearOnAx = c + (vToCAxisNorm * lhs->getRadius());
+		Vector2 cFarOnAx = c - (vToCAxisNorm * lhs->getRadius());
+		Vector2 cNearOnProjAx = Vector2::projectVector(cNearOnAx, vToCAxis);
+		Vector2 cFarOnProjAx = Vector2::projectVector(cFarOnAx, vToCAxis);
+
 		//Check vertex overlap
 		if ((nearestProj.getX() > cFarOnProjAx.getX() && nearestProj.getX() < cNearOnProjAx.getX()) ||
-			(nearestProjMax.getX() < cNearOnProjAx.getX() && nearestProjMin.getX() > cFarOnProjAx.getX()) ||
-			(nearestProjMin.getX() < cNearOnProjAx.getX() && nearestProjMax.getX() > cFarOnProjAx.getX())){
+			(nearestProj.getX() < cFarOnProjAx.getX() && nearestProj.getX() > cNearOnProjAx.getX())){
 
-		    Vector2 penCan3 = cNearOnProjAx - nearestProj;
+			Vector2 penCan3 = cNearOnProjAx - nearestProj;
 
 			penetration = std::abs(penetration.getX()) < std::abs(penCan3.getX()) && std::abs(penetration.getY()) < std::abs(penCan3.getY()) ? penetration : penCan3;
-			
+
 			p->setX(penetration.getX());
 			p->setY(penetration.getY());
 
 			return true;
 		
 		}
-
+			
 	}
 
 	return false;

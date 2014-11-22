@@ -116,7 +116,7 @@ void Player::update()
 
 void Player::render()
 {
-	/*glColor3f(0.f, 1.f, 0.f);
+	glColor3f(0.f, 1.f, 0.f);
 	
 	glLineWidth(2.f);
 
@@ -124,16 +124,16 @@ void Player::render()
 
 	for (int i = 0; i < 36; ++i)
 	{
-		float angle = (i * M_PI / 180.0) * 10.0;
-		glVertex2f(getPosition().getX() + sin(angle) * 10.f, getPosition().getY() + cos(angle) * 10.f);
-		angle = ((i + 1) * M_PI / 180.0) * 10.0;
-		glVertex2f(getPosition().getX() + sin(angle) * 10.f, getPosition().getY() + cos(angle) * 10.f);
+		float angle = (i * M_PI / 180.0) * 25.0;
+		glVertex2f(getPosition().getX() + sin(angle) * 25.f, getPosition().getY() + cos(angle) * 25.f);
+		angle = ((i + 1) * M_PI / 180.0) * 25.0;
+		glVertex2f(getPosition().getX() + sin(angle) * 25.f, getPosition().getY() + cos(angle) * 25.f);
 	}
 
 	glVertex2f(getPosition().getX() + getForward().getX() * 5.f, getPosition().getY() + getForward().getY() * 5.f);
 	glVertex2f(getPosition().getX() + getForward().getX() * 15.f, getPosition().getY() + getForward().getY() * 15.f);
 
-	glEnd();*/
+	glEnd();
 
 	if (rocket != nullptr)
 		rocket->render();
