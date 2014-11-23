@@ -36,5 +36,8 @@ private:
 	bool checkCircleVsCircle(CircleBoundingBox *lhs, CircleBoundingBox *rhs, Vector2 *p);
 	bool checkCircleVsPolygon(CircleBoundingBox *lhs, PolygonBoundingBox *rhs, Vector2 *p);
 
+	bool checkCircleVsPolygonAABB(CircleBoundingBox *lhs, PolygonBoundingBox *rhs, Vector2 *p);
+	bool checkCircleVsPolygonTriangle(CircleBoundingBox *lhs, PolygonBoundingBox *rhs, Vector2 *p);
+
 };
 

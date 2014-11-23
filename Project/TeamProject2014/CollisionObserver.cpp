@@ -89,6 +89,16 @@ bool CollisionObserver::checkCircleVsCircle(CircleBoundingBox *lhs, CircleBoundi
 }
 
 bool CollisionObserver::checkCircleVsPolygon(CircleBoundingBox *lhs, PolygonBoundingBox *rhs, Vector2 *p){
+	if (rhs->getVerticesCount() == 4){
+		return checkCircleVsPolygonAABB(lhs, rhs, p);
+	} else if (rhs->getVerticesCount() == 3){
+		return checkCircleVsPolygonTriangle(lhs, rhs, p);
+	}
+
+	return false;
+}
+
+bool CollisionObserver::checkCircleVsPolygonAABB(CircleBoundingBox *lhs, PolygonBoundingBox *rhs, Vector2 *p){
 	
 	Vector2 penetration;
 
@@ -209,5 +219,73 @@ bool CollisionObserver::checkCircleVsPolygon(CircleBoundingBox *lhs, PolygonBoun
 			
 	}
 
+	return false;
+}
+
+bool CollisionObserver::checkCircleVsPolygonTriangle(CircleBoundingBox *lhs, PolygonBoundingBox *rhs, Vector2 *p){
+	Vector2 penetration;
+	if (checkCircleVsPolygonAABB(lhs, rhs, &penetration)){
+		//calculating the perpendicular Axis to the hypotenuse
+		Vector2 c = lhs->getPosition();
+		Vector2 hypotenuse = rhs->getVertex(0) - rhs->getVertex(2);
+		Vector2 cProjOnHypo = Vector2::projectVector(c, hypotenuse);
+		//Vector2 perpAxis = c.getX() > (c + cProjOnHypo).getX() ? c - cProjOnHypo : cProjOnHypo - c;
+		Vector2 perpAxis = c - cProjOnHypo;
+
+		Vector2 test1 = perpAxis;
+		test1.normalize();
+		Vector2 test2 = hypotenuse;
+		test2.normalize();
+
+		float test = Vector2::dotProduct(test1, test2);
+		
+		//Projecting the circle and the triangle on the perpendicular axis
+		Vector2 cToNearestFeature; 
+		
+		Vector2 dist1 = rhs->getVertex(1) - c;
+		Vector2 dist2 = (c + cProjOnHypo) - c;
+		/*if (dist1.getX() * dist1.getX() + dist1.getY() * dist1.getY() > dist2.getX() * dist2.getX() + dist2.getY() * dist2.getY()){*/
+			cToNearestFeature = perpAxis;
+		/*}else{
+			cToNearestFeature = rhs->getVertex(1) - c;
+		}*/
+		
+		Vector2 cToNearestFeatureNorm = cToNearestFeature;
+		cToNearestFeatureNorm.normalize();
+		
+		Vector2 cNearOnAx1 = c + (cToNearestFeatureNorm * lhs->getRadius());	
+		Vector2 cNearOnAxProj1 = Vector2::projectVector(cNearOnAx1, perpAxis);
+
+		Vector2 cNearOnAx2 = c - (cToNearestFeatureNorm * lhs->getRadius());
+		Vector2 cNearOnAxProj2 = Vector2::projectVector(cNearOnAx2, perpAxis);
+		
+		Vector2 t0OnAxProj = Vector2::projectVector(rhs->getVertex(0), perpAxis);
+		Vector2 t1OnAxProj = Vector2::projectVector(rhs->getVertex(1), perpAxis);
+		Vector2 t2OnAxProj = Vector2::projectVector(rhs->getVertex(2), perpAxis);
+
+		//Check for overlap on perpendicular Axis
+		if ((cNearOnAxProj1.getX() < t0OnAxProj.getX() && cNearOnAxProj1.getX() > t1OnAxProj.getX()) ||
+			(cNearOnAxProj1.getX() > t0OnAxProj.getX() && cNearOnAxProj1.getX() < t1OnAxProj.getX()) ||
+			(cNearOnAxProj2.getX() < t0OnAxProj.getX() && cNearOnAxProj2.getX() > t1OnAxProj.getX()) ||
+			(cNearOnAxProj2.getX() > t0OnAxProj.getX() && cNearOnAxProj2.getX() < t1OnAxProj.getX())){
+
+			Vector2 penCan;
+			Vector2 penCan1 = cNearOnAxProj1 - t0OnAxProj;
+			Vector2 penCan2 = cNearOnAxProj2 - t0OnAxProj;
+
+			penCan = std::abs(penCan1.getX()) < std::abs(penCan2.getX()) && std::abs(penCan1.getY()) < std::abs(penCan2.getY()) ? penCan1 : penCan2;
+
+			penetration = std::abs(penetration.getX()) < std::abs(penCan.getX()) && std::abs(penetration.getY()) < std::abs(penCan.getY()) ? penetration : penCan;
+
+			p->setX(penetration.getX());
+			p->setY(penetration.getY());
+
+			return true;
+		}
+		
+
+
+	}
+	
 	return false;
 }

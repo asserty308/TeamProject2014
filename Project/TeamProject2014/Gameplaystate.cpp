@@ -34,7 +34,7 @@ void Gameplaystate::init()
 	player = new Player(playerSpawn, Vector2(0.f, -1.f));
 
 	//initialize and play music
-	g_pAudioController->playMusic("Audio/Music/space2a.wav", true);
+	//g_pAudioController->playMusic("Audio/Music/space2a.wav", true);
 
 }
 
