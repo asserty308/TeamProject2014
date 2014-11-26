@@ -7,6 +7,7 @@
 
 Gameplaystate::Gameplaystate()
 {
+	client = nullptr;
 	player = nullptr;
 	map = nullptr;
 	dbc = nullptr;
@@ -14,6 +15,7 @@ Gameplaystate::Gameplaystate()
 
 Gameplaystate::~Gameplaystate()
 {
+	delete client;
 	delete player;
 	delete map;
 
@@ -24,6 +26,8 @@ Gameplaystate::~Gameplaystate()
 
 void Gameplaystate::init()
 {
+	client = new Client();
+
 	map = MapParser::loadMap("testmap.xml");
 
 	Vector2 playerSpawn(g_pGame->getWindowWidth() / 2, g_pGame->getWindowHeight() / 2);

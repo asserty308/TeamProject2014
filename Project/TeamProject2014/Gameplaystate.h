@@ -1,5 +1,6 @@
 #pragma once
 #include "gamestate.h"
+#include "Client.h"
 #include "Player.hpp"
 #include "Pausestate.h"
 #include "Map.hpp"
@@ -20,6 +21,7 @@ public:
 	virtual void inputReceived(SDL_KeyboardEvent *key);
 
 private:
+	Client *client;
 	Player *player;
 	Map *map;
 

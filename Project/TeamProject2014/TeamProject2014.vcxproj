@@ -61,7 +61,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;opengl32.lib;SOIL.lib;tinyxml2.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;opengl32.lib;SOIL.lib;tinyxml2.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -87,6 +87,7 @@
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="CircleBoundingBox.cpp" />
     <ClCompile Include="CollisionObserver.cpp" />
+    <ClCompile Include="Client.cpp" />
     <ClCompile Include="DebugCollider.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Gameplaystate.cpp" />
@@ -115,6 +116,7 @@
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="CircleBoundingBox.h" />
     <ClInclude Include="CollisionObserver.h" />
+    <ClInclude Include="Client.h" />
     <ClInclude Include="DebugCollider.h" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Gameplaystate.h" />
