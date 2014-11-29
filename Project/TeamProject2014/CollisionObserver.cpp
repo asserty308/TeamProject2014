@@ -244,11 +244,8 @@ bool CollisionObserver::checkCircleVsPolygonTriangle(CircleBoundingBox *lhs, Pol
 		
 		Vector2 dist1 = rhs->getVertex(1) - c;
 		Vector2 dist2 = (c + cProjOnHypo) - c;
-		/*if (dist1.getX() * dist1.getX() + dist1.getY() * dist1.getY() > dist2.getX() * dist2.getX() + dist2.getY() * dist2.getY()){*/
-			cToNearestFeature = perpAxis;
-		/*}else{
-			cToNearestFeature = rhs->getVertex(1) - c;
-		}*/
+		
+		cToNearestFeature = perpAxis;
 		
 		Vector2 cToNearestFeatureNorm = cToNearestFeature;
 		cToNearestFeatureNorm.normalize();
@@ -256,8 +253,8 @@ bool CollisionObserver::checkCircleVsPolygonTriangle(CircleBoundingBox *lhs, Pol
 		Vector2 cNearOnAx1 = c + (cToNearestFeatureNorm * lhs->getRadius());	
 		Vector2 cNearOnAxProj1 = Vector2::projectVector(cNearOnAx1, perpAxis);
 
-		Vector2 cNearOnAx2 = c - (cToNearestFeatureNorm * lhs->getRadius());
-		Vector2 cNearOnAxProj2 = Vector2::projectVector(cNearOnAx2, perpAxis);
+		Vector2 cFarOnAx = c - (cToNearestFeatureNorm * lhs->getRadius());
+		Vector2 cFarOnAxProj = Vector2::projectVector(cFarOnAx, perpAxis);
 		
 		Vector2 t0OnAxProj = Vector2::projectVector(rhs->getVertex(0), perpAxis);
 		Vector2 t1OnAxProj = Vector2::projectVector(rhs->getVertex(1), perpAxis);
@@ -266,14 +263,25 @@ bool CollisionObserver::checkCircleVsPolygonTriangle(CircleBoundingBox *lhs, Pol
 		//Check for overlap on perpendicular Axis
 		if ((cNearOnAxProj1.getX() < t0OnAxProj.getX() && cNearOnAxProj1.getX() > t1OnAxProj.getX()) ||
 			(cNearOnAxProj1.getX() > t0OnAxProj.getX() && cNearOnAxProj1.getX() < t1OnAxProj.getX()) ||
-			(cNearOnAxProj2.getX() < t0OnAxProj.getX() && cNearOnAxProj2.getX() > t1OnAxProj.getX()) ||
-			(cNearOnAxProj2.getX() > t0OnAxProj.getX() && cNearOnAxProj2.getX() < t1OnAxProj.getX())){
+			(cFarOnAxProj.getX() < t0OnAxProj.getX() && cFarOnAxProj.getX() > t1OnAxProj.getX()) ||
+			(cFarOnAxProj.getX() > t0OnAxProj.getX() && cFarOnAxProj.getX() < t1OnAxProj.getX())){
 
 			Vector2 penCan;
-			Vector2 penCan1 = cNearOnAxProj1 - t0OnAxProj;
-			Vector2 penCan2 = cNearOnAxProj2 - t0OnAxProj;
-
-			penCan = std::abs(penCan1.getX()) < std::abs(penCan2.getX()) && std::abs(penCan1.getY()) < std::abs(penCan2.getY()) ? penCan1 : penCan2;
+	
+			//Calculate overlap depending on perpAxis-orientation. This is our penetration for the perpendicular Axis.
+			if (t0OnAxProj.getX() > cNearOnAxProj1.getX() && t0OnAxProj.getX() < cFarOnAxProj.getX() &&
+				t1OnAxProj.getX() > cNearOnAxProj1.getX() && t1OnAxProj.getX() > cFarOnAxProj.getX()){
+				penCan = cFarOnAxProj - t0OnAxProj;
+			} else if (t0OnAxProj.getX() < cNearOnAxProj1.getX() && t0OnAxProj.getX() > cFarOnAxProj.getX() &&
+					   t1OnAxProj.getX() > cNearOnAxProj1.getX() && t1OnAxProj.getX() > cFarOnAxProj.getX()){
+				penCan = cNearOnAxProj1 - t0OnAxProj;
+			} else if (t0OnAxProj.getX() > cNearOnAxProj1.getX() && t0OnAxProj.getX() < cFarOnAxProj.getX() &&
+					   t1OnAxProj.getX() < cNearOnAxProj1.getX() && t1OnAxProj.getX() < cFarOnAxProj.getX()){
+				penCan = cNearOnAxProj1 - t0OnAxProj;
+			} else if (t0OnAxProj.getX() < cNearOnAxProj1.getX() && t0OnAxProj.getX() > cFarOnAxProj.getX() &&
+					   t1OnAxProj.getX() < cNearOnAxProj1.getX() && t1OnAxProj.getX() < cFarOnAxProj.getX()){
+				penCan = cFarOnAxProj - t0OnAxProj;
+			}
 
 			penetration = std::abs(penetration.getX()) < std::abs(penCan.getX()) && std::abs(penetration.getY()) < std::abs(penCan.getY()) ? penetration : penCan;
 

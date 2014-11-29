@@ -9,9 +9,27 @@
 	</Obstacle>
 
 	<Obstacle>
+		<Vertex x="650" y="150"/>
+		<Vertex x="650" y="250"/>
+		<Vertex x="750" y="250"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="650" y="150"/>
+		<Vertex x="650" y="250"/>
 		<Vertex x="550" y="250"/>
-		<Vertex x="550" y="350"/>
+	</Obstacle>
+	
+	<Obstacle>
 		<Vertex x="650" y="350"/>
+		<Vertex x="650" y="250"/>
+		<Vertex x="750" y="250"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="650" y="350"/>
+		<Vertex x="650" y="250"/>
+		<Vertex x="550" y="250"/>
 	</Obstacle>
 	
 	<Obstacle>
