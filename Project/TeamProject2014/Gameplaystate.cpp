@@ -53,6 +53,11 @@ void Gameplaystate::update()
 		player->updatePosition(g_pTimer->getDeltaTime());
 		player->update();
 	}
+
+	std::string playerPos = "X: " + std::to_string(player->getPosition().getX()) + " Y:" + std::to_string(player->getPosition().getY()) + "\n";
+
+	client->setPackage((char*)playerPos.c_str(), strlen(playerPos.c_str()));
+	client->update();
 }
 
 void Gameplaystate::render()

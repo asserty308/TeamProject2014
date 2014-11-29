@@ -1,4 +1,5 @@
 #pragma once
+#include <string.h>
 #include "gamestate.h"
 #include "Client.h"
 #include "Player.hpp"
