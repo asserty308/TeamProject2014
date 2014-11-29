@@ -30,24 +30,27 @@ Server::Server()
 		return;
 	}
 
-	if (listen(listeningSocket, 10) == SOCKET_ERROR)
-	// up to 10 connections may wait at any one time to be accepted
+	if (listen(listeningSocket, MAX_PLAYERS) == SOCKET_ERROR)
+	// up to MAX_PLAYERS connections may wait at any one time to be accepted
 	{
 		std::cout << "Failed to listen for connecting clients." << std::endl;
 		return;
 	}
 
-	std::cout << "Waiting for client connection..." << std::endl;
-
-	// wait for a client
-	if ((clientSocket = accept(listeningSocket, NULL, NULL)) == INVALID_SOCKET)
+	for (int socket = 0; socket < MAX_PLAYERS; ++socket)
 	{
-		std::cout << "Failed to accept client connection." << std::endl;
-		return;
-	}
+		std::cout << "Waiting for client " << socket << " to connect..." << std::endl;
 
-	std::string playerName = readData();
-	std::cout << "Player \"" << playerName.c_str() << "\" connected." << std::endl;
+		// wait for a client
+		if ((clientSocket[socket] = accept(listeningSocket, NULL, NULL)) == INVALID_SOCKET)
+		{
+			std::cout << "Failed to accept client connection." << std::endl;
+			return;
+		}
+
+		std::string playerName = readData(socket);
+		std::cout << "Player \"" << playerName.c_str() << "\" (ID: " << socket << ") connected." << std::endl;
+	}
 
 	char anykey;
 	std::cin >> anykey;
@@ -56,21 +59,25 @@ Server::Server()
 Server::~Server()
 {
 	// close sockets
-	closesocket(clientSocket);
+
 	closesocket(listeningSocket);
+
+	for (int socket = 0; socket < MAX_PLAYERS; ++socket)
+		closesocket(clientSocket[socket]);
+	
 
 	// shutdown winsock
 	WSACleanup();
 }
 
-std::string Server::readData()
+std::string Server::readData(int socket)
 {
 	std::string data;
-	char buffer;
 	
 	while (true)
 	{
-		int bytesReceived = recv(clientSocket, &buffer, 1, 0);
+		char buffer;
+		int bytesReceived = recv(clientSocket[socket], &buffer, 1, 0);
 		
 		if (bytesReceived <= 0)
 			return "";
