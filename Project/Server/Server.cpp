@@ -41,6 +41,7 @@ Server::Server()
 	{
 		std::cout << "Waiting for client " << socket << " to connect..." << std::endl;
 
+
 		// wait for a client
 		if ((clientSocket[socket] = accept(listeningSocket, NULL, NULL)) == INVALID_SOCKET)
 		{
@@ -54,6 +55,7 @@ Server::Server()
 
 	char anykey;
 	std::cin >> anykey;
+
 }
 
 Server::~Server()
@@ -71,6 +73,8 @@ Server::~Server()
 }
 
 
+
+
 bool Server::update(){
 
 	std::string data = readData();
@@ -79,6 +83,7 @@ bool Server::update(){
 	//TODO: Check if connection is lost/cancelled and if so, return false
 	return true;
 }
+
 
 std::string Server::readData(int socket)
 {
