@@ -17,4 +17,6 @@ class Server
 	public:
 		Server();
 		~Server();
+
+		bool update();
 };

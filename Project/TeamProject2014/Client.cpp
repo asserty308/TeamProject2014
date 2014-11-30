@@ -51,6 +51,8 @@ Client::Client()
 		g_pLogfile->textout("Failed to send data to server...");
 		return;
 	}
+
+	ZeroMemory(package, 256);
 }
 
 Client::~Client()
@@ -60,4 +62,16 @@ Client::~Client()
 
 	// shutdown winsock
 	WSACleanup();
+}
+
+void Client::update(){
+	
+	if (send(serverSocket, package, strlen(package), 0) == SOCKET_ERROR){
+		g_pLogfile->fLog("Could not send clientdata in update!");
+	}
+
+}
+
+void Client::setPackage(char* data, int size){
+	memcpy(package, data, size);
 }

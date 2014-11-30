@@ -70,6 +70,16 @@ Server::~Server()
 	WSACleanup();
 }
 
+
+bool Server::update(){
+
+	std::string data = readData();
+	std::cout << (data + "\n").c_str();
+	
+	//TODO: Check if connection is lost/cancelled and if so, return false
+	return true;
+}
+
 std::string Server::readData(int socket)
 {
 	std::string data;
