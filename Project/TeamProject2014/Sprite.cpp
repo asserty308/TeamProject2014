@@ -10,11 +10,13 @@ Sprite::Sprite()
  position = center of sprite
  dimensions = width / height of sprite
 */
-Sprite::Sprite(const char* path, Vector2 position, Vector2 dimensions)
+Sprite::Sprite(char* path, Vector2 position, Vector2 dimensions)
 {
 	this->position = position;
 	this->dimensions = dimensions;
 	angle = 180.f;
+
+	spritePath = path;
 
 	loadFromFile(path);
 }
@@ -40,12 +42,12 @@ void Sprite::loadFromFile(const char* path)
 void Sprite::render()
 {
 	glEnable(GL_TEXTURE_2D);
+
 	glColor3f(1.f, 1.f, 1.f);
 	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glPushMatrix();
 
-	//TODO: only rotate when it should rotate
 	glTranslatef(position.getX(), position.getY(), 0.f);
 	glRotatef(angle, 0.f, 0.f, 1.f);
 	glTranslatef(-position.getX(), -position.getY(), 0.f);
@@ -64,6 +66,7 @@ void Sprite::render()
 		glTexCoord2f(0.f, 1.f);
 		glVertex2f(position.getX() - (dimensions.getX() / 2.f), position.getY() - (dimensions.getY() / 2.f));
 	glEnd();
+
 	glPopMatrix();
 
 	glDisable(GL_TEXTURE_2D);

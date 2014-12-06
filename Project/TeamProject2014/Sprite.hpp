@@ -12,10 +12,11 @@ class Sprite
 		Vector2 position, dimensions;
 		float angle;
 		unsigned char* img;
+		char* spritePath;
 
 	public:
 		Sprite();
-		Sprite(const char* path, Vector2 position, Vector2 dimensions);
+		Sprite(char* path, Vector2 position, Vector2 dimensions);
 		~Sprite();
 
 		void loadFromFile(const char* path);

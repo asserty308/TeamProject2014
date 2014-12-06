@@ -3,50 +3,37 @@
 
 Client::Client()
 {
-	// we want winsock version 1.1
-	WORD sockVersion = MAKEWORD(1, 1);
+	// we want winsock version 2.2
+	WORD sockVersion = MAKEWORD(2, 2);
 
 	// load up winsock
 	WSADATA wsaData;
-	WSAStartup(sockVersion, &wsaData);
-	
-	LPHOSTENT hostEntry;
-	in_addr host;
-	host.s_addr = inet_addr("127.0.0.1");
-	if (!(hostEntry = gethostbyaddr((const char *)&host, sizeof(struct in_addr), AF_INET)))
-	// get host by address
+	if (WSAStartup(sockVersion, &wsaData) != 0)
 	{
-		g_pLogfile->textout("Failed to get server by address...");
+		g_pLogfile->fLog("WSAStartup() error: %s", WSAGetLastError());
 		return;
 	}
 	
-	if ((serverSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
-	// create the socket
+	//create socket
+	clientSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (clientSocket == INVALID_SOCKET)
 	{
-		g_pLogfile->textout("Failed to create server socket...");
-		return;
-	}
-	
-	SOCKADDR_IN serverInfo;
-	serverInfo.sin_family = AF_INET;
-	serverInfo.sin_addr = *((LPIN_ADDR)*hostEntry->h_addr_list);
-	serverInfo.sin_port = htons(8888);
-	
-	if ((connect(serverSocket, (LPSOCKADDR)&serverInfo, sizeof(struct sockaddr))) == SOCKET_ERROR)
-	// connect to the server
-	{
-		g_pLogfile->textout("Failed to connect to server...");
+		g_pLogfile->fLog("socket() error: %s", WSAGetLastError());
 		return;
 	}
 
-	g_pLogfile->textout("Successfully connected to server...");
+	//setup address structure
+	memset((char*)&serverInfo, 0, sizeof(serverInfo));
+	serverInfo.sin_family = AF_INET;
+	serverInfo.sin_port = htons(8888);
+	serverInfo.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
 
 	// send our name to the server
-	char buffer[256];
-	ZeroMemory(buffer, 256);
+	char buffer[BUFLEN];
+	ZeroMemory(buffer, BUFLEN);
 	strcpy(buffer, "SuP3R-H4xX0R");
-	buffer[12] = '\n';
-	if (send(serverSocket, buffer, strlen(buffer), 0) == SOCKET_ERROR)
+	//buffer[12] = '\n';
+	if (sendto(clientSocket, buffer, strlen(buffer), 0, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR)
 	{
 		g_pLogfile->textout("Failed to send data to server...");
 		return;
@@ -56,7 +43,7 @@ Client::Client()
 Client::~Client()
 {
 	// close socket
-	closesocket(serverSocket);
+	closesocket(clientSocket);
 
 	// shutdown winsock
 	WSACleanup();
