@@ -65,13 +65,17 @@ Client::~Client()
 }
 
 void Client::update(){
-	
-	if (send(serverSocket, package, strlen(package), 0) == SOCKET_ERROR){
+
+	if (send(serverSocket, package, sizeof(float) * 2 + sizeof(char), 0) == SOCKET_ERROR){
 		g_pLogfile->fLog("Could not send clientdata in update!");
 	}
 
 	std::string dataFromServer = readData();
-	g_pLogfile->textout((dataFromServer + "\n").c_str());
+	float testPos[4];
+	memcpy(testPos, dataFromServer.data(), sizeof(float) * 2);
+	memcpy(testPos + 2, dataFromServer.data() + sizeof(float) * 2, sizeof(float)* 2);
+
+	g_pLogfile->fLog("Client1 - X:%f Y:%f\nClient2 - X:%f Y:%f\n", testPos[0], testPos[1], testPos[2], testPos[3]);
 
 }
 
@@ -100,5 +104,8 @@ std::string Client::readData()
 }
 
 void Client::setPackage(char* data, int size){
+	char c = '\n';
+	size_t s = sizeof(c);
 	memcpy(package, data, size);
+	memcpy(package + size, &c, s);
 }

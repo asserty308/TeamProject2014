@@ -54,9 +54,9 @@ void Gameplaystate::update()
 		player->update();
 	}
 
-	std::string playerPos = "X: " + std::to_string(player->getPosition().getX()) + " Y:" + std::to_string(player->getPosition().getY()) + "\n";
+	float playerPos[2] = { player->getPosition().getX(), player->getPosition().getY() };
 
-	client->setPackage((char*)playerPos.c_str(), strlen(playerPos.c_str()));
+	client->setPackage((char*)&playerPos, sizeof(float) * 2);
 	client->update();
 }
 

@@ -79,6 +79,9 @@ bool Server::update(){
 	std::string dataFrom1 = readData(1);
 	//std::cout << ("Player 2 Pos: " + dataFrom1 + "\n").c_str();
 
+	float testPos1[2];
+	memcpy(&testPos1, dataFrom0.data(), sizeof(float) * 2);
+
 	std::string endOfTransmission = "\n";
 
 	size_t packageSize = dataFrom0.size() + dataFrom1.size() + endOfTransmission.size();
@@ -110,7 +113,7 @@ std::string Server::readData(int socket)
 	std::string data;
 	
 	while (true)
-	{
+	{	
 		char buffer;
 		int bytesReceived = recv(clientSocket[socket], &buffer, 1, 0);
 		
