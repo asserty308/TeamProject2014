@@ -53,15 +53,11 @@ Server::Server()
 		std::cout << "Player \"" << playerName.c_str() << "\" (ID: " << socket << ") connected." << std::endl;
 	}
 
-	char anykey;
-	std::cin >> anykey;
-
 }
 
 Server::~Server()
 {
 	// close sockets
-
 	closesocket(listeningSocket);
 
 	for (int socket = 0; socket < MAX_PLAYERS; ++socket)
@@ -77,8 +73,32 @@ Server::~Server()
 
 bool Server::update(){
 
-	std::string data = readData();
-	std::cout << (data + "\n").c_str();
+	std::string dataFrom0 = readData(0);
+	//std::cout << ("Player 1 Pos: " + dataFrom0 + "\n").c_str();
+	
+	std::string dataFrom1 = readData(1);
+	//std::cout << ("Player 2 Pos: " + dataFrom1 + "\n").c_str();
+
+	std::string endOfTransmission = "\n";
+
+	size_t packageSize = dataFrom0.size() + dataFrom1.size() + endOfTransmission.size();
+
+	char* package = new char[packageSize];
+
+	memcpy(package, dataFrom0.data(), dataFrom0.size());
+	memcpy(package + dataFrom0.size(), dataFrom1.data(), dataFrom1.size());
+	memcpy(package + dataFrom0.size() + dataFrom1.size(), endOfTransmission.data(), endOfTransmission.size());
+
+	int sendBytes = 0;
+	for (int i = 0; i < MAX_PLAYERS; i++){
+		sendBytes = send(clientSocket[i], package, packageSize, 0);
+
+		if (sendBytes == SOCKET_ERROR){
+			printf("Could not send data from server to client %d Error: %d\n", i, WSAGetLastError());
+		}
+	}
+
+	delete package;
 	
 	//TODO: Check if connection is lost/cancelled and if so, return false
 	return true;

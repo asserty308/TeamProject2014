@@ -70,6 +70,33 @@ void Client::update(){
 		g_pLogfile->fLog("Could not send clientdata in update!");
 	}
 
+	std::string dataFromServer = readData();
+	g_pLogfile->textout((dataFromServer + "\n").c_str());
+
+}
+
+std::string Client::readData()
+{
+	std::string data;
+
+	while (true)
+	{
+		char buffer;
+		int bytesReceived = recv(serverSocket, &buffer, 1, 0);
+
+		if (bytesReceived == SOCKET_ERROR){
+			g_pLogfile->fLog("\nCould not receive Data from Server!\n");
+			return "";
+		}
+
+		if (bytesReceived <= 0)
+			return "";
+
+		if (buffer == '\n')
+			return data;
+		else
+			data.push_back(buffer);
+	}
 }
 
 void Client::setPackage(char* data, int size){
