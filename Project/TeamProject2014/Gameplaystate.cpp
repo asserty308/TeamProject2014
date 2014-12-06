@@ -3,6 +3,7 @@
 #include "Game.hpp"
 #include "MapParser.h"
 #include "SpriteRenderer.hpp"
+#include "FontRenderer.h"
 #include "AudioController.hpp"
 
 Gameplaystate::Gameplaystate()
@@ -67,6 +68,9 @@ void Gameplaystate::render()
 		player->render();
 
 	g_pSpriteRenderer->renderScene();
+
+	SDL_Color color = { 255, 127, 0 };
+	g_pFontRenderer->drawText("Hello World", color);
 }
 
 void Gameplaystate::quit()
