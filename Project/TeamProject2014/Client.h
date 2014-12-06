@@ -21,4 +21,8 @@ class Client
 		void update();
 
 		void setPackage(char* data, int size);
+
+		char* getReceivedPackage(){
+			return receivedPackage;
+		}
 };

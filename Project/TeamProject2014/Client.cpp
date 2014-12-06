@@ -71,12 +71,8 @@ void Client::update(){
 	}
 
 	std::string dataFromServer = readData();
-	float testPos[4];
-	memcpy(testPos, dataFromServer.data(), sizeof(float) * 2);
-	memcpy(testPos + 2, dataFromServer.data() + sizeof(float) * 2, sizeof(float)* 2);
-
-	g_pLogfile->fLog("Client1 - X:%f Y:%f\nClient2 - X:%f Y:%f\n", testPos[0], testPos[1], testPos[2], testPos[3]);
-
+	
+	memcpy(receivedPackage, dataFromServer.data(), sizeof(float) * 4);
 }
 
 std::string Client::readData()

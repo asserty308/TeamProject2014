@@ -3,6 +3,7 @@
 #include "gamestate.h"
 #include "Client.h"
 #include "Player.hpp"
+#include "Netplayer.h"
 #include "Pausestate.h"
 #include "Map.hpp"
 #include "DebugCollider.h"
@@ -24,6 +25,7 @@ public:
 private:
 	Client *client;
 	Player *player;
+	Netplayer *netplayer;
 	Map *map;
 
 	//TEMP
