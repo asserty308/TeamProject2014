@@ -3,6 +3,7 @@
 #include "Game.hpp"
 #include "MapParser.h"
 #include "SpriteRenderer.hpp"
+#include "FontRenderer.h"
 #include "AudioController.hpp"
 
 Gameplaystate::Gameplaystate()
@@ -63,23 +64,10 @@ void Gameplaystate::update()
 	client->setPackage((char*)&playerPos, sizeof(float) * 2);
 	client->update();
 
-	float allPlayerPositions[4];
-	memcpy(allPlayerPositions, client->getReceivedPackage(), sizeof(float) * 4);
-
-	Vector2 pos0(allPlayerPositions[0], allPlayerPositions[1]);
-	Vector2 pos1(allPlayerPositions[2], allPlayerPositions[3]);
-
-	Vector2 playerPosVec = Vector2(player->getPosition().getX(), player->getPosition().getY());
-
-	float errorMargin = 1.0f;
-	Vector2 netPlayerPos;
-
-	if (std::abs(playerPosVec.getX() - pos0.getX()) < std::abs(playerPosVec.getX() - pos1.getX()) && 
-		std::abs(playerPosVec.getY() - pos0.getY()) < std::abs(playerPosVec.getY() - pos1.getY())){
-		netPlayerPos = pos1;
-	} else{
-		netPlayerPos = pos0;
-	}
+	float allPlayerPositions[2];
+	memcpy(allPlayerPositions, client->getReceivedPackage(), sizeof(float) * 2);
+	
+	Vector2 netPlayerPos(allPlayerPositions[0], allPlayerPositions[1]);
 
 	netplayer->update(netPlayerPos);
 }
@@ -91,11 +79,14 @@ void Gameplaystate::render()
 	if (map)
 		map->render();
 
-	// temporary
 	if (player)
 		player->render();
 
 	g_pSpriteRenderer->renderScene();
+
+	//disabled until sprite rendering bug is fixed
+	SDL_Color color = { 255, 127, 0 };
+	g_pFontRenderer->drawText("Hello World", color);
 }
 
 void Gameplaystate::quit()

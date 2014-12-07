@@ -42,8 +42,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Libs\SDL2-2.0.3\include;$(SolutionDir)\Libs\SDL2_mixer-2.0.0\include;$(SolutionDir)\Libs\SOIL\include;$(SolutionDir)\Libs\TinyXML-2.0.2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\Libs\SDL2-2.0.3\lib\x86;$(SolutionDir)\Libs\SDL2_mixer-2.0.0\lib\x86;$(SolutionDir)\Libs\SOIL\lib;$(SolutionDir)\Libs\TinyXML-2.0.2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\Libs\SDL2-2.0.3\include;$(SolutionDir)\Libs\SDL2_ttf-2.0.12\include;$(SolutionDir)\Libs\SDL2_mixer-2.0.0\include;$(SolutionDir)\Libs\SOIL\include;$(SolutionDir)\Libs\TinyXML-2.0.2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libs\SDL2-2.0.3\lib\x86;$(SolutionDir)\Libs\SDL2_mixer-2.0.0\lib\x86;$(SolutionDir)\Libs\SDL2_ttf-2.0.12\lib\x86;$(SolutionDir)\Libs\SOIL\lib;$(SolutionDir)\Libs\TinyXML-2.0.2\lib;$(LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>false</LinkIncremental>
@@ -61,7 +61,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_mixer.lib;opengl32.lib;SOIL.lib;tinyxml2.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>SDL2.lib;SDL2main.lib;SDL2_ttf.lib;SDL2_mixer.lib;opengl32.lib;SOIL.lib;tinyxml2.lib;wsock32.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -89,6 +89,7 @@
     <ClCompile Include="CollisionObserver.cpp" />
     <ClCompile Include="Client.cpp" />
     <ClCompile Include="DebugCollider.cpp" />
+    <ClCompile Include="FontRenderer.cpp" />
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Gameplaystate.cpp" />
     <ClCompile Include="InputObserver.cpp" />
@@ -119,6 +120,7 @@
     <ClInclude Include="CollisionObserver.h" />
     <ClInclude Include="Client.h" />
     <ClInclude Include="DebugCollider.h" />
+    <ClInclude Include="FontRenderer.h" />
     <ClInclude Include="Game.hpp" />
     <ClInclude Include="Gameplaystate.h" />
     <ClInclude Include="Gamestate.h" />

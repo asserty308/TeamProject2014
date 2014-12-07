@@ -4,17 +4,29 @@
 
 Server::Server()
 {
-	// we want winsock version 1.1
-	WORD sockVersion = MAKEWORD(1, 1);
+	// we want winsock version 2.2
+	WORD sockVersion = MAKEWORD(2, 2);
 
 	// load up winsock
 	WSADATA wsaData;
-	WSAStartup(sockVersion, &wsaData);
+	if (WSAStartup(sockVersion, &wsaData) != 0)
+	{
+		std::cout << "WSAStartup() error: " << WSAGetLastError() << std::endl;
+		return;
+	}
 
 	// create the listening socket
-	if ((listeningSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP)) == INVALID_SOCKET)
+	if ((listeningSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
 	{
 		std::cout << "Failed to create listening socket." << std::endl;
+		return;
+	}
+
+	//create the responding socket
+	respondingSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (respondingSocket == INVALID_SOCKET)
+	{
+		std::cout << "Failed to create responding socket." << std::endl;
 		return;
 	}
 
@@ -24,20 +36,22 @@ Server::Server()
 	serverInfo.sin_port = htons(8888);
 
 	// bind the socket to our local server address
-	if (bind(listeningSocket, (LPSOCKADDR)&serverInfo, sizeof(sockaddr)) == SOCKET_ERROR)
+	if (bind(listeningSocket, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR)
 	{
 		std::cout << "Failed to bind listening socket to local server address." << std::endl;
 		return;
 	}
 
-	if (listen(listeningSocket, MAX_PLAYERS) == SOCKET_ERROR)
+	returnPackage = new char[BUFLEN * MAX_PLAYERS];
+
+	/*if (listen(listeningSocket, MAX_PLAYERS) == SOCKET_ERROR)
 	// up to MAX_PLAYERS connections may wait at any one time to be accepted
 	{
 		std::cout << "Failed to listen for connecting clients." << std::endl;
 		return;
-	}
+	}*/
 
-	for (int socket = 0; socket < MAX_PLAYERS; ++socket)
+	/*for (int socket = 0; socket < MAX_PLAYERS; ++socket)
 	{
 		std::cout << "Waiting for client " << socket << " to connect..." << std::endl;
 
@@ -51,7 +65,9 @@ Server::Server()
 
 		std::string playerName = readData(socket);
 		std::cout << "Player \"" << playerName.c_str() << "\" (ID: " << socket << ") connected." << std::endl;
-	}
+	}*/
+
+	readData();
 
 }
 
@@ -60,17 +76,17 @@ Server::~Server()
 	// close sockets
 	closesocket(listeningSocket);
 
-	for (int socket = 0; socket < MAX_PLAYERS; ++socket)
-		closesocket(clientSocket[socket]);
+	delete returnPackage;
+
+	/*for (int socket = 0; socket < MAX_PLAYERS; ++socket)
+		closesocket(clientSocket[socket]);*/
 	
 
 	// shutdown winsock
 	WSACleanup();
 }
 
-
-
-
+/*
 bool Server::update(){
 
 	std::string dataFrom0 = readData(0);
@@ -105,24 +121,81 @@ bool Server::update(){
 	
 	//TODO: Check if connection is lost/cancelled and if so, return false
 	return true;
-}
+}*/
 
-
-std::string Server::readData(int socket)
+void Server::readData()
 {
 	std::string data;
+	sockaddr_in clientInfo;
+
+	int clientLen = sizeof(clientInfo);
 	
 	while (true)
-	{	
-		char buffer;
-		int bytesReceived = recv(clientSocket[socket], &buffer, 1, 0);
+	{
+		std::cout << "\nWaiting for data..." << std::endl;
+		fflush(stdout);
+
+		char buffer[BUFLEN];
+
+		//clear the buffer
+		memset(buffer, '\0', BUFLEN);
+
+		int bytesReceived = recvfrom(listeningSocket, buffer, BUFLEN, 0, (struct sockaddr*)&clientInfo, &clientLen);
 		
-		if (bytesReceived <= 0)
-			return "";
+		if (bytesReceived == SOCKET_ERROR)
+		{
+			std::cout << "recvfrom() error: " << WSAGetLastError() << std::endl;
+		}
 		
-		if (buffer == '\n')
-			return data;
-		else
-			data.push_back(buffer);
+		//print client's details and the data received ip:port
+		std::cout << "Received packet from " << inet_ntoa(clientInfo.sin_addr) << ":" << ntohs(clientInfo.sin_port) << std::endl;
+
+		//TODO: switch from port to ip-adress when migrating from localhost to real connections!
+		unsigned int idCriteria = clientInfo.sin_port;
+		
+		//Check if package-sender is already in our "database"
+		std::map<unsigned int, unsigned int>::iterator it;
+		it = playerID.find(clientInfo.sin_port);
+		
+		if (it == playerID.end()){
+			playerID.insert(std::pair<unsigned int, unsigned int>(idCriteria, playerID.size()));
+			playerClientInfo.insert(std::pair<unsigned int, sockaddr_in>(playerID.at(clientInfo.sin_port), clientInfo));
+
+			std::string data(buffer);
+			std::cout << "Player \"" << data.c_str() << "\" (ID: " << playerID[idCriteria] << ") connected." << std::endl;
+			
+		}
+
+		
+		tiePackage(playerID.at(idCriteria), buffer);
+
+		for (int i = 0; i < playerClientInfo.size(); i++){
+			distributePackage(i, playerClientInfo.at(i));
+		}
+		
 	}
+}
+
+void Server::tiePackage(unsigned int id, char* data){
+	char* dest = returnPackage + (id * BUFLEN);
+	memcpy(dest, data, BUFLEN);
+}
+
+void Server::distributePackage(unsigned int receiverID, sockaddr_in& clientInfo){
+	//Only send information of the other players to a client, not its own!
+	size_t bufferSize = (MAX_PLAYERS - 1) * BUFLEN;
+	char* buffer = new char[bufferSize];
+	int bufferOffset = 0;
+	for (int i = 0; i < MAX_PLAYERS; i++){
+		if (i != receiverID){
+			memcpy(buffer + bufferOffset, returnPackage + (i * BUFLEN), BUFLEN);
+			bufferOffset++;
+		}
+	}
+
+	if (sendto(respondingSocket, buffer, bufferSize, 0, (struct sockaddr*) &clientInfo, sizeof(clientInfo)) == SOCKET_ERROR){
+		std::cout << "Could not send data to client. Error: " << WSAGetLastError() << std::endl;
+	}
+	
+	delete buffer;
 }

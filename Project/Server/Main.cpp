@@ -8,9 +8,5 @@ void main()
 
 	Server *server = new Server();
 
-	while (server->update()){
-		
-	}
-	
 	delete server;
 }
