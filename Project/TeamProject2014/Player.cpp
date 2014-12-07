@@ -23,7 +23,7 @@ Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position
 	boundingBox = new CircleBoundingBox(position, 25.0f);
 
 	//create sprite
-	sprite = new Sprite("fighter4.png", position, Vector2(200.f, 150.f));
+	sprite = new Sprite("fighter4_2.png", position, Vector2(75.f, 56.25f));
 
 	rocket = nullptr;
 

@@ -69,8 +69,8 @@ void Gameplaystate::render()
 	g_pSpriteRenderer->renderScene();
 
 	//disabled until sprite rendering bug is fixed
-	/*SDL_Color color = { 255, 127, 0 };
-	g_pFontRenderer->drawText("Hello World", color);*/
+	SDL_Color color = { 255, 127, 0 };
+	g_pFontRenderer->drawText("Hello World", color);
 }
 
 void Gameplaystate::quit()

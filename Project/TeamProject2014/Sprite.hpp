@@ -8,18 +8,20 @@
 class Sprite
 {
 	private:
-		GLuint textureID;
+		//GLuint textureID;
 		Vector2 position, dimensions;
 		float angle;
 		unsigned char* img;
 		char* spritePath;
+
+		int imgWidth, imgHeight;
 
 	public:
 		Sprite();
 		Sprite(char* path, Vector2 position, Vector2 dimensions);
 		~Sprite();
 
-		void loadFromFile(const char* path);
+		void loadFromFile();
 		void render();
 
 		void addAngle(float r);
