@@ -16,6 +16,8 @@ FontRenderer::FontRenderer()
 
 	if (!font)
 		g_pLogfile->fLog("Failed to load font '%s': %s", fontFilename, TTF_GetError());
+
+	glGenTextures(1, &textureID);
 }
 
 FontRenderer::~FontRenderer()
@@ -55,12 +57,14 @@ void FontRenderer::drawText(std::string text, SDL_Color color)
 	}
 
 	SDL_BlitSurface(sText, &area, temp, NULL);
+	
+	glEnable(GL_TEXTURE_2D);
+
+	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, sText->w, sText->h, 0, GL_RGBA, GL_UNSIGNED_BYTE, temp->pixels);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-
-	glEnable(GL_TEXTURE_2D);
 
 	glBegin(GL_QUADS);
 		glTexCoord2d(0, 0); glVertex3f(0, 0, 0);

@@ -24,6 +24,7 @@ Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position
 
 	//create sprite
 	sprite = new Sprite("fighter4_2.png", position, Vector2(75.f, 56.25f));
+	//sprite = new Sprite("fighter4.png", position, Vector2(200.f, 150.f));
 
 	rocket = nullptr;
 

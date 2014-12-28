@@ -16,51 +16,33 @@ Sprite::Sprite(char* path, Vector2 position, Vector2 dimensions)
 	this->dimensions = dimensions;
 	angle = 180.f;
 
-	spritePath = path;
-
-	imgWidth = (int)dimensions.getX();
-	imgHeight = (int)dimensions.getY();
-
-	loadFromFile();
+	loadFromFile(path);
 }
 
 
 Sprite::~Sprite()
 {
-	SOIL_free_image_data(img);
 }
 
-void Sprite::loadFromFile()
+void Sprite::loadFromFile(const char* path)
 {
-	//textureID = SOIL_load_OGL_texture(path, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
-	img = SOIL_load_image(spritePath, &imgWidth, &imgHeight, 0, SOIL_LOAD_RGB);
+	textureID = SOIL_load_OGL_texture(path, SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
 
-	/*if (textureID == 0)
-		g_pLogfile->fLog("SOIL loading error: %s", SOIL_last_result());*/
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	if (img == NULL)
-	{
+	if (textureID == 0)
 		g_pLogfile->fLog("SOIL loading error: %s", SOIL_last_result());
-		exit(EXIT_FAILURE);
-	}
-
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
 	g_pSpriteRenderer->addSprite(this);
 }
 
 void Sprite::render()
 {
-	glColor3f(1.f, 1.f, 1.f);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, imgWidth, imgHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, img);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
 	glEnable(GL_TEXTURE_2D);
 
-	/*glColor3f(1.f, 1.f, 1.f);
-	glBindTexture(GL_TEXTURE_2D, textureID);*/
+	glColor3f(1.f, 1.f, 1.f);
+	glBindTexture(GL_TEXTURE_2D, textureID);
 
 	glPushMatrix();
 

@@ -44,7 +44,6 @@ void Gameplaystate::init()
 
 	//initialize and play music
 	//g_pAudioController->playMusic("Audio/Music/space2a.wav", true);
-
 }
 
 void Gameplaystate::update()
@@ -84,7 +83,6 @@ void Gameplaystate::render()
 
 	g_pSpriteRenderer->renderScene();
 
-	//disabled until sprite rendering bug is fixed
 	SDL_Color color = { 255, 127, 0 };
 	g_pFontRenderer->drawText("Hello World", color);
 }
@@ -96,6 +94,7 @@ void Gameplaystate::quit()
 
 void Gameplaystate::inputReceived(SDL_KeyboardEvent *key)
 {
+	//enter pause state
 	if (key->keysym.sym == SDLK_p && key->type == SDL_KEYUP)
 	{
 		g_pGame->setState(g_pGame->getPauseState());

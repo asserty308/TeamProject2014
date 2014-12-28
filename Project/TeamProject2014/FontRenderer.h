@@ -11,6 +11,7 @@ class FontRenderer : public Singleton<FontRenderer>
 {
 	private:
 		TTF_Font *font;
+		GLuint textureID;
 
 	public:
 		FontRenderer();

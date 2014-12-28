@@ -57,7 +57,8 @@ void Client::update(){
 		g_pLogfile->fLog("Could not send clientdata in update! Error: %d", WSAGetLastError());
 	}
 
-	int bytesReceived = recvfrom(clientSocket, receivedPackage, BUFLEN, 0, 0, 0);
+	//commented out because it caused the program to crash after a while
+	//int bytesReceived = recvfrom(clientSocket, receivedPackage, BUFLEN, 0, 0, 0);
 	
 	//memcpy(receivedPackage, dataFromServer.data(), sizeof(float) * 4);
 }
