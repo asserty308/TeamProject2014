@@ -1,12 +1,15 @@
 #pragma once
 
-#include "Transform.hpp"
+#include "TransformCollidable.h"
 #include "InputObserver.h"
 #include "Timer.h"
+#include "Player.hpp"
 
 #include <SDL_opengl.h>
 
-class Rocket : public Transform, public Inputlistener
+class Player;
+
+class Rocket : public TransformCollidable, public Inputlistener
 {
 	private:
 		static const float SPEED;
@@ -16,11 +19,14 @@ class Rocket : public Transform, public Inputlistener
 		bool controllable;
 		bool isLeftKeyDown, isRightKeyDown;
 
+		Player *owner;
+
 	public:
-		Rocket(Vector2 position, Vector2 forward);
+		Rocket(Player* owner, Vector2 position, Vector2 forward);
 		~Rocket();
 
 		virtual void inputReceived(SDL_KeyboardEvent *key);
+		virtual void CollisionDetected(TransformCollidable *other, Vector2 penetration);
 
 		bool getControllable();
 

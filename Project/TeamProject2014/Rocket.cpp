@@ -1,24 +1,34 @@
 #include "Logger.hpp"
 #include "Rocket.hpp"
 #include "AudioController.hpp"
+#include "CollisionObserver.h"
 
 const float Rocket::SPEED = 400.f;
 //const float Rocket::TURN_SPEED = 60.f;
 //const float Rocket::TURN_ACCELERATION = 50.f;
 
-Rocket::Rocket(Vector2 position, Vector2 forward) : Transform(position, forward, Vector2(0.f, 0.f))
+Rocket::Rocket(Player* owner, Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(0.f, 0.f))
 {
 	g_pInputObserver->addListener(this);
+	g_pCollisionObserver->addListener(this);
+
+	boundingBox = new CircleBoundingBox(position, 10.0f);
 
 	controllable = true;
 	isLeftKeyDown = isRightKeyDown = false;
+
+	this->owner = owner;
 
 	g_pAudioController->addSound("Audio/Sounds/sci-fi-rocket-launch-01.wav");
 }
 
 Rocket::~Rocket()
 {
+
+	delete boundingBox;
+
 	g_pInputObserver->removeListener(this);
+	g_pCollisionObserver->removeListener(this);
 
 	g_pAudioController->removeSound("Audio/Sounds/sci-fi-rocket-launch-01.wav");
 }
@@ -50,6 +60,14 @@ void Rocket::inputReceived(SDL_KeyboardEvent *key)
 		else if (key->keysym.sym == SDLK_d)
 			isRightKeyDown = false;
 	}
+}
+
+void Rocket::CollisionDetected(TransformCollidable *other, Vector2 penetration){
+	if (other == owner){
+		return;
+	}
+
+ 	owner->rocketDestroyed();
 }
 
 bool Rocket::getControllable()

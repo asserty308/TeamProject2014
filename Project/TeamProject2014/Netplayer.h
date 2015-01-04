@@ -14,6 +14,6 @@ public:
 	void render();
 
 private:
-	//Sprite *sprite;
+	Sprite *sprite;
 
 };

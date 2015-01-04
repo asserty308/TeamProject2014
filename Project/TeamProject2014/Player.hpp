@@ -4,6 +4,8 @@
 #include "Sprite.hpp"
 #include "TransformCollidable.h"
 
+class Rocket;
+
 class Player : public TransformCollidable, public Inputlistener
 {
 	private:
@@ -28,6 +30,7 @@ class Player : public TransformCollidable, public Inputlistener
 		void render();
 
 		void handleRocket();
+		void rocketDestroyed();
 
 		
 };

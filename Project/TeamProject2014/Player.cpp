@@ -34,6 +34,7 @@ Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position
 Player::~Player()
 {
 	//g_pAudioController->removeSound("Audio/Sounds/spaceship-ambience.wav");
+	g_pCollisionObserver->removeListener(this);
 
 	delete sprite;
 	delete boundingBox;
@@ -55,6 +56,10 @@ void Player::inputReceived(SDL_KeyboardEvent *key)
 }
 
 void Player::CollisionDetected(TransformCollidable *other, Vector2 penetration){
+	if (other == rocket){
+		return;
+	}
+
 	velocity += penetration * -1 * 15.0f;
 }
 
@@ -144,7 +149,7 @@ void Player::handleRocket()
 {
 	if (isFirePressed && rocket == nullptr)
 	{
-		rocket = new Rocket(getPosition(), getForward());
+		rocket = new Rocket(this, getPosition(), getForward());
 		//rocket->setVelocity(getVelocity() * 2.f);
 	}
 	else if (rocket != nullptr)
@@ -158,5 +163,12 @@ void Player::handleRocket()
 			delete rocket;
 			rocket = nullptr;
 		}
+	}
+}
+
+void Player::rocketDestroyed(){
+	if (rocket){
+		delete rocket;
+		rocket = nullptr;
 	}
 }
