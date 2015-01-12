@@ -162,15 +162,23 @@ void Server::readData()
 			playerClientInfo.insert(std::pair<unsigned int, sockaddr_in>(playerID.at(clientInfo.sin_port), clientInfo));
 
 			std::string data(buffer);
-			std::cout << "Player \"" << data.c_str() << "\" (ID: " << playerID[idCriteria] << ") connected." << std::endl;
-			
+			std::cout << "Player \"" << data.c_str() << "\" (ID: " << playerID[idCriteria] << ") connected." << std::endl;	
+		}
+
+		//Here we memorize from whom we already have received a package
+		std::vector<unsigned int>::iterator it2 = std::find(playerIDsFromPackagesReceived.begin(), playerIDsFromPackagesReceived.end(), playerID.at(clientInfo.sin_port));
+		if (it2 == playerIDsFromPackagesReceived.end()){
+			playerIDsFromPackagesReceived.push_back(playerID.at(clientInfo.sin_port));
 		}
 
 		
 		tiePackage(playerID.at(idCriteria), buffer);
 
-		for (int i = 0; i < playerClientInfo.size(); i++){
-			distributePackage(i, playerClientInfo.at(i));
+		if (playerIDsFromPackagesReceived.size() == MAX_PLAYERS){
+			for (int i = 0; i < playerClientInfo.size(); i++){
+				distributePackage(i, playerClientInfo.at(i));
+			}
+			playerIDsFromPackagesReceived.clear();
 		}
 		
 	}

@@ -1,6 +1,7 @@
 #pragma once
 
 #include <map>
+#include <vector>
 #include <winsock2.h>
 
 // check out http://johnnie.jerrata.com/winsocktutorial/
@@ -18,7 +19,10 @@ class Server
 
 		//<port / ip-Address, PlayerID>
 		std::map<unsigned int, unsigned int> playerID;
+		//<playerID, adress>
 		std::map<unsigned int, sockaddr_in> playerClientInfo;
+
+		std::vector<unsigned int> playerIDsFromPackagesReceived;
 
 		char* returnPackage;
 
