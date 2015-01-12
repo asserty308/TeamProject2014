@@ -58,19 +58,38 @@ void Gameplaystate::update()
 		player->update();
 	}
 
-	float playerData[5] = { player->getPosition().getX(), player->getPosition().getY(), player->getForward().getX(), player->getForward().getY(), player->getSprite()->getAngle() };
+	
+	Vector2 rocketPos, rocketForward;
 
-	client->setPackage((char*)&playerData, sizeof(float) * 5);
+	if (player->rocketAlive()){
+		rocketPos = player->getRocket()->getPosition();
+		rocketForward = player->getRocket()->getForward();
+	} else{
+		rocketPos = Vector2(-100.0f, -100.0f);
+		rocketForward = Vector2(0.0f, 0.0f);
+	}
+	
+	float playerData[9] = { player->getPosition().getX(), player->getPosition().getY(), 
+							player->getForward().getX(), player->getForward().getY(), 
+							player->getSprite()->getAngle(),
+							rocketPos.getX(), rocketPos.getY(),
+							rocketForward.getX(), rocketForward.getY()};
+
+	client->setPackage((char*)&playerData, sizeof(float) * 9);
 	client->update();
 
-	float allPlayerData[5];
-	memcpy(allPlayerData, client->getReceivedPackage(), sizeof(float) * 5);
+	float allPlayerData[9];
+	memcpy(allPlayerData, client->getReceivedPackage(), sizeof(float) * 9);
 
 	Vector2 netPlayerPos(allPlayerData[0], allPlayerData[1]);
 	Vector2 netPlayerForward(allPlayerData[2], allPlayerData[3]);
 	float netPlayerAngle = allPlayerData[4];
+	Vector2 netPlayerRocketPos(allPlayerData[5], allPlayerData[6]);
+	Vector2 netPlayerRocketForward(allPlayerData[7], allPlayerData[8]);
 
-	netplayer->update(netPlayerPos, netPlayerForward, netPlayerAngle);
+	float x = netPlayerRocketPos.getX();
+
+	netplayer->update(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward);
 }
 
 void Gameplaystate::render()
@@ -82,6 +101,10 @@ void Gameplaystate::render()
 
 	if (player)
 		player->render();
+
+	if (netplayer){
+		netplayer->render();
+	}
 
 	g_pSpriteRenderer->renderScene();
 

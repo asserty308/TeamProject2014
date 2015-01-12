@@ -28,6 +28,8 @@ Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position
 
 	rocket = nullptr;
 
+	isDead = false;
+
 	//g_pAudioController->addSound("Audio/Sounds/spaceship-ambience.wav");
 }
 
@@ -58,6 +60,10 @@ void Player::inputReceived(SDL_KeyboardEvent *key)
 void Player::CollisionDetected(TransformCollidable *other, Vector2 penetration){
 	if (other == rocket){
 		return;
+	}
+
+	if (std::strcmp(other->getTag().c_str(), "netRocket") == 0){
+		die();
 	}
 
 	velocity += penetration * -1 * 15.0f;
@@ -94,26 +100,26 @@ void Player::update()
 		velocity = velocity * TOP_SPEED;
 	}
 
-	if (getPosition().getX() < 0.f)
-	{
-		position.setX(0.f);
-		velocity.setX(-velocity.getX() * .25f);
-	}
-	else if (getPosition().getX() > g_pGame->getWindowWidth())
-	{
-		position.setX(g_pGame->getWindowWidth());
-		velocity.setX(-velocity.getX() * .25f);
-	}
+	if (!isDead){
+		if (getPosition().getX() < 0.f)
+		{
+			position.setX(0.f);
+			velocity.setX(-velocity.getX() * .25f);
+		} else if (getPosition().getX() > g_pGame->getWindowWidth())
+		{
+			position.setX(g_pGame->getWindowWidth());
+			velocity.setX(-velocity.getX() * .25f);
+		}
 
-	if (getPosition().getY() < 0.f)
-	{
-		position.setY(0.f);
-		velocity.setY(-velocity.getY() *.25f);
-	}
-	else if (getPosition().getY() > g_pGame->getWindowHeight())
-	{
-		position.setY(g_pGame->getWindowHeight());
-		velocity.setY(-velocity.getY() *.25f);
+		if (getPosition().getY() < 0.f)
+		{
+			position.setY(0.f);
+			velocity.setY(-velocity.getY() *.25f);
+		} else if (getPosition().getY() > g_pGame->getWindowHeight())
+		{
+			position.setY(g_pGame->getWindowHeight());
+			velocity.setY(-velocity.getY() *.25f);
+		}
 	}
 
 	//set sprite position to player position
@@ -171,6 +177,26 @@ void Player::rocketDestroyed(){
 		delete rocket;
 		rocket = nullptr;
 	}
+}
+
+bool Player::rocketAlive(){
+	if (rocket){
+		return true;
+	} else{
+		return false;
+	}
+}
+
+void Player::die(){
+	isDead = true;
+	setPosition(Vector2(-500.0, -500.0));
+	g_pInputObserver->removeListener(this);
+
+	//TODO: Do something more.....sophisticed? 
+}
+
+Rocket* Player::getRocket(){
+	return rocket;
 }
 
 Sprite* Player::getSprite(){

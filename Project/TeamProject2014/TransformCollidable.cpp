@@ -5,6 +5,12 @@ TransformCollidable::TransformCollidable(Vector2 position, Vector2 forward, Vect
 {
 }
 
+void TransformCollidable::setPosition(Vector2 position){
+	Transform::setPosition(position);
+
+	boundingBox->setPosition(position);
+}
+
 
 BoundingBox* TransformCollidable::getBoundingBox(){
 	return boundingBox;

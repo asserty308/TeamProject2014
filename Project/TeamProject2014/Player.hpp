@@ -14,7 +14,11 @@ class Player : public TransformCollidable, public Inputlistener
 		static const float TURN_SPEED;
 
 		bool isThrustKeyDown, isLeftKeyDown, isRightKeyDown, isFirePressed;
+		bool isDead;
+
 		float accelFactor;
+
+		void die();
 
 		Rocket *rocket;
 		Sprite *sprite;
@@ -31,6 +35,9 @@ class Player : public TransformCollidable, public Inputlistener
 
 		void handleRocket();
 		void rocketDestroyed();
+		bool rocketAlive();
+
+		Rocket* getRocket();
 
 		Sprite* getSprite();
 

@@ -174,6 +174,7 @@ void Server::readData()
 		
 		tiePackage(playerID.at(idCriteria), buffer);
 
+		//Unless we don't have received a package from every player, we won't send anything to the clients
 		if (playerIDsFromPackagesReceived.size() == MAX_PLAYERS){
 			for (int i = 0; i < playerClientInfo.size(); i++){
 				distributePackage(i, playerClientInfo.at(i));

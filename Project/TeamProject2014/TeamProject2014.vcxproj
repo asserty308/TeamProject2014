@@ -99,6 +99,7 @@
     <ClCompile Include="MapParser.cpp" />
     <ClCompile Include="MusicPlayer.cpp" />
     <ClCompile Include="Netplayer.cpp" />
+    <ClCompile Include="NetRocket.cpp" />
     <ClCompile Include="Obstacle.cpp" />
     <ClCompile Include="Pausestate.cpp" />
     <ClCompile Include="Player.cpp" />
@@ -131,6 +132,7 @@
     <ClInclude Include="MapParser.h" />
     <ClInclude Include="MusicPlayer.hpp" />
     <ClInclude Include="Netplayer.h" />
+    <ClInclude Include="NetRocket.h" />
     <ClInclude Include="Obstacle.hpp" />
     <ClInclude Include="Pausestate.h" />
     <ClInclude Include="Player.hpp" />
