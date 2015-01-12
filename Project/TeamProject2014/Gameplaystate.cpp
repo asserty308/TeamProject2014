@@ -58,17 +58,19 @@ void Gameplaystate::update()
 		player->update();
 	}
 
-	float playerPos[2] = { player->getPosition().getX(), player->getPosition().getY() };
+	float playerData[5] = { player->getPosition().getX(), player->getPosition().getY(), player->getForward().getX(), player->getForward().getY(), player->getSprite()->getAngle() };
 
-	client->setPackage((char*)&playerPos, sizeof(float) * 2);
+	client->setPackage((char*)&playerData, sizeof(float) * 5);
 	client->update();
 
-	float allPlayerPositions[2];
-	memcpy(allPlayerPositions, client->getReceivedPackage(), sizeof(float) * 2);
-	
-	Vector2 netPlayerPos(allPlayerPositions[0], allPlayerPositions[1]);
+	float allPlayerData[5];
+	memcpy(allPlayerData, client->getReceivedPackage(), sizeof(float) * 5);
 
-	netplayer->update(netPlayerPos);
+	Vector2 netPlayerPos(allPlayerData[0], allPlayerData[1]);
+	Vector2 netPlayerForward(allPlayerData[2], allPlayerData[3]);
+	float netPlayerAngle = allPlayerData[4];
+
+	netplayer->update(netPlayerPos, netPlayerForward, netPlayerAngle);
 }
 
 void Gameplaystate::render()

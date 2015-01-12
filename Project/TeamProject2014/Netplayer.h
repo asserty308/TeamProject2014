@@ -10,7 +10,7 @@ public:
 	
 	~Netplayer();
 
-	void update(Vector2 pos);
+	void update(Vector2 pos, Vector2 forward, float angle);
 	void render();
 
 private:

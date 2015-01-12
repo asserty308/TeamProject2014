@@ -172,3 +172,7 @@ void Player::rocketDestroyed(){
 		rocket = nullptr;
 	}
 }
+
+Sprite* Player::getSprite(){
+	return this->sprite;
+}

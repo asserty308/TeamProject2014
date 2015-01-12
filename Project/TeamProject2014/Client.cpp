@@ -53,12 +53,12 @@ Client::~Client()
 
 void Client::update(){
 
-	if (sendto(clientSocket, package, sizeof(float) * 2, 0, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR){
+	if (sendto(clientSocket, package, sizeof(float) * 5, 0, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR){
 		g_pLogfile->fLog("Could not send clientdata in update! Error: %d", WSAGetLastError());
 	}
 
 	//commented out because it caused the program to crash after a while
-	//int bytesReceived = recvfrom(clientSocket, receivedPackage, BUFLEN, 0, 0, 0);
+	int bytesReceived = recvfrom(clientSocket, receivedPackage, BUFLEN, 0, 0, 0);
 	
 	//memcpy(receivedPackage, dataFromServer.data(), sizeof(float) * 4);
 }

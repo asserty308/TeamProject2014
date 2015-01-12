@@ -32,5 +32,7 @@ class Player : public TransformCollidable, public Inputlistener
 		void handleRocket();
 		void rocketDestroyed();
 
+		Sprite* getSprite();
+
 		
 };

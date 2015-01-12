@@ -12,9 +12,12 @@ Netplayer::~Netplayer(){
 	delete sprite;
 }
 
-void Netplayer::update(Vector2 pos){
+void Netplayer::update(Vector2 pos, Vector2 forward, float angle){
 	this->setPosition(pos);
 	sprite->setPosition(pos);
+
+	this->setForward(forward);
+	sprite->setAngle(angle);
 }
 
 void Netplayer::render(){

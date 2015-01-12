@@ -21,6 +21,9 @@ class Sprite
 		void render();
 
 		void addAngle(float r);
+		float getAngle();
+		void setAngle(float a);
+
 		void setPosition(Vector2 newPos);
 		Vector2 getPosition();
 };

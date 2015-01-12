@@ -75,6 +75,14 @@ void Sprite::addAngle(float r)
 	angle += r;
 }
 
+float Sprite::getAngle(){
+	return angle;
+}
+
+void Sprite::setAngle(float a){
+	this->angle = a;
+}
+
 void Sprite::setPosition(Vector2 newPos)
 {
 	position = newPos;
