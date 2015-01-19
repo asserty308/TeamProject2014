@@ -22,11 +22,23 @@ Client::Client()
 		return;
 	}
 
+	SOCKADDR_IN clientInfo;
+	clientInfo.sin_family = AF_INET;
+	clientInfo.sin_addr.s_addr = INADDR_ANY;
+	clientInfo.sin_port = htons(53546);
+
+	// bind the socket to our local server address
+	if (bind(clientSocket, (struct sockaddr*)&clientInfo, sizeof(clientInfo)) == SOCKET_ERROR)
+	{
+		std::cout << "Failed to bind listening socket to local server address." << std::endl;
+		return;
+	}
+
 	//setup address structure
 	memset((char*)&serverInfo, 0, sizeof(serverInfo));
 	serverInfo.sin_family = AF_INET;
 	serverInfo.sin_port = htons(8888);
-	serverInfo.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+	serverInfo.sin_addr.S_un.S_addr = inet_addr("143.93.55.187");
 
 	// send our name to the server
 	char buffer[BUFLEN];

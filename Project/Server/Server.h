@@ -15,7 +15,6 @@ class Server
 {
 	private:
 		SOCKET listeningSocket;
-		SOCKET respondingSocket;
 
 		//<port / ip-Address, PlayerID>
 		std::map<unsigned int, unsigned int> playerID;
