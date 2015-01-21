@@ -62,6 +62,11 @@ void Player::CollisionDetected(TransformCollidable *other, Vector2 penetration){
 		return;
 	}
 
+	//TODO: Change playerspawns and react to playcollisions, don't just ignore them.
+	if (std::strcmp(other->getTag().c_str(), "netPlayer") == 0){
+		return;
+	}
+
 	if (std::strcmp(other->getTag().c_str(), "netRocket") == 0){
 		die();
 	}
@@ -156,6 +161,7 @@ void Player::handleRocket()
 	if (isFirePressed && rocket == nullptr)
 	{
 		rocket = new Rocket(this, getPosition(), getForward());
+		rocket->setTag("rocket");
 		//rocket->setVelocity(getVelocity() * 2.f);
 	}
 	else if (rocket != nullptr)

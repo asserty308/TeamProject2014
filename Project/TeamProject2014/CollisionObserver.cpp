@@ -36,6 +36,7 @@ void CollisionObserver::checkForCollision(TransformCollidable *lhs, TransformCol
 			if (checkCircleVsCircle(b1, b2, &p)){
 				lhs->CollisionDetected(rhs, p * -1);
 				rhs->CollisionDetected(lhs, p);
+				return;
 			}
 		}
 	}
@@ -52,11 +53,13 @@ void CollisionObserver::checkForCollision(TransformCollidable *lhs, TransformCol
 			if (checkCircleVsPolygon(b1, b2, &p)){
 				lhs->CollisionDetected(rhs, p * -1);
 				rhs->CollisionDetected(lhs, p);
+				return;
 			}
 		}else if (b3 && b4){
 			if (checkCircleVsPolygon(b4, b3, &p)){
 				lhs->CollisionDetected(rhs, p * -1);
 				rhs->CollisionDetected(lhs, p);
+				return;
 			}
 		}
 	}

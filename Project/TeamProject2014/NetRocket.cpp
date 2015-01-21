@@ -19,11 +19,11 @@ NetRocket::~NetRocket(){
 }
 
 void NetRocket::CollisionDetected(TransformCollidable *other, Vector2 penetration){
-	//if (other == owner){
-	//	return;
-	//}
+	if (other == owner){
+		return;
+	}
 
-	//owner->rocketDestroyed();
+	owner->rocketDestroyed();
 }
 
 void NetRocket::update(Vector2 position, Vector2 forward){
