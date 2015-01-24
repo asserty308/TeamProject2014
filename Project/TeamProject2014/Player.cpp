@@ -62,7 +62,7 @@ void Player::CollisionDetected(TransformCollidable *other, Vector2 penetration){
 		return;
 	}
 
-	//TODO: Change playerspawns and react to playcollisions, don't just ignore them.
+	//TODO: Change playerspawns and react to playercollisions, don't just ignore them.
 	if (std::strcmp(other->getTag().c_str(), "netPlayer") == 0){
 		return;
 	}
@@ -198,7 +198,24 @@ void Player::die(){
 	setPosition(Vector2(-500.0, -500.0));
 	g_pInputObserver->removeListener(this);
 
-	//TODO: Do something more.....sophisticed? 
+	//TODO: Do something more.....sophisticated? 
+}
+
+void Player::reset(){
+	isDead = false;
+
+	this->acceleration = this->velocity = Vector2(0.0f, 0.0f);
+	this->forward = Vector2(0.0f, -1.0f);
+
+	sprite->setAngle(180.0f);
+
+	if (!g_pInputObserver->isListening(this)){
+		g_pInputObserver->addListener(this);
+	}
+}
+
+bool Player::getIsDead(){
+	return isDead;
 }
 
 Rocket* Player::getRocket(){

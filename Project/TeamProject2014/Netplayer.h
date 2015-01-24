@@ -16,13 +16,16 @@ public:
 
 	virtual void CollisionDetected(TransformCollidable *other, Vector2 penetration);
 
-	void update(Vector2 pos, Vector2 forward, float angle, Vector2 rocketPos, Vector2 rocketForward);
+	void update(Vector2 pos, Vector2 forward, float angle, Vector2 rocketPos, Vector2 rocketForward, bool isDead);
 	void render();
 
 	void rocketDestroyed();
 
+	bool getIsDead();
+
 private:
 	Sprite *sprite;
 	NetRocket* netRocket;
+	bool isDead;
 
 };

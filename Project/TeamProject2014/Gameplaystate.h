@@ -8,6 +8,10 @@
 #include "Map.hpp"
 #include "DebugCollider.h"
 
+#define MATCHNUMBER 5
+
+enum MATCHSTATE{SPAWN, MATCH, MATCHOVER, GAMEOVER};
+
 class Gameplaystate :
 	public Gamestate
 {
@@ -28,8 +32,16 @@ private:
 	Netplayer *netplayer;
 	Map *map;
 
+	int matchCount;
+	int scorePlayer;
+	std::vector<int> scoreNetplayers;
+	MATCHSTATE matchstate;
+	
+
 	//TEMP
 	DebugCollider *dbc;
 	//TEMP
+
+	void handleConnection();
 };
 

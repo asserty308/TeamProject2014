@@ -12,6 +12,8 @@ Netplayer::Netplayer(Vector2 position, Vector2 forward) : TransformCollidable(po
 
 	this->setTag("netPlayer");
 	netRocket->setTag("netRocket");
+
+	isDead = false;
 	
 	g_pCollisionObserver->addListener(this);
 }
@@ -25,12 +27,14 @@ void Netplayer::CollisionDetected(TransformCollidable *other, Vector2 penetratio
 	
 }
 
-void Netplayer::update(Vector2 pos, Vector2 forward, float angle, Vector2 rocketPos, Vector2 rocketForward){
+void Netplayer::update(Vector2 pos, Vector2 forward, float angle, Vector2 rocketPos, Vector2 rocketForward, bool isDead){
 	this->setPosition(pos);
 	sprite->setPosition(pos);
 
 	this->setForward(forward);
 	sprite->setAngle(angle);
+
+	this->isDead = isDead;
 
 	netRocket->update(rocketPos, rocketForward);
 }
@@ -43,4 +47,8 @@ void Netplayer::render(){
 
 void Netplayer::rocketDestroyed(){
 	netRocket->update(Vector2(-100.0, -100.0), Vector2(0.0, 0.0));
+}
+
+bool Netplayer::getIsDead(){
+	return isDead;
 }

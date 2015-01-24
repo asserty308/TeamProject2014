@@ -53,7 +53,7 @@ Client::~Client()
 
 void Client::update(){
 
-	if (sendto(clientSocket, package, sizeof(float) * 9, 0, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR){
+	if (sendto(clientSocket, package, sizeof(float) * 10, 0, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR){
 		g_pLogfile->fLog("Could not send clientdata in update! Error: %d", WSAGetLastError());
 	}
 

@@ -39,57 +39,73 @@ void Gameplaystate::init()
 		playerSpawn = map->getPlayerSpawn();
 
 	player = new Player(playerSpawn, Vector2(0.f, -1.f));
-
 	netplayer = new Netplayer(playerSpawn, Vector2(0.0f, -1.0f));
+
+	matchstate = SPAWN;
+	matchCount = 0;
+	scoreNetplayers.push_back(0);
+	scorePlayer = 0;
 
 	//initialize and play music
 	//g_pAudioController->playMusic("Audio/Music/space2a.wav", true);
 }
 
+//TODO: Expand matchstructure to four players!
 void Gameplaystate::update()
 {
 	g_pCollisionObserver->checkCollisionRoutine();
+	//g_pAudioController->playSound();
 
-	//play all sounds currently active
-	g_pAudioController->playSound();
+	switch (matchstate){
+	case(SPAWN) : {
+		Vector2 playerSpawn;
+		if (map){
+			playerSpawn = map->getPlayerSpawn();
+		}
+	 
+		player->setPosition(playerSpawn);
+		player->reset();
 
-	if (player){
-		player->updatePosition(g_pTimer->getDeltaTime());
-		player->update();
+		matchstate = MATCH;
+	}break;
+	case(MATCH) : {
+		if (player){
+			player->updatePosition(g_pTimer->getDeltaTime());
+			player->update();
+
+			if (player->getIsDead() || netplayer->getIsDead()){
+				matchstate = MATCHOVER;
+			}
+		}
+
+	}break;
+	case(MATCHOVER) : {
+
+		matchCount++;
+
+		if (player->getIsDead()){
+			for (int i = 0; i < scoreNetplayers.size(); i++){
+				scoreNetplayers[i]++;
+				break;
+			}
+		}
+
+		if (netplayer->getIsDead()){
+			scorePlayer++;
+		}
+
+		if (matchCount >= MATCHNUMBER){
+			matchstate = GAMEOVER;
+		} else {
+			matchstate = SPAWN;
+		}
+	}break;
+	case(GAMEOVER) : {					 
+		break;
+	}
 	}
 
-	
-	Vector2 rocketPos, rocketForward;
-
-	if (player->rocketAlive()){
-		rocketPos = player->getRocket()->getPosition();
-		rocketForward = player->getRocket()->getForward();
-	} else{
-		rocketPos = Vector2(-100.0f, -100.0f);
-		rocketForward = Vector2(0.0f, 0.0f);
-	}
-	
-	float playerData[9] = { player->getPosition().getX(), player->getPosition().getY(), 
-							player->getForward().getX(), player->getForward().getY(), 
-							player->getSprite()->getAngle(),
-							rocketPos.getX(), rocketPos.getY(),
-							rocketForward.getX(), rocketForward.getY()};
-
-	client->setPackage((char*)&playerData, sizeof(float) * 9);
-	client->update();
-
-	float allPlayerData[9];
-	memcpy(allPlayerData, client->getReceivedPackage(), sizeof(float) * 9);
-
-	Vector2 netPlayerPos(allPlayerData[0], allPlayerData[1]);
-	Vector2 netPlayerForward(allPlayerData[2], allPlayerData[3]);
-	float netPlayerAngle = allPlayerData[4];
-	Vector2 netPlayerRocketPos(allPlayerData[5], allPlayerData[6]);
-	Vector2 netPlayerRocketForward(allPlayerData[7], allPlayerData[8]);
-
-	float x = netPlayerRocketPos.getX();
-
-	netplayer->update(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward);
+	handleConnection();
 }
 
 void Gameplaystate::render()
@@ -108,6 +124,7 @@ void Gameplaystate::render()
 
 	g_pSpriteRenderer->renderScene();
 
+	//TODO: Render scores!
 	SDL_Color color = { 255, 127, 0 };
 	g_pFontRenderer->drawText("Hello World", color);
 }
@@ -128,3 +145,41 @@ void Gameplaystate::inputReceived(SDL_KeyboardEvent *key)
 		g_pAudioController->playMusic("Audio/Music/science-0f-22mi.wav", true);
 	}
 }
+
+//Task: Send and receive required Information via client to and from server
+void Gameplaystate::handleConnection(){
+	Vector2 rocketPos, rocketForward;
+	float isDead = player->getIsDead() ? 1.0f : 0.0f;
+
+	if (player->rocketAlive()){
+		rocketPos = player->getRocket()->getPosition();
+		rocketForward = player->getRocket()->getForward();
+	} else{
+		rocketPos = Vector2(-100.0f, -100.0f);
+		rocketForward = Vector2(0.0f, 0.0f);
+	}
+
+	float playerData[10] = { player->getPosition().getX(), player->getPosition().getY(),
+		player->getForward().getX(), player->getForward().getY(),
+		player->getSprite()->getAngle(),
+		rocketPos.getX(), rocketPos.getY(),
+		rocketForward.getX(), rocketForward.getY(), isDead };
+
+	client->setPackage((char*)&playerData, sizeof(float)* 10);
+	client->update();
+
+	float allPlayerData[10];
+	memcpy(allPlayerData, client->getReceivedPackage(), sizeof(float)* 10);
+
+	Vector2 netPlayerPos(allPlayerData[0], allPlayerData[1]);
+	Vector2 netPlayerForward(allPlayerData[2], allPlayerData[3]);
+	float netPlayerAngle = allPlayerData[4];
+	Vector2 netPlayerRocketPos(allPlayerData[5], allPlayerData[6]);
+	Vector2 netPlayerRocketForward(allPlayerData[7], allPlayerData[8]);
+	bool netPlayerIsDead = allPlayerData[9] > 0.0f ? true : false;
+
+	float x = netPlayerRocketPos.getX();
+
+	netplayer->update(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward, netPlayerIsDead);
+}
+
