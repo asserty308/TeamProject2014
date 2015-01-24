@@ -12,8 +12,12 @@ class Client
 {
 	private:
 
+		//The package that will be sent to the server
 		char package[BUFLEN];
+		//The package that will be received from the server
 		char receivedPackage[BUFLEN];
+		//The package that will be received from the server upon first contact
+		char initPackage[BUFLEN];
 		
 		//SOCKET serverSocket;
 		sockaddr_in serverInfo;
@@ -30,5 +34,9 @@ class Client
 
 		char* getReceivedPackage(){
 			return receivedPackage;
+		}
+
+		char* getInitPackage(){
+			return initPackage;
 		}
 };

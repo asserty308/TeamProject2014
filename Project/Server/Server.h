@@ -2,6 +2,8 @@
 
 #include <map>
 #include <vector>
+#include <stack>
+#include <tuple>
 #include <winsock2.h>
 
 // check out http://johnnie.jerrata.com/winsocktutorial/
@@ -30,6 +32,9 @@ class Server
 		void readData();
 		void tiePackage(unsigned int id, char* data);
 		void distributePackage(unsigned int receiverID, sockaddr_in& clientInfo);
+
+		//The spawnpoints that are available
+		std::stack<std::tuple<float, float>> spawnPoints;
 
 	public:
 		Server();

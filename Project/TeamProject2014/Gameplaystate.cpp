@@ -6,6 +6,8 @@
 #include "FontRenderer.h"
 #include "AudioController.hpp"
 
+#include <sstream>
+
 Gameplaystate::Gameplaystate()
 {
 	client = nullptr;
@@ -33,10 +35,10 @@ void Gameplaystate::init()
 
 	map = MapParser::loadMap("testmap.xml");
 
-	Vector2 playerSpawn(g_pGame->getWindowWidth() / 2, g_pGame->getWindowHeight() / 2);
-
-	if (map)
-		playerSpawn = map->getPlayerSpawn();
+	char* serverInitPackage = client->getInitPackage();
+	float playerSpawnFromServer[2];
+	memcpy(playerSpawnFromServer, serverInitPackage, sizeof(float)* 2);
+	Vector2 playerSpawn(playerSpawnFromServer[0], playerSpawnFromServer[1]);
 
 	player = new Player(playerSpawn, Vector2(0.f, -1.f));
 	netplayer = new Netplayer(playerSpawn, Vector2(0.0f, -1.0f));
@@ -58,11 +60,11 @@ void Gameplaystate::update()
 
 	switch (matchstate){
 	case(SPAWN) : {
-		Vector2 playerSpawn;
-		if (map){
-			playerSpawn = map->getPlayerSpawn();
-		}
-	 
+		char* serverInitPackage = client->getInitPackage();
+		float playerSpawnFromServer[2];
+		memcpy(playerSpawnFromServer, serverInitPackage, sizeof(float)* 2);
+		Vector2 playerSpawn(playerSpawnFromServer[0], playerSpawnFromServer[1]);
+
 		player->setPosition(playerSpawn);
 		player->reset();
 
@@ -111,22 +113,35 @@ void Gameplaystate::update()
 void Gameplaystate::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
-	if (map)
-		map->render();
 
-	if (player)
-		player->render();
+	switch (matchstate){
+	case(SPAWN) : 
+	case(MATCHOVER) : 
+	case(MATCH) : {
+		if (map)
+		 map->render();
 
-	if (netplayer){
-		netplayer->render();
+		if (player)
+		 player->render();
+
+		if (netplayer){
+		 netplayer->render();
+		}
+
+		g_pSpriteRenderer->renderScene();
+		renderScore();
+	}break;
+	case(GAMEOVER) : {
+		std::string gameOverText = "Game Over! Thanks for playing!";
+		SDL_Color color = { 255, 127, 0 };
+		Vector2 textDimensions = g_pFontRenderer->getTextDimensions(gameOverText);
+		Vector2 textPos((g_pGame->getWindowWidth() / 2) - (textDimensions.getX() / 2), (g_pGame->getWindowHeight() / 2) - (textDimensions.getY() / 2));
+		g_pFontRenderer->drawText(gameOverText, textPos, color);
+	}break;
 	}
-
-	g_pSpriteRenderer->renderScene();
-
-	//TODO: Render scores!
-	SDL_Color color = { 255, 127, 0 };
-	g_pFontRenderer->drawText("Hello World", color);
+	
+	
+	
 }
 
 void Gameplaystate::quit()
@@ -181,5 +196,19 @@ void Gameplaystate::handleConnection(){
 	float x = netPlayerRocketPos.getX();
 
 	netplayer->update(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward, netPlayerIsDead);
+}
+
+//Render playerscores
+void Gameplaystate::renderScore(){
+	std::stringstream scoreStream;
+	scoreStream << scorePlayer;
+	for (int i = 0; i < scoreNetplayers.size(); i++){
+		scoreStream << "    " << scoreNetplayers[i];
+	}
+
+	SDL_Color color = { 255, 127, 0 };
+	Vector2 textDimensions = g_pFontRenderer->getTextDimensions(scoreStream.str());
+	Vector2 textPos((g_pGame->getWindowWidth() / 2) - (textDimensions.getX() / 2), 0.0f);
+	g_pFontRenderer->drawText(scoreStream.str(), textPos, color);
 }
 

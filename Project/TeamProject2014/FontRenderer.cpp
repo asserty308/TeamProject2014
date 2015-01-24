@@ -31,7 +31,7 @@ FontRenderer::~FontRenderer()
 	TTF_Quit();
 }
 
-void FontRenderer::drawText(std::string text, SDL_Color color)
+void FontRenderer::drawText(std::string text, Vector2 pos, SDL_Color color)
 {
 	// convert RGB color to BGR
 	int swap = color.r;
@@ -67,14 +67,20 @@ void FontRenderer::drawText(std::string text, SDL_Color color)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	glBegin(GL_QUADS);
-		glTexCoord2d(0, 0); glVertex3f(0, 0, 0);
-		glTexCoord2d(1, 0); glVertex3f(0 + sText->w, 0, 0);
-		glTexCoord2d(1, 1); glVertex3f(0 + sText->w, 0 + sText->h, 0);
-		glTexCoord2d(0, 1); glVertex3f(0, 0 + sText->h, 0);
+		glTexCoord2d(0, 0); glVertex3f(pos.getX(), pos.getY(), 0);
+		glTexCoord2d(1, 0); glVertex3f(pos.getX() + sText->w, pos.getY(), 0);
+		glTexCoord2d(1, 1); glVertex3f(pos.getX() + sText->w, pos.getY() + sText->h, 0);
+		glTexCoord2d(0, 1); glVertex3f(pos.getX(), pos.getY() + sText->h, 0);
 	glEnd();
 
 	glDisable(GL_TEXTURE_2D);
 
 	SDL_FreeSurface(sText);
 	SDL_FreeSurface(temp);
+}
+
+Vector2 FontRenderer::getTextDimensions(std::string text){
+	SDL_Surface *sText = TTF_RenderUTF8_Blended(font, text.c_str(), SDL_Color());
+
+	return Vector2(sText->w, sText->h);
 }

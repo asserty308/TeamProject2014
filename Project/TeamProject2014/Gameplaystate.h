@@ -43,5 +43,6 @@ private:
 	//TEMP
 
 	void handleConnection();
+	void renderScore();
 };
 
