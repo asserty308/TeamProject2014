@@ -40,9 +40,17 @@ Client::Client()
 	}
 
 	//receive our "welcome package" i.e. spawnpoint and other data that differs between players
+	memset(initPackage, '?', BUFLEN);
 	recvfrom(clientSocket, initPackage, BUFLEN, 0, 0, 0);
 
+	//Change socket to a non-blocking one
+	u_long iMode = 1;
+	if (ioctlsocket(clientSocket, FIONBIO, &iMode) == SOCKET_ERROR){
+		g_pLogfile->textout("Clientsocket did not enter non-blocking mode!");
+	}
+
 	ZeroMemory(package, 256);
+	memset(receivedPackage, '?', BUFLEN);
 }
 
 Client::~Client()
@@ -55,15 +63,14 @@ Client::~Client()
 }
 
 void Client::update(){
+	memset(receivedPackage, '?', BUFLEN);
 
 	if (sendto(clientSocket, package, sizeof(float) * 10, 0, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR){
 		g_pLogfile->fLog("Could not send clientdata in update! Error: %d", WSAGetLastError());
 	}
 
-	//commented out because it caused the program to crash after a while
 	int bytesReceived = recvfrom(clientSocket, receivedPackage, BUFLEN, 0, 0, 0);
 	
-	//memcpy(receivedPackage, dataFromServer.data(), sizeof(float) * 4);
 }
 
 void Client::setPackage(char* data, int size){

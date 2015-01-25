@@ -6,7 +6,7 @@ NetRocket::NetRocket() : TransformCollidable(Vector2(0.0f, 0.0f), Vector2(0.0f, 
 
 }
 
-NetRocket::NetRocket(Netplayer* owner, Vector2 postion, Vector2 forward) : TransformCollidable(position, forward, Vector2(1.0f, 1.0f)){
+NetRocket::NetRocket(Netplayer* owner, Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(1.0f, 1.0f)){
 	g_pCollisionObserver->addListener(this);
 
 	boundingBox = new CircleBoundingBox(position, 10.0f);

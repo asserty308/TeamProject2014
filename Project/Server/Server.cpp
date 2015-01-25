@@ -30,6 +30,12 @@ Server::Server()
 		return;
 	}
 
+	//Change socket to a non-blocking one
+	u_long iMode = 1;
+	if (ioctlsocket(respondingSocket, FIONBIO, &iMode) == SOCKET_ERROR){
+		std::cout << "Clientsocket did not enter non-blocking mode!" << std::endl;
+	}
+
 	SOCKADDR_IN serverInfo;
 	serverInfo.sin_family = AF_INET;
 	serverInfo.sin_addr.s_addr = INADDR_ANY;

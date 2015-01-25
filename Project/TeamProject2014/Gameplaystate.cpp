@@ -119,13 +119,13 @@ void Gameplaystate::render()
 	case(MATCHOVER) : 
 	case(MATCH) : {
 		if (map)
-		 map->render();
+			map->render();
 
 		if (player)
-		 player->render();
+			player->render();
 
 		if (netplayer){
-		 netplayer->render();
+			netplayer->render();
 		}
 
 		g_pSpriteRenderer->renderScene();
@@ -195,7 +195,12 @@ void Gameplaystate::handleConnection(){
 
 	float x = netPlayerRocketPos.getX();
 
-	netplayer->update(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward, netPlayerIsDead);
+	char* defaultTest = "???";
+	if (memcmp(allPlayerData, defaultTest, sizeof(char) * 3) != 0){ //Check if sent data is no default memory. If it is, pass default values
+		netplayer->update(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward, netPlayerIsDead);
+	} else{
+		netplayer->update(Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), 180.0f, Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), false);
+	}
 }
 
 //Render playerscores
