@@ -62,11 +62,6 @@ void Player::CollisionDetected(TransformCollidable *other, Vector2 penetration){
 		return;
 	}
 
-	//TODO: Change playerspawns and react to playercollisions, don't just ignore them.
-	if (std::strcmp(other->getTag().c_str(), "netPlayer") == 0){
-		return;
-	}
-
 	if (std::strcmp(other->getTag().c_str(), "netRocket") == 0){
 		die();
 	}
