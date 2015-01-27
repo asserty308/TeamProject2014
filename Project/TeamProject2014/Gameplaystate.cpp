@@ -16,6 +16,9 @@ Gameplaystate::Gameplaystate() :
 	player = nullptr;
 	map = nullptr;
 	dbc = nullptr;
+
+	//Just to make sure the Audiocontroller exists. Creating one during Gameplay causes Lags!
+	g_pAudioController->stopMusic();
 }
 
 Gameplaystate::~Gameplaystate()
