@@ -159,7 +159,7 @@ void Server::distributePackage(unsigned int receiverID, sockaddr_in& clientInfo)
 	int bufferOffset = 0;
 	for (int i = 0; i < MAX_PLAYERS; i++){
 		if (i != receiverID){
-			memcpy(buffer + bufferOffset, returnPackage + (i * BUFLEN), BUFLEN);
+			memcpy(buffer + (i * bufferOffset), returnPackage + (i * BUFLEN), BUFLEN);
 			bufferOffset++;
 		}
 	}

@@ -9,10 +9,10 @@
 
 #include <sstream>
 
-Gameplaystate::Gameplaystate() : 
+Gameplaystate::Gameplaystate(Client* client) :
 	countdown(3)
 {
-	client = nullptr;
+	this->client = client;
 	player = nullptr;
 	map = nullptr;
 	dbc = nullptr;
@@ -23,7 +23,6 @@ Gameplaystate::Gameplaystate() :
 
 Gameplaystate::~Gameplaystate()
 {
-	delete client;
 	delete player;
 	delete netplayer;
 	delete map;
@@ -36,8 +35,6 @@ Gameplaystate::~Gameplaystate()
 
 void Gameplaystate::init()
 {
-	client = new Client();
-
 	map = MapParser::loadMap("testmap.xml");
 
 	char* serverInitPackage = client->getInitPackage();

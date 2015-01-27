@@ -95,6 +95,7 @@
     <ClCompile Include="Game.cpp" />
     <ClCompile Include="Gameplaystate.cpp" />
     <ClCompile Include="InputObserver.cpp" />
+    <ClCompile Include="LobbyState.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Map.cpp" />
@@ -129,6 +130,7 @@
     <ClInclude Include="Gamestate.h" />
     <ClInclude Include="Inputlistener.h" />
     <ClInclude Include="InputObserver.h" />
+    <ClInclude Include="LobbyState.h" />
     <ClInclude Include="Logger.hpp" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="MapParser.h" />

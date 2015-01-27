@@ -32,6 +32,7 @@
     <ClCompile Include="NetRocket.cpp" />
     <ClCompile Include="Countdown.cpp" />
     <ClCompile Include="AudioFiles.cpp" />
+    <ClCompile Include="LobbyState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioController.hpp" />
@@ -67,5 +68,6 @@
     <ClInclude Include="NetRocket.h" />
     <ClInclude Include="Countdown.h" />
     <ClInclude Include="AudioFiles.hpp" />
+    <ClInclude Include="LobbyState.h" />
   </ItemGroup>
 </Project>

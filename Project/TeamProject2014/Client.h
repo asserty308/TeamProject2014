@@ -3,7 +3,8 @@
 #include <iostream>
 #include <winsock2.h>
 
-#define BUFLEN 512
+#define BUFLEN 128
+#define MAX_PLAYER 2
 
 
 // check out http://johnnie.jerrata.com/winsocktutorial/
@@ -15,7 +16,7 @@ class Client
 		//The package that will be sent to the server
 		char package[BUFLEN];
 		//The package that will be received from the server
-		char receivedPackage[BUFLEN];
+		char receivedPackage[BUFLEN * MAX_PLAYER];
 		//The package that will be received from the server upon first contact
 		char initPackage[BUFLEN];
 		

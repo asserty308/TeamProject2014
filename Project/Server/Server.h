@@ -10,7 +10,7 @@
 
 
 #define MAX_PLAYERS 2
-#define BUFLEN 512
+#define BUFLEN 128
 
 
 class Server

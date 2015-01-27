@@ -12,6 +12,7 @@
 #include "Gamestate.h"
 #include "Gameplaystate.h"
 #include "Pausestate.h"
+#include "LobbyState.h"
 #include "Singleton.hpp"
 
 #define g_pGame Game::Get()
@@ -19,6 +20,7 @@
 //forward declarations
 class Gameplaystate; 
 class Pausestate;
+class LobbyState;
 
 class Game : public Singleton < Game >
 {
@@ -34,6 +36,9 @@ private:
 
 	Gameplaystate *gameplayState;
 	Pausestate *pauseState;
+	LobbyState *lobbyState;
+
+	Client* client;
 
 public:
 	Game();
@@ -51,6 +56,7 @@ public:
 
 	Gameplaystate* getGameplayState();
 	Pausestate* getPauseState();
+	LobbyState* getLobbyState();
 
 	int getWindowWidth();
 	int getWindowHeight();

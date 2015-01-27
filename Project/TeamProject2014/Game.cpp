@@ -11,14 +11,18 @@ Game::Game()
 	g_pCollisionObserver->setxAxis(Vector2(windowWidth, 0));
 	g_pCollisionObserver->setyAxis(Vector2(0, windowHeight));
 
-	gameplayState = new Gameplaystate();
-	pauseState = new Pausestate();
+	client = new Client();
 
-	setState(gameplayState);
+	gameplayState = new Gameplaystate(client);
+	pauseState = new Pausestate();
+	lobbyState = new LobbyState(client, MAX_PLAYER);
+
+	setState(lobbyState);
 }
 
 Game::~Game()
 {
+	delete client;
 	delete gameplayState;
 	delete pauseState;
 	g_pLogfile->log("quit game");
@@ -45,7 +49,7 @@ void Game::init()
 
 	//Init modules
 	g_pTimer->init();
-	currentState->init();
+	//currentState->init();
 }
 
 // Event-related functions
@@ -103,6 +107,7 @@ void Game::setState(Gamestate *state){
 		g_pInputObserver->addListener(state);
 	}
 	this->currentState = state;
+	currentState->init();
 }
 
 Gameplaystate* Game::getGameplayState(){
@@ -111,6 +116,10 @@ Gameplaystate* Game::getGameplayState(){
 
 Pausestate* Game::getPauseState(){
 	return pauseState;
+}
+
+LobbyState* Game::getLobbyState(){
+	return lobbyState;
 }
 
 int Game::getWindowWidth()
