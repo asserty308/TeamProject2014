@@ -30,9 +30,9 @@
     <ClCompile Include="TransformCollidable.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="NetRocket.cpp" />
+    <ClCompile Include="AudioFiles.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AudioBase.hpp" />
     <ClInclude Include="AudioController.hpp" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="CircleBoundingBox.h" />
@@ -64,5 +64,6 @@
     <ClInclude Include="TransformCollidable.h" />
     <ClInclude Include="Vector2.hpp" />
     <ClInclude Include="NetRocket.h" />
+    <ClInclude Include="AudioFiles.hpp" />
   </ItemGroup>
 </Project>

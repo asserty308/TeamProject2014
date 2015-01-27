@@ -2,6 +2,7 @@
 #include "Rocket.hpp"
 #include "AudioController.hpp"
 #include "CollisionObserver.h"
+#include "AudioFiles.hpp"
 
 const float Rocket::SPEED = 400.f;
 //const float Rocket::TURN_SPEED = 60.f;
@@ -19,7 +20,7 @@ Rocket::Rocket(Player* owner, Vector2 position, Vector2 forward) : TransformColl
 
 	this->owner = owner;
 
-	g_pAudioController->addSound("Audio/Sounds/sci-fi-rocket-launch-01.wav");
+	g_pAudioController->playSound(SoundFiles::ROCKET, false);
 }
 
 Rocket::~Rocket()
@@ -30,7 +31,7 @@ Rocket::~Rocket()
 	g_pInputObserver->removeListener(this);
 	g_pCollisionObserver->removeListener(this);
 
-	g_pAudioController->removeSound("Audio/Sounds/sci-fi-rocket-launch-01.wav");
+	g_pAudioController->stopSoundByFile(SoundFiles::ROCKET);
 }
 
 void Rocket::inputReceived(SDL_KeyboardEvent *key)

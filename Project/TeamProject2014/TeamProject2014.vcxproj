@@ -84,6 +84,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="AudioController.cpp" />
+    <ClCompile Include="AudioFiles.cpp" />
     <ClCompile Include="BoundingBox.cpp" />
     <ClCompile Include="CircleBoundingBox.cpp" />
     <ClCompile Include="CollisionObserver.cpp" />
@@ -114,8 +115,8 @@
     <ClCompile Include="Vector2.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="AudioBase.hpp" />
     <ClInclude Include="AudioController.hpp" />
+    <ClInclude Include="AudioFiles.hpp" />
     <ClInclude Include="BoundingBox.h" />
     <ClInclude Include="CircleBoundingBox.h" />
     <ClInclude Include="CollisionObserver.h" />
