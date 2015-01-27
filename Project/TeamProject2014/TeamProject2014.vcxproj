@@ -88,6 +88,7 @@
     <ClCompile Include="CircleBoundingBox.cpp" />
     <ClCompile Include="CollisionObserver.cpp" />
     <ClCompile Include="Client.cpp" />
+    <ClCompile Include="Countdown.cpp" />
     <ClCompile Include="DebugCollider.cpp" />
     <ClCompile Include="FontRenderer.cpp" />
     <ClCompile Include="Game.cpp" />
@@ -142,6 +143,7 @@
     <ClInclude Include="SoundPlayer.hpp" />
     <ClInclude Include="Sprite.hpp" />
     <ClInclude Include="SpriteRenderer.hpp" />
+    <ClInclude Include="Countdown.h" />
     <ClInclude Include="Timer.h" />
     <ClInclude Include="Transform.hpp" />
     <ClInclude Include="TransformCollidable.h" />

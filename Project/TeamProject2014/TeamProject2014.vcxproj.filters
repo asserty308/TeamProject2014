@@ -30,6 +30,7 @@
     <ClCompile Include="TransformCollidable.cpp" />
     <ClCompile Include="Vector2.cpp" />
     <ClCompile Include="NetRocket.cpp" />
+    <ClCompile Include="Countdown.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioBase.hpp" />
@@ -64,5 +65,6 @@
     <ClInclude Include="TransformCollidable.h" />
     <ClInclude Include="Vector2.hpp" />
     <ClInclude Include="NetRocket.h" />
+    <ClInclude Include="Countdown.h" />
   </ItemGroup>
 </Project>

@@ -7,6 +7,7 @@
 #include "Pausestate.h"
 #include "Map.hpp"
 #include "DebugCollider.h"
+#include "Countdown.h"
 
 #define MATCHNUMBER 5
 
@@ -31,6 +32,7 @@ private:
 	Player *player;
 	Netplayer *netplayer;
 	Map *map;
+	Countdown countdown;
 
 	int matchCount;
 	int scorePlayer;

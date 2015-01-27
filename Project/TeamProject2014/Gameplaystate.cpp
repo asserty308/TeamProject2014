@@ -8,7 +8,8 @@
 
 #include <sstream>
 
-Gameplaystate::Gameplaystate()
+Gameplaystate::Gameplaystate() : 
+	countdown(3)
 {
 	client = nullptr;
 	player = nullptr;
@@ -68,7 +69,12 @@ void Gameplaystate::update()
 		player->setPosition(playerSpawn);
 		player->reset();
 
-		matchstate = MATCH;
+		if (countdown.getState() == INITIALIZED){
+			countdown.start();
+		} else if (countdown.getState() == FINISHED){
+			matchstate = MATCH;
+			countdown.reset();
+		}
 	}break;
 	case(MATCH) : {
 		if (player){
@@ -107,6 +113,7 @@ void Gameplaystate::update()
 	}
 	}
 
+	countdown.run();
 	handleConnection();
 }
 
@@ -115,7 +122,16 @@ void Gameplaystate::render()
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	switch (matchstate){
-	case(SPAWN) : 
+	case(SPAWN) : {
+		if (countdown.getState() == RUNNING){
+			std::stringstream CountdownText;
+			CountdownText << countdown.getCurrentCountdown();
+			SDL_Color color = { 255, 127, 0 };
+			Vector2 textDimensions = g_pFontRenderer->getTextDimensions(CountdownText.str());
+			Vector2 textPos((g_pGame->getWindowWidth() / 2) - (textDimensions.getX() / 2), (g_pGame->getWindowHeight() / 2) - (textDimensions.getY() / 2));
+			g_pFontRenderer->drawText(CountdownText.str(), textPos, color);
+		}
+	}break;
 	case(MATCHOVER) : 
 	case(MATCH) : {
 		if (map)
