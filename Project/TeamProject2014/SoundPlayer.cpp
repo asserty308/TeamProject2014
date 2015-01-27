@@ -1,81 +1,93 @@
 #include "SoundPlayer.hpp"
 #include "Logger.hpp"
+#include "AudioFiles.hpp"
 
 SoundPlayer::SoundPlayer()
 {
-	maxChannels = 20;
 	usedChannels = 0;
+
+	channels = new std::map<std::string, int>();
+	sounds = new std::array<Mix_Chunk*, MAX_CHANNELS>();
+
+	loadFromFile(SoundFiles::ROCKET);
 }
 
 
 SoundPlayer::~SoundPlayer()
 {
+	delete channels;
+	delete sounds;
 }
 
-void SoundPlayer::loadFromFile(const char* path)
+void SoundPlayer::loadFromFile(std::string path)
 {
-	if (usedChannels < maxChannels)
+	if (usedChannels < MAX_CHANNELS)
 	{
-		Mix_Chunk *soundFile = Mix_LoadWAV(path);
+		Mix_Chunk *soundFile = Mix_LoadWAV(path.c_str());
 
 		if (soundFile == nullptr)
+		{
 			g_pLogfile->fLog("Failed to load sound effect! SDL_mixer Error: %s\n", Mix_GetError());
+		}
 		else
 		{
-			auto it = sounds.find(path);
+			auto it = channels->find(path);
 
 			//only add when it has not already been added
-			if (it == sounds.end())
+			if (it == channels->end())
 			{
-				sounds[path] = soundFile;
+				channels->insert(std::make_pair(path, usedChannels));
+				sounds->at(usedChannels) = soundFile;
 				usedChannels++;
 			}
 		}
 	}
 }
 
-void SoundPlayer::removeSoundByFile(const char* path)
+void SoundPlayer::removeSoundByFile(std::string path)
 {
-	auto it = sounds.find(path);
+	auto it = channels->find(path);
 
 	//if file is found
-	if (it != sounds.end())
+	if (it != channels->end())
 	{
-		auto cmpIT = sounds.begin();
-		for (int i = 0; i < sounds.size(); i++)
-		{
-			/*compare the length (bytes) of each file
-			  and stop the channel*/
-			if (it->second->alen == cmpIT->second->alen)
-			{
-				Mix_HaltChannel(i);
-				usedChannels--;
-				break;
-			}
+		Mix_HaltChannel(channels->at(path));
 
-			++cmpIT;
-		}
+		sounds->at(channels->at(path)) = nullptr;
+		channels->erase(it);
 
-		sounds.erase(it);
+		usedChannels--;
 	}
 }
 
-void SoundPlayer::play(bool loop)
+void SoundPlayer::play(std::string path, bool loop)
 {
-	auto it = sounds.begin();
-	for (int i = 0; i < sounds.size(); i++)
-	{
-		if (!Mix_Playing(i))
-		{
-			Mix_PlayChannel(i, it->second, -1);
-		}
+	auto it = channels->find(path);
+	int loops = loop ? -1 : 0; //-1 = infinite, 0 = no loop
 
-		it++;
+	if (it != channels->end())
+	{
+		int ch = channels->at(path);
+
+		if (!Mix_Playing(ch))
+		{
+			Mix_PlayChannel(ch, sounds->at(ch), loops);
+		}
 	}
 }
 
 void SoundPlayer::stop()
 {
-	for (int i = 0; i < sounds.size(); i++)
+	for (int i = 0; i < channels->size(); i++)
 		Mix_HaltChannel(i);
+}
+
+void SoundPlayer::stopByFile(std::string path)
+{
+	auto it = channels->find(path);
+
+	if (it != channels->end())
+	{
+		Mix_HaltChannel(channels->at(path));
+	}
 }

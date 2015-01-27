@@ -3,49 +3,54 @@
 
 AudioController::AudioController()
 {
+	musicPlayer = new MusicPlayer();
+	soundPlayer = new SoundPlayer();
 }
 
 AudioController::~AudioController()
 {
+	delete musicPlayer;
+	delete soundPlayer;
+
 	Mix_Quit();
 }
 
-void AudioController::playMusic(const char* path, bool loop)
+void AudioController::playMusic(std::string path, bool loop)
 {
-	if (musicPlayer.isMusicPlaying())
+	if (musicPlayer->isMusicPlaying())
 		stopMusic();
 
-	musicPlayer.loadFromFile(path);
-	musicPlayer.play(loop);
+	musicPlayer->loadFromFile(path);
+	musicPlayer->play(loop);
 }
 
 void AudioController::stopMusic()
 {
-	musicPlayer.stop();
+	musicPlayer->stop();
 }
 
-void AudioController::addSound(const char* path)
+void AudioController::addSound(std::string path)
 {
-	soundPlayer.loadFromFile(path);
+	soundPlayer->loadFromFile(path);
 }
 
-void AudioController::removeSound(const char* path)
+void AudioController::removeSound(std::string path)
 {
-	soundPlayer.removeSoundByFile(path);
+	soundPlayer->removeSoundByFile(path);
 }
 
-void AudioController::playSound()
+void AudioController::playSound(std::string path, bool loop)
 {
-	soundPlayer.play(true);
+	soundPlayer->play(path, true);
 }
 
-void AudioController::stopSound()
+void AudioController::stopSoundByFile(std::string path)
 {
-	soundPlayer.stop();
+	soundPlayer->stopByFile(path);
 }
 
 void AudioController::stopAudio()
 {
 	stopMusic();
-	stopSound();
+	soundPlayer->stop();
 }

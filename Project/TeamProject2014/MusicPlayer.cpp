@@ -16,9 +16,9 @@ MusicPlayer::~MusicPlayer()
 	musicFile = nullptr;
 }
 
-void MusicPlayer::loadFromFile(const char* path)
+void MusicPlayer::loadFromFile(std::string path)
 {
-	musicFile = Mix_LoadMUS(path);
+	musicFile = Mix_LoadMUS(path.c_str());
 
 	if (musicFile == nullptr)
 		g_pLogfile->fLog("Failed to load music! SDL_mixer Error: %s\n", Mix_GetError());

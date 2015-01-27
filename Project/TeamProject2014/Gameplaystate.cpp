@@ -5,6 +5,7 @@
 #include "SpriteRenderer.hpp"
 #include "FontRenderer.h"
 #include "AudioController.hpp"
+#include "AudioFiles.hpp"
 
 #include <sstream>
 
@@ -50,7 +51,7 @@ void Gameplaystate::init()
 	scorePlayer = 0;
 
 	//initialize and play music
-	//g_pAudioController->playMusic("Audio/Music/space2a.wav", true);
+	//g_pAudioController->playMusic(MusicFiles::THEME, true);
 }
 
 //TODO: Expand matchstructure to four players!

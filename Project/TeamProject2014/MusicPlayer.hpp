@@ -1,8 +1,8 @@
 #pragma once
 #include <SDL_mixer.h>
-#include "AudioBase.hpp"
+#include <string>
 
-class MusicPlayer : public AudioBase
+class MusicPlayer
 {
 	private:
 		Mix_Music *musicFile;
@@ -11,7 +11,7 @@ class MusicPlayer : public AudioBase
 		MusicPlayer();
 		~MusicPlayer();
 
-		void loadFromFile(const char* path);
+		void loadFromFile(std::string path);
 		void play(bool loop);
 		void stop();
 		bool isMusicPlaying();

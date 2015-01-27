@@ -1,21 +1,25 @@
 #pragma once
 #include <map>
+#include <array>
 #include <SDL_mixer.h>
-#include "AudioBase.hpp"
+#include <string>
 
-class SoundPlayer : public AudioBase
+#define MAX_CHANNELS 10
+
+class SoundPlayer
 {
 	private:
-		Uint8 maxChannels, usedChannels;
-		std::map<const char*, Mix_Chunk*> sounds;
+		Uint8 usedChannels;
+		std::map<std::string, int> *channels; //path, channel
+		std::array<Mix_Chunk*, MAX_CHANNELS> *sounds;
 
 	public:
 		SoundPlayer();
 		~SoundPlayer();
 
-		void play(bool loop);
+		void play(std::string path, bool loop);
 		void stop();
-		void loadFromFile(const char* path);
-		void removeSoundByFile(const char* path);
+		void stopByFile(std::string path);
+		void loadFromFile(std::string path);
+		void removeSoundByFile(std::string path);
 };
-
