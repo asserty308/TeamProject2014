@@ -58,7 +58,6 @@ void Gameplaystate::init()
 void Gameplaystate::update()
 {
 	g_pCollisionObserver->checkCollisionRoutine();
-	//g_pAudioController->playSound();
 
 	switch (matchstate){
 	case(SPAWN) : {
@@ -172,9 +171,6 @@ void Gameplaystate::inputReceived(SDL_KeyboardEvent *key)
 	if (key->keysym.sym == SDLK_p && key->type == SDL_KEYUP)
 	{
 		g_pGame->setState(g_pGame->getPauseState());
-
-		//tmp location because init() is not called on state-changes
-		g_pAudioController->playMusic("Audio/Music/science-0f-22mi.wav", true);
 	}
 }
 
