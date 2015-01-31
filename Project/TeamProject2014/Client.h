@@ -2,12 +2,13 @@
 
 #include <iostream>
 #include <winsock2.h>
+#include "Game.hpp"
 
 #define BUFLEN 128
-#define MAX_PLAYER 2
 
 
 // check out http://johnnie.jerrata.com/winsocktutorial/
+class Game;
 
 class Client
 {
@@ -16,7 +17,7 @@ class Client
 		//The package that will be sent to the server
 		char package[BUFLEN];
 		//The package that will be received from the server
-		char receivedPackage[BUFLEN * MAX_PLAYER];
+		char* receivedPackage;
 		//The package that will be received from the server upon first contact
 		char initPackage[BUFLEN];
 		
@@ -32,6 +33,8 @@ class Client
 		void update();
 
 		void setPackage(char* data, int size);
+
+		void init(int numberOfPlayers);
 
 		char* getReceivedPackage(){
 			return receivedPackage;

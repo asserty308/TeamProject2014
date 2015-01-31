@@ -13,6 +13,8 @@
 
 enum MATCHSTATE{SPAWN, MATCH, MATCHOVER, GAMEOVER};
 
+class Client;
+
 class Gameplaystate :
 	public Gamestate
 {
@@ -30,7 +32,7 @@ public:
 private:
 	Client *client;
 	Player *player;
-	Netplayer *netplayer;
+	std::vector<Netplayer*> netplayers;
 	Map *map;
 	Countdown countdown;
 

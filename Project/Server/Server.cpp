@@ -156,11 +156,11 @@ void Server::distributePackage(unsigned int receiverID, sockaddr_in& clientInfo)
 	//Only send information of the other players to a client, not its own!
 	size_t bufferSize = (MAX_PLAYERS - 1) * BUFLEN;
 	char* buffer = new char[bufferSize];
-	int bufferOffset = 0;
+	int offset = 0;
 	for (int i = 0; i < MAX_PLAYERS; i++){
 		if (i != receiverID){
-			memcpy(buffer + (i * bufferOffset), returnPackage + (i * BUFLEN), BUFLEN);
-			bufferOffset++;
+			memcpy(buffer + (offset * BUFLEN), returnPackage + (i * BUFLEN), BUFLEN);
+			offset++;
 		}
 	}
 

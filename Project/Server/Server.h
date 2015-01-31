@@ -9,7 +9,7 @@
 // check out http://johnnie.jerrata.com/winsocktutorial/
 
 
-#define MAX_PLAYERS 2
+#define MAX_PLAYERS 4
 #define BUFLEN 128
 
 

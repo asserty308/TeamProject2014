@@ -49,17 +49,23 @@ Client::Client()
 		g_pLogfile->textout("Clientsocket did not enter non-blocking mode!");
 	}
 
-	ZeroMemory(package, 256);
-	memset(receivedPackage, '?', BUFLEN);
+	ZeroMemory(package, 128);
 }
 
 Client::~Client()
 {
+	delete[] receivedPackage;
+
 	// close socket
 	closesocket(clientSocket);
 
 	// shutdown winsock
 	WSACleanup();
+}
+
+void Client::init(int numberOfPlayers){
+	receivedPackage = new char[BUFLEN * numberOfPlayers - 1];
+	memset(receivedPackage, '?', BUFLEN);
 }
 
 void Client::update(){
@@ -69,7 +75,7 @@ void Client::update(){
 		g_pLogfile->fLog("Could not send clientdata in update! Error: %d", WSAGetLastError());
 	}
 
-	int bytesReceived = recvfrom(clientSocket, receivedPackage, BUFLEN, 0, 0, 0);
+	int bytesReceived = recvfrom(clientSocket, receivedPackage, BUFLEN * g_pGame->getNumberOfPlayers() - 1, 0, 0, 0);
 	
 }
 

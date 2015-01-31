@@ -24,11 +24,14 @@ Gameplaystate::Gameplaystate(Client* client) :
 Gameplaystate::~Gameplaystate()
 {
 	delete player;
-	delete netplayer;
 	delete map;
 
+	for (Netplayer* n : netplayers){
+		delete n;
+		n = nullptr;
+	}
+
 	player = nullptr;
-	netplayer = nullptr;
 	map = nullptr;
 	dbc = nullptr;
 }
@@ -43,11 +46,19 @@ void Gameplaystate::init()
 	Vector2 playerSpawn(playerSpawnFromServer[0], playerSpawnFromServer[1]);
 
 	player = new Player(playerSpawn, Vector2(0.f, -1.f));
-	netplayer = new Netplayer(playerSpawn, Vector2(0.0f, -1.0f));
+
+	for (int i = 0; i < g_pGame->getNumberOfPlayers() - 1; i++){
+		netplayers.push_back(new Netplayer(playerSpawn, Vector2(0.0f, -1.0f)));
+	}
+
 
 	matchstate = SPAWN;
 	matchCount = 0;
-	scoreNetplayers.push_back(0);
+	
+	for (int i = 0; i < g_pGame->getNumberOfPlayers() - 1; i++){
+		scoreNetplayers.push_back(0);
+	}
+
 	scorePlayer = 0;
 
 	//initialize and play music
@@ -81,7 +92,17 @@ void Gameplaystate::update()
 			player->updatePosition(g_pTimer->getDeltaTime());
 			player->update();
 
-			if (player->getIsDead() || netplayer->getIsDead()){
+			int deadNetplayers = 0;
+			for (Netplayer* n : netplayers){
+				if (n->getIsDead()){
+					deadNetplayers++;
+				}
+			}
+
+			//if every netplayer is dead and the player is alive OR every netplayer but one is dead and the player is also dead
+			//the match is over
+			if (deadNetplayers == g_pGame->getNumberOfPlayers() - 1 && !player->getIsDead() || 
+				deadNetplayers == g_pGame->getNumberOfPlayers() - 2 && player->getIsDead()){
 				matchstate = MATCHOVER;
 			}
 		}
@@ -91,15 +112,14 @@ void Gameplaystate::update()
 
 		matchCount++;
 
-		if (player->getIsDead()){
-			for (int i = 0; i < scoreNetplayers.size(); i++){
-				scoreNetplayers[i]++;
-				break;
-			}
-		}
-
-		if (netplayer->getIsDead()){
+		if (!player->getIsDead()){
 			scorePlayer++;
+		} else{
+			for (int i = 0; i < netplayers.size(); i++){
+				if (!netplayers[i]->getIsDead()){
+					scoreNetplayers[i]++;
+				}
+			}
 		}
 
 		if (matchCount >= MATCHNUMBER){
@@ -140,8 +160,10 @@ void Gameplaystate::render()
 		if (player)
 			player->render();
 
-		if (netplayer){
-			netplayer->render();
+		for (Netplayer* n : netplayers){
+			if (n){
+				n->render();
+			}
 		}
 
 		g_pSpriteRenderer->renderScene();
@@ -196,24 +218,29 @@ void Gameplaystate::handleConnection(){
 	client->setPackage((char*)&playerData, sizeof(float)* 10);
 	client->update();
 
-	float allPlayerData[10];
-	memcpy(allPlayerData, client->getReceivedPackage(), sizeof(float)* 10);
-
-	Vector2 netPlayerPos(allPlayerData[0], allPlayerData[1]);
-	Vector2 netPlayerForward(allPlayerData[2], allPlayerData[3]);
-	float netPlayerAngle = allPlayerData[4];
-	Vector2 netPlayerRocketPos(allPlayerData[5], allPlayerData[6]);
-	Vector2 netPlayerRocketForward(allPlayerData[7], allPlayerData[8]);
-	bool netPlayerIsDead = allPlayerData[9] > 0.0f ? true : false;
-
-	float x = netPlayerRocketPos.getX();
-
+	size_t numberOfFloatsInBUFLEN = BUFLEN / sizeof(float);
+	float* allPlayerData = new float[(g_pGame->getNumberOfPlayers() - 1) * numberOfFloatsInBUFLEN];
+	memcpy(allPlayerData, client->getReceivedPackage(), sizeof(float)* (g_pGame->getNumberOfPlayers() - 1) * numberOfFloatsInBUFLEN);
+	int offset = 0;
 	char* defaultTest = "???";
-	if (memcmp(allPlayerData, defaultTest, sizeof(char) * 3) != 0){ //Check if sent data is no default memory. If it is, pass default values
-		netplayer->update(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward, netPlayerIsDead);
-	} else{
-		netplayer->update(Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), 180.0f, Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), false);
+
+	for (int i = 0; i < g_pGame->getNumberOfPlayers() - 1; i++){
+		offset = i * numberOfFloatsInBUFLEN;
+
+		Vector2 netPlayerPos(allPlayerData[offset + 0], allPlayerData[offset + 1]);
+		Vector2 netPlayerForward(allPlayerData[offset + 2], allPlayerData[offset + 3]);
+		float netPlayerAngle = allPlayerData[offset + 4];
+		Vector2 netPlayerRocketPos(allPlayerData[offset + 5], allPlayerData[offset + 6]);
+		Vector2 netPlayerRocketForward(allPlayerData[offset + 7], allPlayerData[offset + 8]);
+		bool netPlayerIsDead = allPlayerData[offset + 9] > 0.0f ? true : false;
+
+		if (memcmp(allPlayerData + offset, defaultTest, sizeof(char)* 3) != 0){ //Check if sent data is no default memory. If it is, pass default values
+			netplayers[i]->update(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward, netPlayerIsDead);
+		} else{
+			netplayers[i]->update(Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), 180.0f, Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), false);
+		}
 	}
+	delete[] allPlayerData;
 }
 
 //Render playerscores

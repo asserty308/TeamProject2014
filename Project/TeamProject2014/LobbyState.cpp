@@ -1,16 +1,16 @@
 #include "LobbyState.h"
 
-LobbyState::LobbyState(Client* client, int numberOfPlayers){
+LobbyState::LobbyState(Client* client){
 	this->client = client;
-	this->numberOfPlayers = numberOfPlayers;
 }
 
 LobbyState::~LobbyState(){
-
+	delete[] receivedBuffer;
 }
 
 void LobbyState::init(){
-	
+	this->numberOfPlayers = g_pGame->getNumberOfPlayers() - 1;
+	receivedBuffer = new char[BUFLEN * numberOfPlayers];
 }
 
 void LobbyState::update(){
@@ -24,8 +24,8 @@ void LobbyState::update(){
 
 	//Check other players packages. If they contain defaultvalues ("???")
 	//those players have not connected yet and the Game won't start!
-	char* receivedBuffer[BUFLEN * MAX_PLAYER];
-	memcpy(receivedBuffer, client->getReceivedPackage(), BUFLEN * MAX_PLAYER);
+	
+	memcpy(receivedBuffer, client->getReceivedPackage(), BUFLEN * numberOfPlayers);
 
 	char* defaultCompareString = "???";
 

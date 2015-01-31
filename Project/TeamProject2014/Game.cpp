@@ -11,13 +11,15 @@ Game::Game()
 	g_pCollisionObserver->setxAxis(Vector2(windowWidth, 0));
 	g_pCollisionObserver->setyAxis(Vector2(0, windowHeight));
 
+	numberofPlayers = 4;
+
 	client = new Client();
+	client->init(numberofPlayers - 1);
 
 	gameplayState = new Gameplaystate(client);
 	pauseState = new Pausestate();
-	lobbyState = new LobbyState(client, MAX_PLAYER);
+	lobbyState = new LobbyState(client);
 
-	setState(lobbyState);
 }
 
 Game::~Game()
@@ -33,6 +35,8 @@ Game::~Game()
 */
 void Game::init()
 {
+	setState(lobbyState);
+
 	int contextFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 
 	// TODO: error checking
@@ -130,4 +134,12 @@ int Game::getWindowWidth()
 int Game::getWindowHeight()
 {
 	return windowHeight;
+}
+
+int Game::getNumberOfPlayers(){
+	return numberofPlayers;
+}
+
+void Game::setNumberOfPlayers(int n){
+	this->numberofPlayers = numberofPlayers;
 }

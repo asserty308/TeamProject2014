@@ -5,9 +5,11 @@
 #include "Game.hpp"
 #include "FontRenderer.h"
 
+class Client;
+
 class LobbyState : public Gamestate{
 public:
-	LobbyState(Client* client, int numberOfPlayers);
+	LobbyState(Client* client);
 	~LobbyState();
 
 	virtual void init();
@@ -20,5 +22,7 @@ public:
 private:
 	Client* client;
 	int numberOfPlayers;
+
+	char* receivedBuffer;
 
 };

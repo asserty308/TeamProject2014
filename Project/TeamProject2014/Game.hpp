@@ -40,6 +40,8 @@ private:
 
 	Client* client;
 
+	int numberofPlayers; 
+
 public:
 	Game();
 	~Game();
@@ -60,5 +62,8 @@ public:
 
 	int getWindowWidth();
 	int getWindowHeight();
+
+	int getNumberOfPlayers();
+	void setNumberOfPlayers(int n);
 };
 
