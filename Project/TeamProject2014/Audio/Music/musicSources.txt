@@ -1,4 +1,0 @@
-space2a.wav: 
-	http://www.freesound.org/people/Xythe/sounds/100873/
-science-0f-22mi.wav:
-	http://www.freesound.org/people/Setuniman/sounds/143994/

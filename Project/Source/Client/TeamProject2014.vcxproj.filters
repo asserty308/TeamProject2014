@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="AudioController.cpp" />
+    <ClCompile Include="BoundingBox.cpp" />
+    <ClCompile Include="CircleBoundingBox.cpp" />
+    <ClCompile Include="CollisionObserver.cpp" />
+    <ClCompile Include="Client.cpp" />
+    <ClCompile Include="DebugCollider.cpp" />
+    <ClCompile Include="FontRenderer.cpp" />
+    <ClCompile Include="Game.cpp" />
+    <ClCompile Include="Gameplaystate.cpp" />
+    <ClCompile Include="InputObserver.cpp" />
+    <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="main.cpp" />
+    <ClCompile Include="Map.cpp" />
+    <ClCompile Include="MapParser.cpp" />
+    <ClCompile Include="MusicPlayer.cpp" />
+    <ClCompile Include="Netplayer.cpp" />
+    <ClCompile Include="Obstacle.cpp" />
+    <ClCompile Include="Pausestate.cpp" />
+    <ClCompile Include="Player.cpp" />
+    <ClCompile Include="PolygonBoundingBox.cpp" />
+    <ClCompile Include="Rocket.cpp" />
+    <ClCompile Include="SoundPlayer.cpp" />
+    <ClCompile Include="Sprite.cpp" />
+    <ClCompile Include="SpriteRenderer.cpp" />
+    <ClCompile Include="Timer.cpp" />
+    <ClCompile Include="Transform.cpp" />
+    <ClCompile Include="TransformCollidable.cpp" />
+    <ClCompile Include="Vector2.cpp" />
+    <ClCompile Include="NetRocket.cpp" />
+    <ClCompile Include="Countdown.cpp" />
+    <ClCompile Include="AudioFiles.cpp" />
+    <ClCompile Include="LobbyState.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="AudioController.hpp" />
+    <ClInclude Include="BoundingBox.h" />
+    <ClInclude Include="CircleBoundingBox.h" />
+    <ClInclude Include="CollisionObserver.h" />
+    <ClInclude Include="Client.h" />
+    <ClInclude Include="DebugCollider.h" />
+    <ClInclude Include="FontRenderer.h" />
+    <ClInclude Include="Game.hpp" />
+    <ClInclude Include="Gameplaystate.h" />
+    <ClInclude Include="Gamestate.h" />
+    <ClInclude Include="Inputlistener.h" />
+    <ClInclude Include="InputObserver.h" />
+    <ClInclude Include="Logger.hpp" />
+    <ClInclude Include="Map.hpp" />
+    <ClInclude Include="MapParser.h" />
+    <ClInclude Include="MusicPlayer.hpp" />
+    <ClInclude Include="Netplayer.h" />
+    <ClInclude Include="Obstacle.hpp" />
+    <ClInclude Include="Pausestate.h" />
+    <ClInclude Include="Player.hpp" />
+    <ClInclude Include="PolygonBoundingBox.h" />
+    <ClInclude Include="Rocket.hpp" />
+    <ClInclude Include="Singleton.hpp" />
+    <ClInclude Include="SoundPlayer.hpp" />
+    <ClInclude Include="Sprite.hpp" />
+    <ClInclude Include="SpriteRenderer.hpp" />
+    <ClInclude Include="Timer.h" />
+    <ClInclude Include="Transform.hpp" />
+    <ClInclude Include="TransformCollidable.h" />
+    <ClInclude Include="Vector2.hpp" />
+    <ClInclude Include="NetRocket.h" />
+    <ClInclude Include="Countdown.h" />
+    <ClInclude Include="AudioFiles.hpp" />
+    <ClInclude Include="LobbyState.h" />
+  </ItemGroup>
+</Project>
