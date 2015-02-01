@@ -5,7 +5,7 @@ Netplayer::Netplayer() : TransformCollidable(Vector2(0.0, 0.0), Vector2(0.0f, -1
 }
 
 Netplayer::Netplayer(Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(0.0f, 0.0f)){
-	sprite = new Sprite("fighter4.png", position, Vector2(200.f, 150.f));
+	sprite = new Sprite("Sprites\\fighter4.png", position, Vector2(200.f, 150.f));
 	netRocket = new NetRocket(this, Vector2(-100.0, -100.0), Vector2(0.0f, 0.0f));
 
 	boundingBox = new CircleBoundingBox(position, 25.0f);

@@ -11,7 +11,7 @@ Game::Game()
 	g_pCollisionObserver->setxAxis(Vector2(windowWidth, 0));
 	g_pCollisionObserver->setyAxis(Vector2(0, windowHeight));
 
-	numberofPlayers = 4;
+	numberofPlayers = 2;
 
 	client = new Client();
 	client->init(numberofPlayers - 1);

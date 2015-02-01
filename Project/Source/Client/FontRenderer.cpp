@@ -6,7 +6,7 @@
 
 FontRenderer::FontRenderer()
 {
-	std::string fontFilename = "font.ttf";
+	std::string fontFilename = "Fonts\\font.ttf";
 	int pointSize = 28;
 
 	if (TTF_Init() < 0)
@@ -79,8 +79,10 @@ void FontRenderer::drawText(std::string text, Vector2 pos, SDL_Color color)
 	SDL_FreeSurface(temp);
 }
 
-Vector2 FontRenderer::getTextDimensions(std::string text){
+Vector2 FontRenderer::getTextDimensions(std::string text)
+{
 	SDL_Surface *sText = TTF_RenderUTF8_Blended(font, text.c_str(), SDL_Color());
-
-	return Vector2(sText->w, sText->h);
+	Vector2 out = Vector2(sText->w, sText->h);
+	SDL_FreeSurface(sText);
+	return out;
 }

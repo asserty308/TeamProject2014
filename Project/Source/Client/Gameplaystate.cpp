@@ -38,7 +38,7 @@ Gameplaystate::~Gameplaystate()
 
 void Gameplaystate::init()
 {
-	map = MapParser::loadMap("testmap.xml");
+	map = MapParser::loadMap("Maps\\testmap.xml");
 
 	char* serverInitPackage = client->getInitPackage();
 	float playerSpawnFromServer[2];
