@@ -42,8 +42,8 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
-    <IncludePath>$(SolutionDir)\Libs\SDL2-2.0.3\include;$(SolutionDir)\Libs\SDL2_ttf-2.0.12\include;$(SolutionDir)\Libs\SDL2_mixer-2.0.0\include;$(SolutionDir)\Libs\SOIL\include;$(SolutionDir)\Libs\TinyXML-2.0.2\include;$(IncludePath)</IncludePath>
-    <LibraryPath>$(SolutionDir)\Libs\SDL2-2.0.3\lib\x86;$(SolutionDir)\Libs\SDL2_mixer-2.0.0\lib\x86;$(SolutionDir)\Libs\SDL2_ttf-2.0.12\lib\x86;$(SolutionDir)\Libs\SOIL\lib;$(SolutionDir)\Libs\TinyXML-2.0.2\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>$(SolutionDir)\Libraries\SDL2-2.0.3\include;$(SolutionDir)\Libraries\SDL2_ttf-2.0.12\include;$(SolutionDir)\Libraries\SDL2_mixer-2.0.0\include;$(SolutionDir)\Libraries\SOIL\include;$(SolutionDir)\Libraries\TinyXML-2.0.2\include;$(IncludePath)</IncludePath>
+    <LibraryPath>$(SolutionDir)\Libraries\SDL2-2.0.3\lib\x86;$(SolutionDir)\Libraries\SDL2_mixer-2.0.0\lib\x86;$(SolutionDir)\Libraries\SDL2_ttf-2.0.12\lib\x86;$(SolutionDir)\Libraries\SOIL\lib;$(SolutionDir)\Libraries\TinyXML-2.0.2\lib;$(LibraryPath)</LibraryPath>
     <OutDir>$(SolutionDir)Binaries\Client\</OutDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
