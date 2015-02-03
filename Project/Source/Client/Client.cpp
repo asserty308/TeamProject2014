@@ -25,13 +25,13 @@ Client::Client()
 	//setup address structure
 	memset((char*)&serverInfo, 0, sizeof(serverInfo));
 	serverInfo.sin_family = AF_INET;
-	serverInfo.sin_port = htons(8888);
-	serverInfo.sin_addr.S_un.S_addr = inet_addr("127.0.0.1");
+	serverInfo.sin_port = htons(g_pGame->getServerPort());
+	serverInfo.sin_addr.S_un.S_addr = inet_addr(g_pGame->getServerIP().c_str());
 
 	// send our name to the server
 	char buffer[BUFLEN];
 	ZeroMemory(buffer, BUFLEN);
-	strcpy(buffer, "SuP3R-H4xX0R");
+	strcpy(buffer, g_pGame->getName().c_str());
 	//buffer[12] = '\n';
 	if (sendto(clientSocket, buffer, strlen(buffer), 0, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR)
 	{
@@ -44,10 +44,10 @@ Client::Client()
 	recvfrom(clientSocket, initPackage, BUFLEN, 0, 0, 0);
 
 	//Change socket to a non-blocking one
-	u_long iMode = 1;
+	/*u_long iMode = 1;
 	if (ioctlsocket(clientSocket, FIONBIO, &iMode) == SOCKET_ERROR){
 		g_pLogfile->textout("Clientsocket did not enter non-blocking mode!");
-	}
+	}*/
 
 	ZeroMemory(package, 128);
 }

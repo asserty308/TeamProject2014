@@ -99,6 +99,7 @@
     <ClCompile Include="LobbyState.cpp" />
     <ClCompile Include="Logger.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="MainMenuState.cpp" />
     <ClCompile Include="Map.cpp" />
     <ClCompile Include="MapParser.cpp" />
     <ClCompile Include="MusicPlayer.cpp" />
@@ -133,6 +134,7 @@
     <ClInclude Include="InputObserver.h" />
     <ClInclude Include="LobbyState.h" />
     <ClInclude Include="Logger.hpp" />
+    <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="MapParser.h" />
     <ClInclude Include="MusicPlayer.hpp" />

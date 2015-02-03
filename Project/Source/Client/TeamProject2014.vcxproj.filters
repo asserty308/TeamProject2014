@@ -33,6 +33,7 @@
     <ClCompile Include="Countdown.cpp" />
     <ClCompile Include="AudioFiles.cpp" />
     <ClCompile Include="LobbyState.cpp" />
+    <ClCompile Include="MainMenuState.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="AudioController.hpp" />
@@ -69,5 +70,6 @@
     <ClInclude Include="Countdown.h" />
     <ClInclude Include="AudioFiles.hpp" />
     <ClInclude Include="LobbyState.h" />
+    <ClInclude Include="MainMenuState.h" />
   </ItemGroup>
 </Project>

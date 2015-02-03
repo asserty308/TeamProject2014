@@ -103,6 +103,7 @@ void Gameplaystate::update()
 			//the match is over
 			if (deadNetplayers == g_pGame->getNumberOfPlayers() - 1 && !player->getIsDead() || 
 				deadNetplayers == g_pGame->getNumberOfPlayers() - 2 && player->getIsDead()){
+				player->rocketDestroyed();
 				matchstate = MATCHOVER;
 			}
 		}

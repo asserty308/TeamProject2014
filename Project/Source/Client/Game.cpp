@@ -13,12 +13,10 @@ Game::Game()
 
 	numberofPlayers = 2;
 
-	client = new Client();
-	client->init(numberofPlayers - 1);
-
 	gameplayState = new Gameplaystate(client);
 	pauseState = new Pausestate();
 	lobbyState = new LobbyState(client);
+	menuState = new MainMenuState();
 
 }
 
@@ -35,7 +33,7 @@ Game::~Game()
 */
 void Game::init()
 {
-	setState(lobbyState);
+	setState(menuState);
 
 	int contextFlags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 
@@ -142,4 +140,51 @@ int Game::getNumberOfPlayers(){
 
 void Game::setNumberOfPlayers(int n){
 	this->numberofPlayers = numberofPlayers;
+}
+
+void Game::setName(std::string n)
+{
+	name = n;
+}
+
+void Game::setServerIP(std::string i)
+{
+	serverIP = i;
+}
+
+void Game::setServerPort(int p)
+{
+	serverPort = p;
+}
+
+void Game::setClientPort(int p)
+{
+	clientPort = p;
+}
+
+std::string Game::getName()
+{
+	return name;
+}
+
+std::string Game::getServerIP()
+{
+	return serverIP;
+}
+
+int Game::getServerPort()
+{
+	return serverPort;
+}
+
+int Game::getClientPort()
+{
+	return clientPort;
+}
+
+void Game::setClient(Client *c)
+{
+	client = c;
+
+	client->init(numberofPlayers - 1);
 }

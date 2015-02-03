@@ -14,6 +14,7 @@
 #include "Pausestate.h"
 #include "LobbyState.h"
 #include "Singleton.hpp"
+#include "MainMenuState.h"
 
 #define g_pGame Game::Get()
 
@@ -21,6 +22,7 @@
 class Gameplaystate; 
 class Pausestate;
 class LobbyState;
+class MainMenuState;
 
 class Game : public Singleton < Game >
 {
@@ -37,10 +39,14 @@ private:
 	Gameplaystate *gameplayState;
 	Pausestate *pauseState;
 	LobbyState *lobbyState;
+	MainMenuState *menuState;
 
 	Client* client;
 
 	int numberofPlayers; 
+
+	std::string name, serverIP;
+	int serverPort, clientPort;
 
 public:
 	Game();
@@ -65,5 +71,17 @@ public:
 
 	int getNumberOfPlayers();
 	void setNumberOfPlayers(int n);
+
+	void setName(std::string n);
+	void setServerIP(std::string i);
+	void setServerPort(int p);
+	void setClientPort(int p);
+
+	std::string getName();
+	std::string getServerIP();
+	int getServerPort();
+	int getClientPort();
+
+	void setClient(Client *c);
 };
 
