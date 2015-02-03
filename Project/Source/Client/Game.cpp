@@ -112,6 +112,11 @@ void Game::setState(Gamestate *state){
 	currentState->init();
 }
 
+Gamestate *Game::getState()
+{
+	return currentState;
+}
+
 Gameplaystate* Game::getGameplayState(){
 	return gameplayState;
 }
@@ -186,7 +191,7 @@ void Game::setClient(Client *c)
 {
 	client = c;
 
-	client->init(numberofPlayers - 1);
+	//client->init(numberofPlayers - 1);
 }
 
 Client* Game::getClient(){

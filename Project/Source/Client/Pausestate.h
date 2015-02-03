@@ -14,6 +14,7 @@ public:
 	virtual void quit();
 
 	virtual void inputReceived(SDL_KeyboardEvent *key);
+	virtual void receivePacket(std::string data);
 
 private:
 };

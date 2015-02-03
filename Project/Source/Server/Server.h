@@ -6,38 +6,47 @@
 #include <tuple>
 #include <winsock2.h>
 
+#include "PlayerInfo.hpp"
+
 // check out http://johnnie.jerrata.com/winsocktutorial/
 
-
-#define MAX_PLAYERS 2
 #define BUFLEN 128
 
+enum ServerState
+{
+	ServerState_Waiting,
+	ServerState_Ingame
+};
 
 class Server
 {
-	private:
-		SOCKET listeningSocket;
-		SOCKET respondingSocket;
+private:
+	SOCKET s;
+	char *data;
+	ServerState state;
 
-		//<port / ip-Address, PlayerID>
-		std::map<unsigned int, unsigned int> playerID;
-		//<playerID, adress>
-		std::map<unsigned int, sockaddr_in> playerClientInfo;
+	int maxPlayers, port, tickrate;
+	int connectedPlayers;
 
-		std::vector<unsigned int> playerIDsFromPackagesReceived;
+	std::vector<PlayerInfo*> players;
 
-		char* returnPackage;
+	//<port / ip-Address, PlayerID>
+	//std::map<unsigned int, unsigned int> playerID;
+	//<playerID, adress>
+	//std::map<unsigned int, sockaddr_in> playerClientInfo;
+	//std::vector<unsigned int> playerIDsFromPackagesReceived;
 
+	//The spawnpoints that are available
+	//std::stack<std::tuple<float, float>> spawnPoints;
 
-		void readData();
-		void tiePackage(unsigned int id, char* data);
-		void distributePackage(unsigned int receiverID, sockaddr_in& clientInfo);
+public:
+	Server();
+	~Server();
 
-		//The spawnpoints that are available
-		std::stack<std::tuple<float, float>> spawnPoints;
+	int getMaxPlayers();
+	int getTickrate();
 
-	public:
-		Server();
-		~Server();
-
+	bool sendToClient(PlayerInfo player, std::string data);
+	bool sendToClient(PlayerInfo player, char* data, int size);
+	void update();
 };

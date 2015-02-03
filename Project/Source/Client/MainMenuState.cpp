@@ -5,6 +5,11 @@ void MainMenuState::init()
 	prompt = PROMPTING_NAME;
 }
 
+void MainMenuState::receivePacket(std::string data)
+{
+
+}
+
 void MainMenuState::inputReceived(SDL_KeyboardEvent *key)
 {
 	if (key->type == SDL_KEYUP)

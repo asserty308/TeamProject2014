@@ -13,12 +13,32 @@ Client::Client()
 		g_pLogfile->fLog("WSAStartup() error: %s", WSAGetLastError());
 		return;
 	}
-	
-	//create socket
-	clientSocket = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
-	if (clientSocket == INVALID_SOCKET)
+
+	// create socket
+	s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP);
+	if (s == INVALID_SOCKET)
 	{
 		g_pLogfile->fLog("socket() error: %s", WSAGetLastError());
+		return;
+	}
+
+	SOCKADDR_IN clientInfo;
+	clientInfo.sin_family = AF_INET;
+	clientInfo.sin_addr.s_addr = INADDR_ANY;
+	clientInfo.sin_port = htons(53546);
+
+	// bind the socket
+	if (bind(s, (struct sockaddr*)&clientInfo, sizeof(clientInfo)) == SOCKET_ERROR)
+	{
+		std::cout << "Failed to bind socket." << std::endl;
+		return;
+	}
+
+	//Change socket to a non-blocking one
+	u_long iMode = 1;
+	if (ioctlsocket(s, FIONBIO, &iMode) == SOCKET_ERROR)
+	{
+		g_pLogfile->fLog("Socket did not enter non-blocking mode.");
 		return;
 	}
 
@@ -28,57 +48,48 @@ Client::Client()
 	serverInfo.sin_port = htons(g_pGame->getServerPort());
 	serverInfo.sin_addr.S_un.S_addr = inet_addr(g_pGame->getServerIP().c_str());
 
+	if (!sendToServer("welcome:" + g_pGame->getName()))
 	// send our name to the server
-	char buffer[BUFLEN];
-	ZeroMemory(buffer, BUFLEN);
-	strcpy(buffer, g_pGame->getName().c_str());
-	//buffer[12] = '\n';
-	if (sendto(clientSocket, buffer, strlen(buffer), 0, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR)
 	{
-		g_pLogfile->textout("Failed to send data to server...");
+		g_pLogfile->fLog("Failed to send welcome packet to server.");
 		return;
 	}
 
-	//receive our "welcome package" i.e. spawnpoint and other data that differs between players
-	memset(initPackage, '?', BUFLEN);
-	recvfrom(clientSocket, initPackage, BUFLEN, 0, 0, 0);
+	data = new char[BUFLEN];
 
-	//Change socket to a non-blocking one
-	/*u_long iMode = 1;
-	if (ioctlsocket(clientSocket, FIONBIO, &iMode) == SOCKET_ERROR){
-		g_pLogfile->textout("Clientsocket did not enter non-blocking mode!");
-	}*/
-
-	ZeroMemory(package, 128);
+	//ZeroMemory(package, 128);
 }
 
 Client::~Client()
 {
-	delete[] receivedPackage;
-
-	// close socket
-	closesocket(clientSocket);
-
-	// shutdown winsock
+	closesocket(s);
 	WSACleanup();
 }
 
-void Client::init(int numberOfPlayers){
-	receivedPackage = new char[BUFLEN * numberOfPlayers - 1];
-	memset(receivedPackage, '?', BUFLEN);
+bool Client::sendToServer(std::string data)
+{
+	char d[BUFLEN];
+	strcpy(d, data.c_str());
+	return sendToServer(d, strlen(d));
 }
 
-void Client::update(){
-	memset(receivedPackage, '?', BUFLEN);
+bool Client::sendToServer(char *data, int size)
+{
+	return sendto(s, data, size, 0, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) != SOCKET_ERROR;
+}
 
-	if (sendto(clientSocket, package, sizeof(float) * 10, 0, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR){
-		g_pLogfile->fLog("Could not send clientdata in update! Error: %d", WSAGetLastError());
+void Client::update()
+{
+	// read data from socket
+	int bytesReceived = recvfrom(s, data, BUFLEN, 0, 0, 0);
+
+	while (bytesReceived > 0)
+	// if there was something to read
+	{
+		// pass the received packet on to the current game state
+		g_pGame->getState()->receivePacket(data);
+
+		// read more data
+		bytesReceived = recvfrom(s, data, BUFLEN, 0, 0, 0);
 	}
-
-	int bytesReceived = recvfrom(clientSocket, receivedPackage, BUFLEN * g_pGame->getNumberOfPlayers() - 1, 0, 0, 0);
-	
-}
-
-void Client::setPackage(char* data, int size){
-	memcpy(package, data, size);
 }

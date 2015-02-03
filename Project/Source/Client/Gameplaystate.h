@@ -11,7 +11,7 @@
 
 #define MATCHNUMBER 5
 
-enum MATCHSTATE{SPAWN, MATCH, MATCHOVER, GAMEOVER};
+enum MATCHSTATE{ SPAWN, MATCH, MATCHOVER, GAMEOVER };
 
 class Client;
 
@@ -21,11 +21,14 @@ class Gameplaystate :
 public:
 	Gameplaystate();
 	~Gameplaystate();
-	
+
 	virtual void init();
+	virtual void receivePacket(std::string packet);
 	virtual void update();
 	virtual void render();
 	virtual void quit();
+
+	int spawnPoint;
 
 	virtual void inputReceived(SDL_KeyboardEvent *key);
 
@@ -40,13 +43,13 @@ private:
 	int scorePlayer;
 	std::vector<int> scoreNetplayers;
 	MATCHSTATE matchstate;
-	
+
 
 	//TEMP
 	DebugCollider *dbc;
 	//TEMP
 
-	void handleConnection();
+	void sendOurStuffToServer();
 	void renderScore();
 };
 

@@ -6,41 +6,24 @@
 
 #define BUFLEN 128
 
-
 // check out http://johnnie.jerrata.com/winsocktutorial/
+
 class Game;
 
 class Client
 {
-	private:
+private:
 
-		//The package that will be sent to the server
-		char package[BUFLEN];
-		//The package that will be received from the server
-		char* receivedPackage;
-		//The package that will be received from the server upon first contact
-		char initPackage[BUFLEN];
-		
-		//SOCKET serverSocket;
-		sockaddr_in serverInfo;
-		SOCKET clientSocket;
+	sockaddr_in serverInfo;
+	SOCKET s;
+	char *data;
 
+public:
+	Client();
+	~Client();
 
-	public:
-		Client();
-		~Client();
+	bool sendToServer(std::string data);
+	bool sendToServer(char* data, int size);
 
-		void update();
-
-		void setPackage(char* data, int size);
-
-		void init(int numberOfPlayers);
-
-		char* getReceivedPackage(){
-			return receivedPackage;
-		}
-
-		char* getInitPackage(){
-			return initPackage;
-		}
+	void update();
 };

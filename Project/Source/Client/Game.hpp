@@ -62,6 +62,7 @@ public:
 
 	void setState(Gamestate *state);
 
+	Gamestate *getState();
 	Gameplaystate* getGameplayState();
 	Pausestate* getPauseState();
 	LobbyState* getLobbyState();
