@@ -1,4 +1,5 @@
 #include <iostream>
+#include <sstream>
 
 #include "Server.h"
 
@@ -40,14 +41,14 @@ Server::Server()
 
 	do
 	{
-		std::cout << "Please enter desired port number (1000-10000): ";
+		std::cout << "Please enter desired port number (1000-99999): ";
 		std::cin >> port;
-	} while (port < 1000 || port > 10000);
+	} while (port < 1000 || port > 99999);
 		
 	SOCKADDR_IN serverInfo;
 	serverInfo.sin_family = AF_INET;
 	serverInfo.sin_addr.s_addr = INADDR_ANY;
-	serverInfo.sin_port = htons(port);
+	serverInfo.sin_port = port;
 
 	// bind the socket
 	if (bind(s, (struct sockaddr*)&serverInfo, sizeof(serverInfo)) == SOCKET_ERROR)
@@ -127,13 +128,14 @@ void Server::update()
 
 					for (PlayerInfo *i : players)
 					{
-						std::string msg = "start:0";
+						std::stringstream msg;
+						msg << "start:";
+						msg	<< startIndex;
 
-						if (startIndex == 1)
-							msg = "start:1";
-
-						if (!sendToClient(*i, msg))
+						if (!sendToClient(*i, msg.str()))
 							std::cout << "Failed to send start packet to a player." << std::endl;
+						else
+							std::cout << "Sent start packet \"" << msg.str() << "\" to player \"" << (*i).getName() << "\"."  << std::endl;
 
 						startIndex++;
 					}
@@ -150,11 +152,11 @@ void Server::update()
 		{
 			int index = 0;
 
-			std::cout << "player count: " << players.size() << std::endl;
+			//std::cout << "player count: " << players.size() << std::endl;
 
 			for (PlayerInfo *playerInfo : players)
 			{
-				std::cout << "comparing ports " << clientInfo.sin_port << "  and " << playerInfo->getAddress().sin_port << std::endl;
+				//std::cout << "comparing ports " << clientInfo.sin_port << "  and " << playerInfo->getAddress().sin_port << std::endl;
 				if (/*clientInfo.sin_addr.S_un.S_addr == playerInfo->getAddress().sin_addr.S_un.S_addr &&*/ clientInfo.sin_port == playerInfo->getAddress().sin_port)
 				{
 					float *playerData = new float[10];

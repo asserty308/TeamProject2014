@@ -135,85 +135,69 @@ void Gameplaystate::update()
 	client->update();
 
 	g_pCollisionObserver->checkCollisionRoutine();
-	/*
+
+	Vector2 playerSpawn(spawnPoints[spawnPoint][0], spawnPoints[spawnPoint][1]);
+
 	switch (matchstate)
 	{
-		case(SPAWN) :
-		{
-			Vector2 playerSpawn(spawnPoints[spawnPoint][0], spawnPoints[spawnPoint][1]);
+		case(SPAWN):
+			player->setPosition(playerSpawn);
+			player->reset();
 
-						player->setPosition(playerSpawn);
-						player->reset();
+			if (countdown.getState() == INITIALIZED)
+				countdown.start();
+			else if (countdown.getState() == FINISHED)
+			{
+				matchstate = MATCH;
+				countdown.reset();
+			}
+		break;
+		case(MATCH):
+			if (player)
+			{
+				player->updatePosition(g_pTimer->getDeltaTime());
+				player->update();
 
-						if (countdown.getState() == INITIALIZED){
-							countdown.start();
-						}
-						else if (countdown.getState() == FINISHED){
-							matchstate = MATCH;
-							countdown.reset();
-						}
-		}
-					break;
-		case(MATCH) :
-		{
-						if (player){
-							player->updatePosition(g_pTimer->getDeltaTime());
-							player->update();
+				int deadNetplayers = 0;
+				for (Netplayer* n : netplayers)
+				{
+					if (n->getIsDead())
+						deadNetplayers++;
+				}
 
-							int deadNetplayers = 0;
-							for (Netplayer* n : netplayers){
-								if (n->getIsDead()){
-									deadNetplayers++;
-								}
-							}
+				//if every netplayer is dead and the player is alive OR every netplayer but one is dead and the player is also dead
+				//the match is over
+				if (deadNetplayers == g_pGame->getNumberOfPlayers() - 1 && !player->getIsDead() ||
+					deadNetplayers == g_pGame->getNumberOfPlayers() - 2 && player->getIsDead())
+				{
+					//matchstate = MATCHOVER;
+				}
+			}
+		break;
+		case(MATCHOVER):
+			matchCount++;
 
-							//if every netplayer is dead and the player is alive OR every netplayer but one is dead and the player is also dead
-							//the match is over
-							if (deadNetplayers == g_pGame->getNumberOfPlayers() - 1 && !player->getIsDead() ||
-								deadNetplayers == g_pGame->getNumberOfPlayers() - 2 && player->getIsDead()){
-								//matchstate = MATCHOVER;
-							}
-							//if every netplayer is dead and the player is alive OR every netplayer but one is dead and the player is also dead
-							//the match is over
-							if (deadNetplayers == g_pGame->getNumberOfPlayers() - 1 && !player->getIsDead() ||
-								deadNetplayers == g_pGame->getNumberOfPlayers() - 2 && player->getIsDead()){
-								player->rocketDestroyed();
-								matchstate = MATCHOVER;
-							}
+			if (!player->getIsDead())
+				scorePlayer++;
+			else
+			{
+				for (int i = 0; i < netplayers.size(); i++)
+				{
+					if (!netplayers[i]->getIsDead())
+						scoreNetplayers[i]++;
+				}
+			}
 
-						}
-						break;
-		case(MATCHOVER) :
-		{
-							matchCount++;
-
-							if (!player->getIsDead()){
-								scorePlayer++;
-							}
-							else{
-								for (int i = 0; i < netplayers.size(); i++){
-									if (!netplayers[i]->getIsDead()){
-										scoreNetplayers[i]++;
-									}
-								}
-							}
-
-							if (matchCount >= MATCHNUMBER){
-								matchstate = GAMEOVER;
-							}
-							else {
-								matchstate = SPAWN;
-							}
-		}
-						break;
+			if (matchCount >= MATCHNUMBER)
+				matchstate = GAMEOVER;
+			else
+				matchstate = SPAWN;
+		break;
 		case(GAMEOVER) :
-		{
-						   break;
-		}
+		break;
 	}
 
 	countdown.run();
-	*/
 }
 
 void Gameplaystate::render()

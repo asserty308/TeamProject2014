@@ -25,12 +25,12 @@ Client::Client()
 	SOCKADDR_IN clientInfo;
 	clientInfo.sin_family = AF_INET;
 	clientInfo.sin_addr.s_addr = INADDR_ANY;
-	clientInfo.sin_port = htons(53546);
+	clientInfo.sin_port = g_pGame->getClientPort();
 
 	// bind the socket
 	if (bind(s, (struct sockaddr*)&clientInfo, sizeof(clientInfo)) == SOCKET_ERROR)
 	{
-		std::cout << "Failed to bind socket." << std::endl;
+		g_pLogfile->fLog("Failed to bind socket.");
 		return;
 	}
 
@@ -45,7 +45,7 @@ Client::Client()
 	//setup address structure
 	memset((char*)&serverInfo, 0, sizeof(serverInfo));
 	serverInfo.sin_family = AF_INET;
-	serverInfo.sin_port = htons(g_pGame->getServerPort());
+	serverInfo.sin_port = g_pGame->getServerPort();
 	serverInfo.sin_addr.S_un.S_addr = inet_addr(g_pGame->getServerIP().c_str());
 
 	if (!sendToServer("welcome:" + g_pGame->getName()))
@@ -55,9 +55,9 @@ Client::Client()
 		return;
 	}
 
-	data = new char[BUFLEN];
+	g_pLogfile->fLog("Sent welcome packet to server with our name \"%s\".", g_pGame->getName().c_str());
 
-	//ZeroMemory(package, 128);
+	data = new char[BUFLEN];
 }
 
 Client::~Client()

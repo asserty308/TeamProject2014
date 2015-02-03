@@ -17,7 +17,7 @@ void LobbyState::init(){
 void LobbyState::receivePacket(std::string packet)
 {
 	if (packet.substr(0, 5).compare("start") == 0)
-		// if we received a start packet from the server to let us know the game is starting
+	// if we received a start packet from the server to let us know the game is starting
 	{
 		std::string tmp = packet.substr(6);
 		int spawnIndex = atoi(tmp.c_str());
@@ -28,7 +28,7 @@ void LobbyState::receivePacket(std::string packet)
 		g_pGame->setState(g_pGame->getGameplayState());
 	}
 	else
-		g_pLogfile->fLog("Invalid packet received and discarded.", packet);
+		g_pLogfile->fLog("Invalid packet \"%s\" received and discarded.", packet);
 }
 
 void LobbyState::update()
