@@ -9,10 +9,9 @@
 
 #include <sstream>
 
-Gameplaystate::Gameplaystate(Client* client) :
+Gameplaystate::Gameplaystate() :
 	countdown(3)
 {
-	this->client = client;
 	player = nullptr;
 	map = nullptr;
 	dbc = nullptr;
@@ -38,7 +37,9 @@ Gameplaystate::~Gameplaystate()
 
 void Gameplaystate::init()
 {
-	map = MapParser::loadMap("Maps\\testmap.xml");
+	client = g_pGame->getClient();
+
+	map = MapParser::loadMap("Maps\\testmap2.xml");
 
 	char* serverInitPackage = client->getInitPackage();
 	float playerSpawnFromServer[2];

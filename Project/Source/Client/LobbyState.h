@@ -9,7 +9,7 @@ class Client;
 
 class LobbyState : public Gamestate{
 public:
-	LobbyState(Client* client);
+	LobbyState();
 	~LobbyState();
 
 	virtual void init();

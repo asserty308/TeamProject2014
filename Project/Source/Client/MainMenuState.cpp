@@ -44,8 +44,8 @@ void MainMenuState::inputReceived(SDL_KeyboardEvent *key)
 					g_pGame->setServerIP(ip);
 					g_pGame->setServerPort(atoi(port.c_str()));
 					g_pGame->setClientPort(atoi(clPort.c_str()));
-					g_pGame->setState(g_pGame->getLobbyState());
 					g_pGame->setClient(new Client());
+					g_pGame->setState(g_pGame->getLobbyState());
 				}
 				else
 					appendSDLKey(key, &clPort);

@@ -1,7 +1,6 @@
 #include "LobbyState.h"
 
-LobbyState::LobbyState(Client* client){
-	this->client = client;
+LobbyState::LobbyState(){
 }
 
 LobbyState::~LobbyState(){
@@ -11,6 +10,8 @@ LobbyState::~LobbyState(){
 void LobbyState::init(){
 	this->numberOfPlayers = g_pGame->getNumberOfPlayers() - 1;
 	receivedBuffer = new char[BUFLEN * numberOfPlayers];
+
+	client = g_pGame->getClient();
 }
 
 void LobbyState::update()

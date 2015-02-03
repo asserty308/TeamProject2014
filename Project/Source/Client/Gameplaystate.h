@@ -19,7 +19,7 @@ class Gameplaystate :
 	public Gamestate
 {
 public:
-	Gameplaystate(Client* client);
+	Gameplaystate();
 	~Gameplaystate();
 	
 	virtual void init();

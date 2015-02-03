@@ -83,5 +83,6 @@ public:
 	int getClientPort();
 
 	void setClient(Client *c);
+	Client* getClient();
 };
 

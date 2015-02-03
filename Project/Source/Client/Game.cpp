@@ -13,9 +13,9 @@ Game::Game()
 
 	numberofPlayers = 2;
 
-	gameplayState = new Gameplaystate(client);
+	gameplayState = new Gameplaystate();
 	pauseState = new Pausestate();
-	lobbyState = new LobbyState(client);
+	lobbyState = new LobbyState();
 	menuState = new MainMenuState();
 
 }
@@ -187,4 +187,8 @@ void Game::setClient(Client *c)
 	client = c;
 
 	client->init(numberofPlayers - 1);
+}
+
+Client* Game::getClient(){
+	return client;
 }

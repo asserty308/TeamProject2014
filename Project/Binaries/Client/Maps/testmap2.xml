@@ -1,0 +1,136 @@
+<?xml version="1.0" ?>
+
+<Map>
+	<PlayerSpawn x="50" y="50"/>
+	<Obstacle>
+		<Vertex x="150" y="75"/>
+		<Vertex x="150" y="150"/>
+		<Vertex x="75" y="150"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="150" y="75"/>
+		<Vertex x="200" y="75"/>
+		<Vertex x="200" y="200"/>
+		<Vertex x="150" y="200"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="75" y="150"/>
+		<Vertex x="200" y="150"/>
+		<Vertex x="200" y="200"/>
+		<Vertex x="75" y="200"/>
+	</Obstacle>
+	//////
+	<Obstacle>
+		<Vertex x="650" y="75"/>
+		<Vertex x="650" y="150"/>
+		<Vertex x="725" y="150"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="600" y="75"/>
+		<Vertex x="650" y="75"/>
+		<Vertex x="650" y="200"/>
+		<Vertex x="600" y="200"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="600" y="150"/>
+		<Vertex x="725" y="150"/>
+		<Vertex x="725" y="200"/>
+		<Vertex x="600" y="200"/>
+	</Obstacle>
+	/////
+	<Obstacle>
+		<Vertex x="725" y="450"/>
+		<Vertex x="650" y="450"/>
+		<Vertex x="650" y="525"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="650" y="525"/>
+		<Vertex x="600" y="525"/>
+		<Vertex x="600" y="400"/>
+		<Vertex x="650" y="400"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="650" y="400"/>
+		<Vertex x="725" y="400"/>
+		<Vertex x="725" y="450"/>
+		<Vertex x="650" y="450"/>
+	</Obstacle>
+	/////
+	<Obstacle>
+		<Vertex x="75" y="450"/>
+		<Vertex x="150" y="450"/>
+		<Vertex x="150" y="525"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="75" y="450"/>
+		<Vertex x="75" y="400"/>
+		<Vertex x="200" y="400"/>
+		<Vertex x="200" y="450"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="150" y="525"/>
+		<Vertex x="200" y="525"/>
+		<Vertex x="200" y="450"/>
+		<Vertex x="150" y="450"/>
+	</Obstacle>
+	/////
+	<Obstacle>
+		<Vertex x="400" y="200"/>
+		<Vertex x="400" y="300"/>
+		<Vertex x="300" y="300"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="400" y="200"/>
+		<Vertex x="400" y="300"/>
+		<Vertex x="500" y="300"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="500" y="300"/>
+		<Vertex x="400" y="300"/>
+		<Vertex x="400" y="400"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="400" y="400"/>
+		<Vertex x="400" y="300"/>
+		<Vertex x="300" y="300"/>
+	</Obstacle>
+	/////
+	<Obstacle>
+		<Vertex x="375" y="0"/>
+		<Vertex x="425" y="0"/>
+		<Vertex x="425" y="75"/>
+		<Vertex x="375" y="75"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="725" y="275"/>
+		<Vertex x="800" y="275"/>
+		<Vertex x="800" y="325"/>
+		<Vertex x="725" y="325"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="375" y="525"/>
+		<Vertex x="425" y="525"/>
+		<Vertex x="425" y="600"/>
+		<Vertex x="375" y="600"/>
+	</Obstacle>
+	
+	<Obstacle>
+		<Vertex x="0" y="275"/>
+		<Vertex x="75" y="275"/>
+		<Vertex x="75" y="325"/>
+		<Vertex x="0" y="325"/>
+	</Obstacle>
+</Map>
