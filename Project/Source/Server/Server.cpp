@@ -134,8 +134,8 @@ void Server::update()
 
 						if (!sendToClient(*i, msg.str()))
 							std::cout << "Failed to send start packet to a player." << std::endl;
-						else
-							std::cout << "Sent start packet \"" << msg.str() << "\" to player \"" << (*i).getName() << "\"."  << std::endl;
+						//else
+							//std::cout << "Sent start packet \"" << msg.str() << "\" to player \"" << (*i).getName() << "\"."  << std::endl;
 
 						startIndex++;
 					}
@@ -152,12 +152,9 @@ void Server::update()
 		{
 			int index = 0;
 
-			//std::cout << "player count: " << players.size() << std::endl;
-
 			for (PlayerInfo *playerInfo : players)
 			{
-				//std::cout << "comparing ports " << clientInfo.sin_port << "  and " << playerInfo->getAddress().sin_port << std::endl;
-				if (/*clientInfo.sin_addr.S_un.S_addr == playerInfo->getAddress().sin_addr.S_un.S_addr &&*/ clientInfo.sin_port == playerInfo->getAddress().sin_port)
+				if (clientInfo.sin_addr.S_un.S_addr == playerInfo->getAddress().sin_addr.S_un.S_addr && clientInfo.sin_port == playerInfo->getAddress().sin_port)
 				{
 					float *playerData = new float[10];
 					memcpy(playerData, data, sizeof(float)* 10);
@@ -175,8 +172,6 @@ void Server::update()
 
 					delete[] playerData;
 
-					std::cout << "Received data from player " << index << std::endl;
-
 					break;
 				}
 
@@ -185,7 +180,7 @@ void Server::update()
 		}
 
 		// read more data
-		bytesReceived = recvfrom(s, data, BUFLEN, 0, 0, 0);
+		bytesReceived = recvfrom(s, data, BUFLEN, 0, (struct sockaddr*)&clientInfo, &clientLen);
 	}
 
 	if (state == ServerState_Ingame)
