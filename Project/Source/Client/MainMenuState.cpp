@@ -61,6 +61,11 @@ void MainMenuState::inputReceived(SDL_KeyboardEvent *key)
 
 void MainMenuState::appendSDLKey(SDL_KeyboardEvent *key, std::string *str)
 {
+	if (key->keysym.sym == SDLK_BACKSPACE){
+		str->pop_back();
+		return;
+	}
+
 	char k = key->keysym.sym;
 	str->push_back(k);
 }
@@ -72,7 +77,9 @@ void MainMenuState::update()
 
 void MainMenuState::render()
 {
-	std::stringstream stream;
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	stream.str("");
 	stream << "Name: " + name;
 
 	SDL_Color col = { 255, 127, 0 };

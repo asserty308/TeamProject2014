@@ -36,7 +36,7 @@ Gameplaystate::~Gameplaystate()
 }
 
 // TODO: hardcoded
-float spawnPoints[2][2] = { { 100.f, 100.f }, { 750.f, 750.f } };
+float spawnPoints[2][2] = { { 50.0f, 50.0f }, { 750.f, 750.f } };
 
 void Gameplaystate::init()
 {

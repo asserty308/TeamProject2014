@@ -14,6 +14,7 @@ class MainMenuState : public Gamestate
 		std::string name, ip, port, clPort;
 
 		PromptingState prompt;
+		std::stringstream stream;
 
 	public:
 		void init();
