@@ -13,7 +13,7 @@ public:
 	~LobbyState();
 
 	virtual void init();
-	virtual void receivePacket(std::string packet);
+	virtual void receivePacket(char* packet);
 	virtual void update();
 	virtual void render();
 	virtual void quit();

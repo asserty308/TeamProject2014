@@ -14,20 +14,21 @@ void LobbyState::init(){
 	client = g_pGame->getClient();
 }
 
-void LobbyState::receivePacket(std::string packet)
+void LobbyState::receivePacket(char* packet)
 {
-	if (packet.substr(0, 5).compare("start") == 0)
-	// if we received a start packet from the server to let us know the game is starting
+	char* cmpString = "start";
+
+	if (memcmp(packet, cmpString, sizeof(char)* 5) == 0)
+		// if we received a start packet from the server to let us know the game is starting
 	{
-		std::string tmp = packet.substr(6);
+		std::string tmp = packet + sizeof(char)* 6;
 		int spawnIndex = atoi(tmp.c_str());
 
 		g_pGame->getGameplayState()->spawnPoint = spawnIndex;
 
 		g_pLogfile->fLog("Starting game (spawn point %d).", spawnIndex);
 		g_pGame->setState(g_pGame->getGameplayState());
-	}
-	else
+	} else
 		g_pLogfile->fLog("Invalid packet \"%s\" received and discarded.", packet);
 }
 

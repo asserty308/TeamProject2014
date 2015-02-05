@@ -22,6 +22,6 @@ class MainMenuState : public Gamestate
 		void render();
 		void quit();
 		void inputReceived(SDL_KeyboardEvent *key);
-		void receivePacket(std::string data);
+		void receivePacket(char* data);
 		void appendSDLKey(SDL_KeyboardEvent *key, std::string *str);
 };

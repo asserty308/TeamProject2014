@@ -10,7 +10,7 @@ void Pausestate::init()
 	//g_pAudioController->playMusic("Audio/Music/koz.mp3", true);
 }
 
-void Pausestate::receivePacket(std::string data)
+void Pausestate::receivePacket(char* data)
 {
 
 }

@@ -89,16 +89,15 @@ void Gameplaystate::sendOurStuffToServer()
 	client->sendToServer((char*)&playerData, sizeof(float)* 10);
 }
 
-void Gameplaystate::receivePacket(std::string packet)
+void Gameplaystate::receivePacket(char* packet)
 {
-	const char *cstr = packet.c_str();
 
 	//size_t numberOfFloatsInBUFLEN = BUFLEN / sizeof(float);
 	//float *allPlayerData = new float[(g_pGame->getNumberOfPlayers() - 1) * numberOfFloatsInBUFLEN];
 	//memcpy(allPlayerData, cstr, sizeof(float)* (g_pGame->getNumberOfPlayers() - 1) * numberOfFloatsInBUFLEN);
 
 	float *netPlayerData = new float[10];
-	memcpy(netPlayerData, cstr, sizeof(float)* 10);
+	memcpy(netPlayerData, packet, sizeof(float)* 10);
 
 	//int offset = 0;
 	//char* defaultTest = "???";

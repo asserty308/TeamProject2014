@@ -5,7 +5,7 @@ void MainMenuState::init()
 	prompt = PROMPTING_NAME;
 }
 
-void MainMenuState::receivePacket(std::string data)
+void MainMenuState::receivePacket(char* data)
 {
 
 }
@@ -61,7 +61,7 @@ void MainMenuState::inputReceived(SDL_KeyboardEvent *key)
 
 void MainMenuState::appendSDLKey(SDL_KeyboardEvent *key, std::string *str)
 {
-	if (key->keysym.sym == SDLK_BACKSPACE){
+	if (key->keysym.sym == SDLK_BACKSPACE && str->length() > 0){
 		str->pop_back();
 		return;
 	}
