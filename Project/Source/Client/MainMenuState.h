@@ -6,14 +6,14 @@
 #include <iostream>
 #include <string>
 
-enum PromptingState { PROMPTING_NAME, PROMPTING_IP, PROMPTING_PORT, PROMPTING_CL_PORT };
+enum MenuState { SPLASH_SCREEN, PROMPTING_NAME, PROMPTING_IP, PROMPTING_PORT, PROMPTING_CL_PORT };
 
 class MainMenuState : public Gamestate
 {
 	private:
 		std::string name, ip, port, clPort;
 
-		PromptingState prompt;
+		MenuState currentState;
 		std::stringstream stream;
 
 	public:
