@@ -118,10 +118,10 @@ void Gameplaystate::receivePacket(char* packet)
 		if (netPlayerIsDead > 1.5f || netPlayerIsDead < -1.5f)
 		{
 			//g_pLogfile->fTextout("defaulting from %d", spawnPoint); NEVER HAPPENS
-			netplayers[i]->update(Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), 180.0f, Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), false);
+			netplayers[i]->updateNetData(Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), 180.0f, Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), false);
 		}
 		else
-			netplayers[i]->update(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward, netPlayerIsDead);
+			netplayers[i]->updateNetData(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward, netPlayerIsDead);
 	}
 
 	delete[] netPlayerData;
@@ -132,6 +132,10 @@ void Gameplaystate::update()
 {
 	sendOurStuffToServer();
 	client->update();
+
+	for (int i = 0; i < g_pGame->getNumberOfPlayers() - 1; i++){
+		netplayers[i]->update();
+	}
 
 	g_pCollisionObserver->checkCollisionRoutine();
 

@@ -137,6 +137,7 @@
     <ClInclude Include="MainMenuState.h" />
     <ClInclude Include="Map.hpp" />
     <ClInclude Include="MapParser.h" />
+    <ClInclude Include="MathUtil.h" />
     <ClInclude Include="MusicPlayer.hpp" />
     <ClInclude Include="Netplayer.h" />
     <ClInclude Include="NetRocket.h" />

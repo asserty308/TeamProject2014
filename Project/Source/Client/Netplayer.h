@@ -4,6 +4,21 @@
 #include "Transform.hpp"
 #include "NetRocket.h"
 #include "CollisionObserver.h"
+#include "MathUtil.h"
+#include "Timer.h"
+
+#define EXPECTEDTICKRATE 0.066
+
+
+struct NetplayerData{
+	Vector2 pos;
+	Vector2 forward;
+	float angle;
+	Vector2 rocketPos;
+	Vector2 rocketForward;
+	bool isDead;
+};
+
 
 class NetRocket;
 
@@ -16,9 +31,10 @@ public:
 
 	virtual void CollisionDetected(TransformCollidable *other, Vector2 penetration);
 
-	void update(Vector2 pos, Vector2 forward, float angle, Vector2 rocketPos, Vector2 rocketForward, bool isDead);
+	void update();
 	void render();
 
+	void updateNetData(Vector2 pos, Vector2 forward, float angle, Vector2 rocketPos, Vector2 rocketForward, bool isDead);
 	void rocketDestroyed();
 
 	bool getIsDead();
@@ -27,5 +43,9 @@ private:
 	Sprite *sprite;
 	NetRocket* netRocket;
 	bool isDead;
+
+	NetplayerData frontHistoryCache;
+	NetplayerData backHistoryCache;
+	float updateElapsed;
 
 };

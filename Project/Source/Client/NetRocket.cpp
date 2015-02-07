@@ -1,6 +1,7 @@
 #pragma once
 
 #include "NetRocket.h"
+#include "Game.hpp"
 
 NetRocket::NetRocket() : TransformCollidable(Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f)){
 
@@ -32,15 +33,20 @@ void NetRocket::update(Vector2 position, Vector2 forward){
 }
 
 void NetRocket::render(){
-	glColor3f(0.f, 0.f, 1.f);
-	glLineWidth(2.f);
 
-	glBegin(GL_POLYGON);
-	glVertex2f(position.getX() + forward.getX() * 10.f, position.getY() + forward.getY() * 10.f);
-	glVertex2f(position.getX() - forward.getX() * 10.f - getRight().getX() * 6.f, position.getY() - forward.getY() * 10.f - getRight().getY() * 6.f);
-	glVertex2f(position.getX() - forward.getX() * 6.f, position.getY() - forward.getY() * 6.f);
-	glVertex2f(position.getX() - forward.getX() * 10.f + getRight().getX() * 6.f, position.getY() - forward.getY() * 10.f + getRight().getY() * 6.f);
-	glEnd();
+	if (position.getX() > 0 && position.getX() < g_pGame->getWindowWidth() &&
+		position.getY() > 0 && position.getY() < g_pGame->getWindowHeight() ){
+	
+		glColor3f(0.f, 0.f, 1.f);
+		glLineWidth(2.f);
+
+		glBegin(GL_POLYGON);
+		glVertex2f(position.getX() + forward.getX() * 10.f, position.getY() + forward.getY() * 10.f);
+		glVertex2f(position.getX() - forward.getX() * 10.f - getRight().getX() * 6.f, position.getY() - forward.getY() * 10.f - getRight().getY() * 6.f);
+		glVertex2f(position.getX() - forward.getX() * 6.f, position.getY() - forward.getY() * 6.f);
+		glVertex2f(position.getX() - forward.getX() * 10.f + getRight().getX() * 6.f, position.getY() - forward.getY() * 10.f + getRight().getY() * 6.f);
+		glEnd();
+	}
 }
 
 

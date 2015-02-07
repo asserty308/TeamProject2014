@@ -62,6 +62,7 @@ Client::Client()
 
 Client::~Client()
 {
+	delete[] data;
 	closesocket(s);
 	WSACleanup();
 }
@@ -87,6 +88,7 @@ void Client::update()
 	// if there was something to read
 	{
 		// pass the received packet on to the current game state
+		
 		g_pGame->getState()->receivePacket(data);
 
 		// read more data
