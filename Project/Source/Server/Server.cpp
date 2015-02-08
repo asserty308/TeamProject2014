@@ -18,11 +18,12 @@ Server::Server()
 
 	do
 	{
-		std::cout << "Please enter desired player count (2-4): ";
+		std::cout << "Please enter player count (2-4): ";
 		std::cin >> maxPlayers;
 	} while (maxPlayers < 2 || maxPlayers > 4);
 
 	connectedPlayers = 0;
+	readyPlayers = 0;
 
 	// create the listening socket
 	if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
@@ -41,7 +42,7 @@ Server::Server()
 
 	do
 	{
-		std::cout << "Please enter desired port number (1000-99999): ";
+		std::cout << "Please enter port number (1000-99999): ";
 		std::cin >> port;
 	} while (port < 1000 || port > 99999);
 		
@@ -59,7 +60,7 @@ Server::Server()
 
 	do
 	{
-		std::cout << "Please enter desired tickrate (16-128): ";
+		std::cout << "Please enter tickrate (16-128): ";
 		std::cin >> tickrate;
 	} while (tickrate < 16 || tickrate > 128);
 
@@ -116,33 +117,62 @@ void Server::update()
 			if (recString.substr(0, 7).compare("welcome") == 0)
 			// if we received a welcome packet from a player signing up with their name
 			{
-				std::string nickname = recString.substr(8);
-				std::cout << "Player \"" << nickname.c_str() << "\" connected (" << connectedPlayers + 1 << "/" << maxPlayers << ")" << std::endl;
-				connectedPlayers++;
+				bool skip = false;
 
-				players.push_back(new PlayerInfo(clientInfo, nickname));
-
-				if (connectedPlayers == maxPlayers)
+				// check if that player has already been marked as signed up
+				for (PlayerInfo *playerInfo : players)
 				{
-					int startIndex = 0;
-
-					for (PlayerInfo *i : players)
+					if (clientInfo.sin_addr.S_un.S_addr == playerInfo->getAddress().sin_addr.S_un.S_addr && clientInfo.sin_port == playerInfo->getAddress().sin_port)
+					// this means we received another welcome packet from a client that is already registered
 					{
-						std::stringstream msg;
-						msg << "start:";
-						msg	<< startIndex;
-
-						if (!sendToClient(*i, msg.str()))
-							std::cout << "Failed to send start packet to a player." << std::endl;
-						//else
-							//std::cout << "Sent start packet \"" << msg.str() << "\" to player \"" << (*i).getName() << "\"."  << std::endl;
-
-						startIndex++;
+						// answer with an ACK packet so the player stops spamming us hopefully
+						sendToClient(*playerInfo, "welcome:ack");
+						skip = true;
+						break;
 					}
+				}
 
-					std::cout << std::endl << "All players connected, starting game..." << std::endl << std::endl;
+				if (!skip)
+				// if we received a _new_ player
+				{
+					std::string nickname = recString.substr(8);
+					
+					std::cout << "Player \"" << nickname.c_str() << "\" (" << (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b1 << "."
+						<< (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b2 << "." << (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b3 << "."
+						<< (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b4 << ":" << clientInfo.sin_port << ") connected (" << connectedPlayers + 1
+						<< "/" << maxPlayers << ")" << std::endl;
+					
+					connectedPlayers++;
 
-					state = ServerState_Ingame;
+					players.push_back(new PlayerInfo(clientInfo, nickname));
+				}
+			}
+			else if (recString.substr(0, 9).compare("start:ack") == 0)
+			// if we received a start acknowledge packet from a player
+			{
+				for (PlayerInfo *playerInfo : players)
+				// loop through all connected players
+				{
+					if (*playerInfo == clientInfo)
+					// if we found the player that send us the ack packet
+					{
+						if (!playerInfo->hasAcknowledgedStartPacket)
+						// if the player has not acknowledged their start packet yet
+						{
+							// mark the player as having acknowledged their start packet
+							playerInfo->hasAcknowledgedStartPacket = true;
+
+							std::cout << "Player \"" << playerInfo->getName() << "\" is ready and has acknowledged their start packet." << std::endl;
+
+							readyPlayers++;
+
+							if (readyPlayers == maxPlayers)
+							{
+								std::cout << std::endl << "All players ready, starting game..." << std::endl << std::endl;
+								state = ServerState_Ingame;
+							}
+						}
+					}
 				}
 			}
 			else
@@ -154,7 +184,7 @@ void Server::update()
 
 			for (PlayerInfo *playerInfo : players)
 			{
-				if (clientInfo.sin_addr.S_un.S_addr == playerInfo->getAddress().sin_addr.S_un.S_addr && clientInfo.sin_port == playerInfo->getAddress().sin_port)
+				if (*playerInfo == clientInfo)
 				{
 					float *playerData = new float[10];
 					memcpy(playerData, data, sizeof(float)* 10);
@@ -183,7 +213,35 @@ void Server::update()
 		bytesReceived = recvfrom(s, data, BUFLEN, 0, (struct sockaddr*)&clientInfo, &clientLen);
 	}
 
-	if (state == ServerState_Ingame)
+	if (state == ServerState_Waiting)
+	// if we are still in waiting/lobby mode
+	{
+		if (connectedPlayers == maxPlayers)
+		// and we are ready to go (all players have connected)
+		{
+			int startIndex = 0;
+
+			for (PlayerInfo *i : players)
+			// loop through all connected players
+			{
+				if (!(*i).hasAcknowledgedStartPacket)
+				// if this player has not ackowledged their start packet yet
+				{
+					// send them a new one
+
+					std::stringstream msg;
+					msg << "start:";
+					msg << startIndex;
+
+					if (!sendToClient(*i, msg.str()))
+						std::cout << "Failed to send start packet to a player." << std::endl;
+				}
+
+				startIndex++;
+			}
+		}
+	}
+	else if (state == ServerState_Ingame)
 	{
 		for (PlayerInfo *recipient : players)
 		{
@@ -191,7 +249,7 @@ void Server::update()
 
 			for (PlayerInfo *playerInfo : players)
 			{
-				if (recipient == playerInfo)
+				if (*recipient == *playerInfo)
 					continue;
 
 				float playerData[10] = { playerInfo->positionX, playerInfo->positionY,
@@ -200,10 +258,6 @@ void Server::update()
 					playerInfo->rocketPositionX, playerInfo->rocketPositionY,
 					playerInfo->rocketForwardX, playerInfo->rocketForwardY, playerInfo->isDead };
 
-				//std::cout << "players: " << players.size() << " offset: " << offset << std::endl;
-				//std::cout << "Net player \"" << playerInfo->getName() << "\" pos: " << playerInfo->positionX << "x" << playerInfo->positionY << std::endl;
-
-				//memcpy(playerDataPacket + offset * (sizeof(float) * 10), playerData, sizeof(float) * 10);
 				memcpy(playerDataPacket, playerData, sizeof(float)* 10);
 			}
 
@@ -211,104 +265,3 @@ void Server::update()
 		}
 	}
 }
-
-/*
-void Server::readData()
-{
-std::string data;
-sockaddr_in clientInfo;
-
-int clientLen = sizeof(clientInfo);
-
-while (true)
-{
-std::cout << "\nWaiting for data..." << std::endl;
-fflush(stdout);
-
-char buffer[BUFLEN];
-
-//clear the buffer
-memset(buffer, '\0', BUFLEN);
-
-int bytesReceived = recvfrom(listeningSocket, buffer, BUFLEN, 0, (struct sockaddr*)&clientInfo, &clientLen);
-
-if (bytesReceived == SOCKET_ERROR)
-{
-std::cout << "recvfrom() error: " << WSAGetLastError() << std::endl;
-}
-
-//print client's details and the data received ip:port
-std::cout << "Received packet from " << inet_ntoa(clientInfo.sin_addr) << ":" << ntohs(clientInfo.sin_port) << std::endl;
-
-//TODO: switch from port to ip-adress when migrating from localhost to real connections!
-unsigned int idCriteria = clientInfo.sin_port;
-
-//Check if package-sender is already in our "database"
-std::map<unsigned int, unsigned int>::iterator it;
-it = playerID.find(clientInfo.sin_port);
-
-if (it == playerID.end()){
-playerID.insert(std::pair<unsigned int, unsigned int>(idCriteria, playerID.size()));
-playerClientInfo.insert(std::pair<unsigned int, sockaddr_in>(playerID.at(clientInfo.sin_port), clientInfo));
-
-std::string data(buffer);
-std::cout << "Player \"" << data.c_str() << "\" (ID: " << playerID[idCriteria] << ") connected." << std::endl;
-
-size_t bufferSize = sizeof(float)* 2;
-char* spawnPointPacket = new char[bufferSize];
-std::tuple<float, float> currentSpawn = spawnPoints.top();
-spawnPoints.pop();
-float tempBuf[2] = { std::get<0>(currentSpawn), std::get<1>(currentSpawn) };
-memcpy(spawnPointPacket, tempBuf, sizeof(float)* 2);
-
-if (sendto(respondingSocket, spawnPointPacket, BUFLEN, 0, (struct sockaddr*) &clientInfo, sizeof(clientInfo)) == SOCKET_ERROR){
-std::cout << "Could not send spawnpoint to client. Error: " << WSAGetLastError() << std::endl;
-}
-
-
-}
-
-//Here we memorize from whom we already have received a package
-std::vector<unsigned int>::iterator it2 = std::find(playerIDsFromPackagesReceived.begin(), playerIDsFromPackagesReceived.end(), playerID.at(clientInfo.sin_port));
-if (it2 == playerIDsFromPackagesReceived.end()){
-playerIDsFromPackagesReceived.push_back(playerID.at(clientInfo.sin_port));
-}
-
-
-tiePackage(playerID.at(idCriteria), buffer);
-
-//Unless we don't have received a package from every player, we won't send anything to the clients
-if (playerIDsFromPackagesReceived.size() == MAX_PLAYERS){
-for (int i = 0; i < playerClientInfo.size(); i++){
-distributePackage(i, playerClientInfo.at(i));
-}
-playerIDsFromPackagesReceived.clear();
-}
-
-}
-}
-
-void Server::tiePackage(unsigned int id, char* data){
-char* dest = returnPackage + (id * BUFLEN);
-memcpy(dest, data, BUFLEN);
-}
-
-void Server::distributePackage(unsigned int receiverID, sockaddr_in& clientInfo){
-//Only send information of the other players to a client, not its own!
-size_t bufferSize = (MAX_PLAYERS - 1) * BUFLEN;
-char* buffer = new char[bufferSize];
-int offset = 0;
-for (int i = 0; i < MAX_PLAYERS; i++){
-if (i != receiverID){
-memcpy(buffer + (offset * BUFLEN), returnPackage + (i * BUFLEN), BUFLEN);
-offset++;
-}
-}
-
-if (sendto(respondingSocket, buffer, bufferSize, 0, (struct sockaddr*) &clientInfo, sizeof(clientInfo)) == SOCKET_ERROR){
-std::cout << "Could not send data to client. Error: " << WSAGetLastError() << std::endl;
-}
-
-delete buffer;
-}
-*/

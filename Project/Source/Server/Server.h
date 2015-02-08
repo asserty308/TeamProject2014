@@ -27,17 +27,9 @@ private:
 
 	int maxPlayers, port, tickrate;
 	int connectedPlayers;
+	int readyPlayers; // number of players which have acknowledged the start packet
 
 	std::vector<PlayerInfo*> players;
-
-	//<port / ip-Address, PlayerID>
-	//std::map<unsigned int, unsigned int> playerID;
-	//<playerID, adress>
-	//std::map<unsigned int, sockaddr_in> playerClientInfo;
-	//std::vector<unsigned int> playerIDsFromPackagesReceived;
-
-	//The spawnpoints that are available
-	//std::stack<std::tuple<float, float>> spawnPoints;
 
 public:
 	Server();

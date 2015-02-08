@@ -26,4 +26,8 @@ private:
 
 	char* receivedBuffer;
 
+	bool isWelcomePacketAcknowledged;
+
+	void sendWelcomePacketToServer();
+
 };

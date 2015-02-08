@@ -48,15 +48,6 @@ Client::Client()
 	serverInfo.sin_port = g_pGame->getServerPort();
 	serverInfo.sin_addr.S_un.S_addr = inet_addr(g_pGame->getServerIP().c_str());
 
-	if (!sendToServer("welcome:" + g_pGame->getName()))
-	// send our name to the server
-	{
-		g_pLogfile->fLog("Failed to send welcome packet to server.");
-		return;
-	}
-
-	g_pLogfile->fLog("Sent welcome packet to server with our name \"%s\".", g_pGame->getName().c_str());
-
 	data = new char[BUFLEN];
 }
 
@@ -88,7 +79,6 @@ void Client::update()
 	// if there was something to read
 	{
 		// pass the received packet on to the current game state
-		
 		g_pGame->getState()->receivePacket(data);
 
 		// read more data
