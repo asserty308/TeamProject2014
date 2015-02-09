@@ -2,6 +2,7 @@
 
 #include "TransformCollidable.h"
 #include "InputObserver.h"
+#include "Sprite.hpp"
 #include "Timer.h"
 #include "Player.hpp"
 
@@ -21,6 +22,8 @@ class Rocket : public TransformCollidable, public Inputlistener
 
 		Player *owner;
 
+		Sprite *sprite;
+
 	public:
 		Rocket(Player* owner, Vector2 position, Vector2 forward);
 		~Rocket();
@@ -31,6 +34,6 @@ class Rocket : public TransformCollidable, public Inputlistener
 		bool getControllable();
 
 		void update();
-		void render();
+		//void render();
 };
 

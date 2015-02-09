@@ -3,6 +3,7 @@
 #include "TransformCollidable.h"
 #include "CollisionObserver.h"
 #include "Netplayer.h"
+#include "Sprite.hpp"
 
 
 class Netplayer;
@@ -17,10 +18,10 @@ public:
 	virtual void CollisionDetected(TransformCollidable *other, Vector2 penetration);
 
 	void update(Vector2 position, Vector2 forward);
-	void render();
+	//void render();
 
 private:
 	Netplayer* owner;
 
-
+	Sprite *sprite;
 };

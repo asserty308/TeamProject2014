@@ -22,6 +22,7 @@ countdown(3)
 
 Gameplaystate::~Gameplaystate()
 {
+	delete backgroundSprite;
 	delete player;
 	delete map;
 
@@ -36,10 +37,13 @@ Gameplaystate::~Gameplaystate()
 }
 
 // TODO: hardcoded
-float spawnPoints[2][2] = { { 50.0f, 50.0f }, { 750.f, 750.f } };
+float spawnPoints[2][2] = { { 50.0f, 50.0f }, { 750.f, 550.f } };
 
 void Gameplaystate::init()
 {
+	//create sprite
+	backgroundSprite = new Sprite("Sprites\\new_background.png", Vector2(g_pGame->getWindowWidth() / 2, g_pGame->getWindowHeight() / 2), Vector2(1280.f, 720.f));
+
 	client = g_pGame->getClient();
 
 	map = MapParser::loadMap("Maps\\testmap2.xml");
@@ -225,16 +229,11 @@ void Gameplaystate::render()
 		case(MATCHOVER) :
 		case(MATCH) :
 		{
+			g_pSpriteRenderer->renderScene();
+
 			if (map)
 				map->render();
 
-			if (player)
-				player->render();
-
-			for (Netplayer* n : netplayers)
-				n->render();
-
-			g_pSpriteRenderer->renderScene();
 			renderScore();
 		}
 		break;

@@ -32,7 +32,7 @@ public:
 	virtual void CollisionDetected(TransformCollidable *other, Vector2 penetration);
 
 	void update();
-	void render();
+	//void render();
 
 	void updateNetData(Vector2 pos, Vector2 forward, float angle, Vector2 rocketPos, Vector2 rocketForward, bool isDead);
 	void rocketDestroyed();

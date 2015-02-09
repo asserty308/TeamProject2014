@@ -31,7 +31,7 @@ class Player : public TransformCollidable, public Inputlistener
 		virtual void CollisionDetected(TransformCollidable *other, Vector2 penetration);
 
 		void update();
-		void render();
+		//void render();
 
 		void handleRocket();
 		void rocketDestroyed();

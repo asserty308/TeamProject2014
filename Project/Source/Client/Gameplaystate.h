@@ -8,6 +8,7 @@
 #include "Map.hpp"
 #include "DebugCollider.h"
 #include "Countdown.h"
+#include "Sprite.hpp"
 
 #define MATCHNUMBER 5
 
@@ -38,6 +39,7 @@ private:
 	std::vector<Netplayer*> netplayers;
 	Map *map;
 	Countdown countdown;
+	Sprite *backgroundSprite;
 
 	int matchCount;
 	int scorePlayer;

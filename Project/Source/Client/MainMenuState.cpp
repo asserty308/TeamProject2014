@@ -82,6 +82,7 @@ void MainMenuState::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	glColor3f(1.f, 1.f, 1.f);
 	SDL_Color col = { 255, 127, 0 };
 	Vector2 dim = Vector2(0.f, 0.f);
 
@@ -92,28 +93,64 @@ void MainMenuState::render()
 		dim = g_pFontRenderer->getTextDimensions(stream.str());
 		g_pFontRenderer->drawText(stream.str(), Vector2(400.f - dim.getX() / 2, 230.f - dim.getY() / 2), col);
 
-		stream.str("");
-		stream << "press any key to continue";
-		dim = g_pFontRenderer->getTextDimensions(stream.str());
-		g_pFontRenderer->drawText(stream.str(), Vector2(400.f - dim.getX() / 2, 300.f - dim.getY() / 2), col);
+		static float time;
+		std::string waitingText = "Press any key to continue";
+
+		if (sinf(time) > -.5f && sinf(time) <= .0f)
+			waitingText += ".";
+		else if (sinf(time) > 0.f && sinf(time) <= .5f)
+			waitingText += "..";
+		if (sinf(time) > .5f)
+			waitingText += "...";
+
+		time += 0.025f;
+
+		dim = g_pFontRenderer->getTextDimensions("Press any key to continue...");
+		g_pFontRenderer->drawText(waitingText, Vector2(400.f - dim.getX() / 2, 300.f - dim.getY() / 2), col);
 	}
 	else
 	{
+		static float time;
+
 		stream.str("");
-		stream << "Name: " + name;
+		stream << "Name: " << name << (currentState == PROMPTING_NAME && sinf(time) < 0.f ? "_" : "");
 		g_pFontRenderer->drawText(stream.str(), Vector2(10.f, 10.f), col);
 
 		stream.str("");
-		stream << "Server IP: " + ip;
+		stream << "Server IP: " << ip << (currentState == PROMPTING_IP && sinf(time) < 0.f ? "_" : "");
 		g_pFontRenderer->drawText(stream.str(), Vector2(10.f, 80.f), col);
 
 		stream.str("");
-		stream << "Server Port: " + port;
+		stream << "Server Port: " << port << (currentState == PROMPTING_PORT && sinf(time) < 0.f ? "_" : "");
 		g_pFontRenderer->drawText(stream.str(), Vector2(10.f, 150.f), col);
 
 		stream.str("");
-		stream << "Client Port: " + clPort;
+		stream << "Client Port: " << clPort << (currentState == PROMPTING_CL_PORT && sinf(time) < 0.f ? "_" : "");
 		g_pFontRenderer->drawText(stream.str(), Vector2(10.f, 220.f), col);
+
+		float y = 10.f;
+
+		if (currentState == PROMPTING_IP)
+			y = 80.f;
+		else if (currentState == PROMPTING_PORT)
+			y = 150.f;
+		else if (currentState == PROMPTING_CL_PORT)
+			y = 220.f;
+
+		
+		glColor3f(1.f, 0.5f + sinf(time) / 2.f, 0.f);
+		time += 0.05f;
+
+		glLineWidth(3.f);
+		glBegin(GL_LINE_STRIP);
+
+		glVertex2f(5.f, y);
+		glVertex2f(g_pGame->getWindowWidth() - 5.f, y);
+		glVertex2f(g_pGame->getWindowWidth() - 5.f, y + 55.f);
+		glVertex2f(5.f, y + 55.f);
+		glVertex2f(5.f, y);
+
+		glEnd();
 	}
 }
 

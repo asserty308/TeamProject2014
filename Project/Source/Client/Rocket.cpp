@@ -3,6 +3,7 @@
 #include "AudioController.hpp"
 #include "CollisionObserver.h"
 #include "AudioFiles.hpp"
+#include "MathUtil.h"
 
 const float Rocket::SPEED = 400.f;
 //const float Rocket::TURN_SPEED = 60.f;
@@ -20,11 +21,15 @@ Rocket::Rocket(Player* owner, Vector2 position, Vector2 forward) : TransformColl
 
 	this->owner = owner;
 
+	//create sprite
+	sprite = new Sprite("Sprites\\new_rocket.png", position, Vector2(14.f, 24.f));
+
 	g_pAudioController->playSound(SoundFiles::ROCKET, false);
 }
 
 Rocket::~Rocket()
 {
+	delete sprite;
 
 	delete boundingBox;
 
@@ -85,8 +90,11 @@ void Rocket::update()
 	setVelocity(forward * SPEED);
 
 	updatePosition(g_pTimer->getDeltaTime());
+	sprite->setPosition(position);
+	sprite->setAngle(angleFromVector<float>(forward));
 }
 
+/*
 void Rocket::render()
 {
 	glColor3f(0.f, 0.f, 1.f);
@@ -98,8 +106,7 @@ void Rocket::render()
 	glVertex2f(position.getX() - forward.getX() * 6.f, position.getY() - forward.getY() * 6.f);
 	glVertex2f(position.getX() - forward.getX() * 10.f + getRight().getX() * 6.f, position.getY() - forward.getY() * 10.f + getRight().getY() * 6.f);
 	glEnd();
-
-	/*
+	
 	glBegin(GL_LINES);
 
 	for (int i = 0; i < 36; ++i)
@@ -111,5 +118,5 @@ void Rocket::render()
 	}
 
 	glEnd();
-	*/
 }
+*/

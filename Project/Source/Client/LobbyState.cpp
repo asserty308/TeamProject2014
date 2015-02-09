@@ -69,12 +69,26 @@ void LobbyState::update()
 	client->update();
 }
 
-void LobbyState::render(){
+void LobbyState::render()
+{
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+	glColor3f(1.f, 1.f, 1.f);
 
-	std::string waitingText = "Waiting for players to connect...";
+	static float time;
+	std::string waitingText = "Waiting for players to connect";
+
+	if (sinf(time) > -.5f && sinf(time) <= .0f)
+		waitingText += ".";
+	else if (sinf(time) > 0.f && sinf(time) <= .5f)
+		waitingText += "..";
+	if (sinf(time) > .5f)
+		waitingText += "...";
+
+	time += 0.025f;
+
 	SDL_Color color = { 255, 127, 0 };
 
-	Vector2 textDimensions = g_pFontRenderer->getTextDimensions(waitingText);
+	Vector2 textDimensions = g_pFontRenderer->getTextDimensions("Waiting for players to connect...");
 	Vector2 textPos((g_pGame->getWindowWidth() / 2) - (textDimensions.getX() / 2), (g_pGame->getWindowHeight() / 2) - (textDimensions.getY() / 2));
 	g_pFontRenderer->drawText(waitingText, textPos, color);
 }

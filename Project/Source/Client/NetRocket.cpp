@@ -4,7 +4,7 @@
 #include "Game.hpp"
 
 NetRocket::NetRocket() : TransformCollidable(Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f)){
-
+	// TODO: delete?
 }
 
 NetRocket::NetRocket(Netplayer* owner, Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(1.0f, 1.0f)){
@@ -12,10 +12,14 @@ NetRocket::NetRocket(Netplayer* owner, Vector2 position, Vector2 forward) : Tran
 
 	boundingBox = new CircleBoundingBox(position, 10.0f);
 
+	//create sprite
+	sprite = new Sprite("Sprites\\new_rocket.png", position, Vector2(14.f, 24.f));
+
 	this->owner = owner;
 }
 
 NetRocket::~NetRocket(){
+	delete sprite;
 	delete boundingBox;
 }
 
@@ -30,10 +34,14 @@ void NetRocket::CollisionDetected(TransformCollidable *other, Vector2 penetratio
 void NetRocket::update(Vector2 position, Vector2 forward){
 	setPosition(position);
 	setForward(forward);
+
+	sprite->setPosition(position);
+	sprite->setAngle(angleFromVector<float>(forward));
 }
 
-void NetRocket::render(){
-
+/*
+void NetRocket::render()
+{
 	if (position.getX() > 0 && position.getX() < g_pGame->getWindowWidth() &&
 		position.getY() > 0 && position.getY() < g_pGame->getWindowHeight() ){
 	
@@ -48,6 +56,7 @@ void NetRocket::render(){
 		glEnd();
 	}
 }
+*/
 
 
 	

@@ -23,8 +23,7 @@ Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position
 	boundingBox = new CircleBoundingBox(position, 25.0f);
 
 	//create sprite
-	sprite = new Sprite("Sprites\\fighter4_2.png", position, Vector2(75.f, 56.25f));
-	//sprite = new Sprite("fighter4.png", position, Vector2(200.f, 150.f));
+	sprite = new Sprite(/*"Sprites\\fighter4_2.png"*/"Sprites\\new_fighter.png", position, Vector2(/*75.f, 56.25f*/80.f, 80.f));
 
 	rocket = nullptr;
 
@@ -126,6 +125,7 @@ void Player::update()
 	sprite->setPosition(position);
 }
 
+/*
 void Player::render()
 {
 	glColor3f(0.f, 1.f, 0.f);
@@ -146,10 +146,12 @@ void Player::render()
 	glVertex2f(getPosition().getX() + getForward().getX() * 15.f, getPosition().getY() + getForward().getY() * 15.f);
 
 	glEnd();
+	
 
 	if (rocket != nullptr)
-		rocket->render();
+		rocket->render();	
 }
+*/
 
 void Player::handleRocket()
 {
