@@ -64,13 +64,72 @@ void MainMenuState::inputReceived(SDL_KeyboardEvent *key)
 
 void MainMenuState::appendSDLKey(SDL_KeyboardEvent *key, std::string *str)
 {
-	if (key->keysym.sym == SDLK_BACKSPACE && str->length() > 0){
-		str->pop_back();
+	SDL_Keycode code = key->keysym.sym;
+	if (code == SDLK_BACKSPACE)
+	{
+		if (str->length() > 0)
+			str->pop_back();
+		else
+			switchPromptUp();
+		return;
+	}
+	else if (code == SDLK_UP)
+	{
+		switchPromptUp();
+		return;
+	}
+	else if (code == SDLK_DOWN)
+	{
+		switchPromptDown();
 		return;
 	}
 
-	char k = key->keysym.sym;
-	str->push_back(k);
+	if (key->keysym.mod == KMOD_LSHIFT)
+	{
+		str->push_back(code - 32);
+		return;
+	}
+
+	if (code != SDLK_LSHIFT)
+		str->push_back(code);
+}
+
+void MainMenuState::switchPromptUp()
+{
+	switch (currentState)
+	{
+		case PROMPTING_NAME:
+			currentState = PROMPTING_CL_PORT;
+			break;
+		case PROMPTING_IP:
+			currentState = PROMPTING_NAME;
+			break;
+		case PROMPTING_PORT:
+			currentState = PROMPTING_IP;
+			break;
+		case PROMPTING_CL_PORT:
+			currentState = PROMPTING_PORT;
+			break;
+	}
+}
+
+void MainMenuState::switchPromptDown()
+{
+	switch (currentState)
+	{
+		case PROMPTING_NAME:
+			currentState = PROMPTING_IP;
+			break;
+		case PROMPTING_IP:
+			currentState = PROMPTING_PORT;
+			break;
+		case PROMPTING_PORT:
+			currentState = PROMPTING_CL_PORT;
+			break;
+		case PROMPTING_CL_PORT:
+			currentState = PROMPTING_NAME;
+			break;
+	}
 }
 
 void MainMenuState::update()
