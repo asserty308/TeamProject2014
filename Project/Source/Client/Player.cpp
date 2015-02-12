@@ -169,7 +169,7 @@ void Player::handleRocket()
 			rocket->update();
 		else
 		{
-			delete rocket;
+ 			delete rocket;
 			rocket = nullptr;
 		}
 	}

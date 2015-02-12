@@ -78,7 +78,6 @@ void Netplayer::update(){
 	}
 	
 	netRocket->update(rocketPos, rocketForward);
-
 }
 
 /*

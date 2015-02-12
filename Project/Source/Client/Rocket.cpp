@@ -30,7 +30,6 @@ Rocket::Rocket(Player* owner, Vector2 position, Vector2 forward) : TransformColl
 Rocket::~Rocket()
 {
 	delete sprite;
-
 	delete boundingBox;
 
 	g_pInputObserver->removeListener(this);
@@ -73,7 +72,7 @@ void Rocket::CollisionDetected(TransformCollidable *other, Vector2 penetration){
 		return;
 	}
 
- 	owner->rocketDestroyed();
+	owner->rocketDestroyed();
 }
 
 bool Rocket::getControllable()

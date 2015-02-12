@@ -32,8 +32,10 @@ void NetRocket::CollisionDetected(TransformCollidable *other, Vector2 penetratio
 }
 
 void NetRocket::update(Vector2 position, Vector2 forward){
-	setPosition(position);
 	setForward(forward);
+
+	this->position = position;
+	boundingBox->setPosition(position + forward * 10.0f);
 
 	sprite->setPosition(position);
 	sprite->setAngle(angleFromVector<float>(forward));

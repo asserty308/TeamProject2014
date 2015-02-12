@@ -5,6 +5,7 @@
 #include "Sprite.hpp"
 #include "Timer.h"
 #include "Player.hpp"
+#include "Netplayer.h"
 
 #include <SDL_opengl.h>
 
@@ -32,7 +33,7 @@ class Rocket : public TransformCollidable, public Inputlistener
 		virtual void CollisionDetected(TransformCollidable *other, Vector2 penetration);
 
 		bool getControllable();
-
+		
 		void update();
 		//void render();
 };

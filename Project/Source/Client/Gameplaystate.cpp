@@ -137,11 +137,11 @@ void Gameplaystate::update()
 	sendOurStuffToServer();
 	client->update();
 
+	g_pCollisionObserver->checkCollisionRoutine();
+
 	for (int i = 0; i < g_pGame->getNumberOfPlayers() - 1; i++){
 		netplayers[i]->update();
 	}
-
-	g_pCollisionObserver->checkCollisionRoutine();
 
 	Vector2 playerSpawn(spawnPoints[spawnPoint][0], spawnPoints[spawnPoint][1]);
 
