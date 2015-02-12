@@ -1,4 +1,5 @@
 #include "Netplayer.h"
+#include "Game.hpp"
 
 Netplayer::Netplayer() : TransformCollidable(Vector2(0.0, 0.0), Vector2(0.0f, -1.0f), Vector2(0.0f, 0.0f)){
 
@@ -34,7 +35,22 @@ void Netplayer::update(){
 	float currentFraction = updateElapsed / EXPECTEDTICKRATE;
 	float alpha = clamp(0.0f, 1.0f, currentFraction);
 
-	Vector2 pos = lerp(backHistoryCache.pos, frontHistoryCache.pos, alpha);
+	int windowWidth = g_pGame->getWindowWidth();
+	int windowHeight = g_pGame->getWindowHeight();
+
+	Vector2 pos;
+
+	//We want to hide the fact that the player gets shoved outside the screen when killed, so when that happens, don't interpolate!
+	if (frontHistoryCache.pos.getX() > 0 && frontHistoryCache.pos.getX() < windowWidth  &&
+		frontHistoryCache.pos.getY() > 0 && frontHistoryCache.pos.getY() < windowHeight &&
+		backHistoryCache.pos.getX() > 0  && backHistoryCache.pos.getX()  < windowWidth  &&
+		backHistoryCache.pos.getY() > 0  && backHistoryCache.pos.getY()  < windowHeight   ){
+
+		pos = lerp(backHistoryCache.pos, frontHistoryCache.pos, alpha);
+	} else{
+		pos = frontHistoryCache.pos;
+	}
+
 	this->setPosition(pos);
 	sprite->setPosition(pos);
 
@@ -46,8 +62,21 @@ void Netplayer::update(){
 
 	this->isDead = frontHistoryCache.isDead;
 
-	Vector2 rocketPos = lerp(backHistoryCache.rocketPos, backHistoryCache.rocketPos, alpha);
-	Vector2 rocketForward = lerp(backHistoryCache.rocketForward, backHistoryCache.rocketForward, alpha);
+	Vector2 rocketPos;
+	Vector2 rocketForward;
+
+	if (frontHistoryCache.rocketPos.getX() > 0 && frontHistoryCache.rocketPos.getX() < g_pGame->getWindowWidth() &&
+		frontHistoryCache.rocketPos.getY() > 0 && frontHistoryCache.rocketPos.getY() < g_pGame->getWindowHeight() &&
+		backHistoryCache.rocketPos.getX() > 0 && backHistoryCache.rocketPos.getX() < g_pGame->getWindowWidth() &&
+		backHistoryCache.rocketPos.getY() > 0 && backHistoryCache.rocketPos.getY() < g_pGame->getWindowWidth()){
+
+		rocketPos = lerp(backHistoryCache.rocketPos, frontHistoryCache.rocketPos, alpha);
+		rocketForward = lerp(backHistoryCache.rocketForward, frontHistoryCache.rocketForward, alpha);
+	} else{
+		rocketPos = frontHistoryCache.rocketPos;
+		rocketForward = frontHistoryCache.rocketForward;
+	}
+	
 	netRocket->update(rocketPos, rocketForward);
 
 }
