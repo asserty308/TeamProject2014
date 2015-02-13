@@ -15,7 +15,7 @@ const float Player::TURN_SPEED = 188.f;
 
 Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(0.0f, 0.0f))
 {
-	isThrustKeyDown = isLeftKeyDown = isRightKeyDown = isFirePressed = false;
+	isThrustKeyDown = isLeftKeyDown = isRightKeyDown = isFirePressed = fireLock = false;
 	
 	g_pInputObserver->addListener(this);
 	g_pCollisionObserver->addListener(this);
@@ -52,8 +52,12 @@ void Player::inputReceived(SDL_KeyboardEvent *key)
 		isLeftKeyDown = (key->type == SDL_KEYDOWN);
 	else if (key->keysym.sym == SDLK_d)
 		isRightKeyDown = (key->type == SDL_KEYDOWN);
-	else if (key->keysym.sym == SDLK_SPACE)
+	else if (key->keysym.sym == SDLK_SPACE){
 		isFirePressed = (key->type == SDL_KEYDOWN);
+		if (key->type == SDL_KEYUP){
+			fireLock = false;
+		}
+	}
 }
 
 void Player::CollisionDetected(TransformCollidable *other, Vector2 penetration){
@@ -155,8 +159,9 @@ void Player::render()
 
 void Player::handleRocket()
 {
-	if (isFirePressed && rocket == nullptr)
+	if (isFirePressed && rocket == nullptr && !fireLock)
 	{
+		fireLock = true;
 		rocket = new Rocket(this, getPosition(), getForward());
 		rocket->setTag("rocket");
 		//rocket->setVelocity(getVelocity() * 2.f);

@@ -107,8 +107,8 @@
 	</Obstacle>
 	/////
 	<Obstacle>
-		<Vertex x="375" y="0"/>
-		<Vertex x="425" y="0"/>
+		<Vertex x="375" y="1"/>
+		<Vertex x="425" y="1"/>
 		<Vertex x="425" y="75"/>
 		<Vertex x="375" y="75"/>
 	</Obstacle>
@@ -128,9 +128,9 @@
 	</Obstacle>
 	
 	<Obstacle>
-		<Vertex x="0" y="275"/>
+		<Vertex x="1" y="275"/>
 		<Vertex x="75" y="275"/>
 		<Vertex x="75" y="325"/>
-		<Vertex x="0" y="325"/>
+		<Vertex x="1" y="325"/>
 	</Obstacle>
 </Map>

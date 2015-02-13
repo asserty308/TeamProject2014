@@ -15,6 +15,7 @@ class Player : public TransformCollidable, public Inputlistener
 
 		bool isThrustKeyDown, isLeftKeyDown, isRightKeyDown, isFirePressed;
 		bool isDead;
+		bool fireLock;
 
 		float accelFactor;
 

@@ -4,10 +4,11 @@
 #include "CollisionObserver.h"
 #include "AudioFiles.hpp"
 #include "MathUtil.h"
+#include <math.h>
 
 const float Rocket::SPEED = 400.f;
-//const float Rocket::TURN_SPEED = 60.f;
-//const float Rocket::TURN_ACCELERATION = 50.f;
+const float Rocket::TURN_SPEED = 160.f;
+const float Rocket::TURN_ACCELERATION = 50.f;
 
 Rocket::Rocket(Player* owner, Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(0.f, 0.f))
 {
@@ -18,6 +19,8 @@ Rocket::Rocket(Player* owner, Vector2 position, Vector2 forward) : TransformColl
 
 	controllable = true;
 	isLeftKeyDown = isRightKeyDown = false;
+
+	torque = 0.0;
 
 	this->owner = owner;
 
@@ -45,14 +48,16 @@ void Rocket::inputReceived(SDL_KeyboardEvent *key)
 
 	if (key->type == SDL_KEYDOWN)
 	{
+		float playerAngle = atan2(owner->getForward().getY(), owner->getForward().getX()) / M_PI * 180.0f;
+
 		if (key->keysym.sym == SDLK_a && !isLeftKeyDown)
 		{
-			rotate(/*-TURN_SPEED * g_pTimer->getDeltaTime()*/-45.f);
+			torque += -TURN_SPEED * g_pTimer->getDeltaTime();
 			isLeftKeyDown = true;
 		}
 		else if (key->keysym.sym == SDLK_d && !isRightKeyDown)
 		{
-			rotate(/*-TURN_SPEED * g_pTimer->getDeltaTime()*/45.f);
+			torque += TURN_SPEED * g_pTimer->getDeltaTime();
 			isRightKeyDown = true;
 		}
 	}
@@ -60,10 +65,13 @@ void Rocket::inputReceived(SDL_KeyboardEvent *key)
 	{
 		if (key->keysym.sym == SDLK_SPACE)
 			controllable = false;
-		else if (key->keysym.sym == SDLK_a)
+		else if (key->keysym.sym == SDLK_a){
 			isLeftKeyDown = false;
-		else if (key->keysym.sym == SDLK_d)
+			torque = 0.0f;
+		} else if (key->keysym.sym == SDLK_d){
 			isRightKeyDown = false;
+			torque = 0.0f;
+		}
 	}
 }
 
@@ -86,6 +94,7 @@ void Rocket::update()
 
 	// make sure the velocity of the rocket is constant
 	// and always towards the current forward vector
+	rotate(torque);
 	setVelocity(forward * SPEED);
 
 	updatePosition(g_pTimer->getDeltaTime());

@@ -65,15 +65,15 @@ void Netplayer::update(){
 	Vector2 rocketPos;
 	Vector2 rocketForward;
 
-	if (frontHistoryCache.rocketPos.getX() > 0 && frontHistoryCache.rocketPos.getX() < g_pGame->getWindowWidth() &&
-		frontHistoryCache.rocketPos.getY() > 0 && frontHistoryCache.rocketPos.getY() < g_pGame->getWindowHeight() &&
-		backHistoryCache.rocketPos.getX() > 0 && backHistoryCache.rocketPos.getX() < g_pGame->getWindowWidth() &&
-		backHistoryCache.rocketPos.getY() > 0 && backHistoryCache.rocketPos.getY() < g_pGame->getWindowWidth()){
+	if (frontHistoryCache.rocketPos.getX() > 0  && frontHistoryCache.rocketPos.getX() < g_pGame->getWindowWidth()  &&
+		frontHistoryCache.rocketPos.getY() > 0  && frontHistoryCache.rocketPos.getY() < g_pGame->getWindowHeight() &&
+		backHistoryCache.rocketPos.getX()  > 0  && backHistoryCache.rocketPos.getX()  < g_pGame->getWindowWidth()  &&
+		backHistoryCache.rocketPos.getY()  > 0  && backHistoryCache.rocketPos.getY()  < g_pGame->getWindowWidth()    ){
 
 		rocketPos = lerp(backHistoryCache.rocketPos, frontHistoryCache.rocketPos, alpha);
 		rocketForward = lerp(backHistoryCache.rocketForward, frontHistoryCache.rocketForward, alpha);
 	} else{
-		rocketPos = frontHistoryCache.rocketPos;
+        rocketPos = frontHistoryCache.rocketPos;
 		rocketForward = frontHistoryCache.rocketForward;
 	}
 	
