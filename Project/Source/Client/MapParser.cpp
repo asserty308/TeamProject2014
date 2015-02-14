@@ -9,6 +9,7 @@ using namespace tinyxml2;
 
 Map *MapParser::loadMap(std::string filename)
 {
+
 	XMLDocument *doc = new XMLDocument;
 
 	int returnCode = doc->LoadFile(filename.c_str());
@@ -40,7 +41,7 @@ Map *MapParser::loadMap(std::string filename)
 			}
 			else if (strcmp(element->Name(), "Obstacle") == 0)
 			{
-				Obstacle* obstacle = new Obstacle;
+				Obstacle* obstacle = new Obstacle(map->getTextureID());
 
 				XMLElement *vertexElement = element->FirstChildElement();
 

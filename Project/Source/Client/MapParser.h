@@ -3,6 +3,7 @@
 #include <string>
 
 #include "Map.hpp"
+#include <SOIL.h>
 
 class MapParser
 {

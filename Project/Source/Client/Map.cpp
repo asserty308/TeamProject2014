@@ -1,5 +1,16 @@
 #include "Map.hpp"
 
+Map::Map(){
+	textureID = SOIL_load_OGL_texture("Sprites\\metal_floor.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+	if (textureID == 0)
+		g_pLogfile->fLog("SOIL loading error: %s", SOIL_last_result());
+
+}
+
 Map::~Map(){
 	for (Obstacle* o : obstacles){
 		delete o;

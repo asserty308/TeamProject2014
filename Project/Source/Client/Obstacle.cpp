@@ -1,6 +1,16 @@
 #include <SDL_opengl.h>
 
 #include "Obstacle.hpp"
+#include "Game.hpp"
+
+Obstacle::Obstacle(GLuint* textureID) : TransformCollidable(Vector2(0, 0), Vector2(0, 0), Vector2(0, 0)){
+	
+	boundingBox = new PolygonBoundingBox(Vector2(0, 0));
+	g_pCollisionObserver->addListener(this);
+
+	this->textureID = textureID;
+
+}
 
 void Obstacle::addVertex(Vector2 vertex)
 {
@@ -10,31 +20,18 @@ void Obstacle::addVertex(Vector2 vertex)
 
 void Obstacle::render()
 {
-	glColor3f(0.f, 0.f, 1.f);
+	glEnable(GL_TEXTURE_2D);
+	
+	//glColor3f(0.f, 0.f, 1.f);
+	glBindTexture(GL_TEXTURE_2D, *textureID);
 
 	glBegin(GL_POLYGON);
-
-	for (std::vector<Vector2>::iterator i = vertices.begin(); i != vertices.end(); ++i)
+	
+	for (std::vector<Vector2>::iterator i = vertices.begin(); i != vertices.end(); ++i){
+		glTexCoord2f((*i).getX() / g_pGame->getWindowWidth(), (*i).getY() / g_pGame->getWindowHeight());
 		glVertex2f((*i).getX(), (*i).getY());
-
-	glEnd();
-
-	glColor3f(1.f, 0.f, 1.f);
-	glLineWidth(3.f);
-
-	glBegin(GL_LINES);
-
-	for (unsigned int i = 0; i < vertices.size(); ++i)
-	{
-		glVertex2f(vertices[i].getX(), vertices[i].getY());
-
-		if (i + 1 < vertices.size())
-			glVertex2f(vertices[i + 1].getX(), vertices[i + 1].getY());
-		else
-			glVertex2f(vertices[0].getX(), vertices[0].getY());
 	}
 
 	glEnd();
 
-	
 }
