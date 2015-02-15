@@ -10,7 +10,7 @@
 
 // check out http://johnnie.jerrata.com/winsocktutorial/
 
-#define BUFLEN 128
+#define BUFLEN 160
 
 enum ServerState
 {
@@ -40,5 +40,7 @@ public:
 
 	bool sendToClient(PlayerInfo player, std::string data);
 	bool sendToClient(PlayerInfo player, char* data, int size);
+	void sendToAllClients(char* data, int size);
+
 	void update();
 };

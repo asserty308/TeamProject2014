@@ -30,7 +30,7 @@ void LobbyState::receivePacket(char* packet)
 	if (memcmp(packet, cmpString, sizeof(char) * strlen(cmpString)) == 0)
 	// if we received a start packet from the server to let us know the welcome string was acknowledged
 	{
-		g_pLogfile->fLog("Welcome packet acknowledged from server.");
+		//g_pLogfile->fLog("Welcome packet acknowledged from server.");
 		isWelcomePacketAcknowledged = true;
 	}
 	//else

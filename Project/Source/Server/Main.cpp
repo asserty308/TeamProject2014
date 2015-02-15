@@ -22,6 +22,15 @@ int main(int argc, char* args[])
 
 	while (true)
 	{
+		/*
+		SDL_Event *e;
+
+		while (SDL_PollEvent(e))
+		{
+
+		}
+		*/
+
 		startTime = SDL_GetTicks();
 
 		server->update();

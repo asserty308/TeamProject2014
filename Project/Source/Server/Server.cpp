@@ -97,6 +97,12 @@ bool Server::sendToClient(PlayerInfo player, char* data, int size)
 	return sendto(s, data, size, 0, (struct sockaddr*)&player.getAddress(), sizeof(player.getAddress())) != SOCKET_ERROR;
 }
 
+void Server::sendToAllClients(char* data, int size)
+{
+	for (PlayerInfo *player : players)
+		sendToClient(*player, data, size);
+}
+
 void Server::update()
 {
 	//clear the buffer
@@ -122,7 +128,7 @@ void Server::update()
 				// check if that player has already been marked as signed up
 				for (PlayerInfo *playerInfo : players)
 				{
-					if (clientInfo.sin_addr.S_un.S_addr == playerInfo->getAddress().sin_addr.S_un.S_addr && clientInfo.sin_port == playerInfo->getAddress().sin_port)
+					if (*playerInfo == clientInfo)
 					// this means we received another welcome packet from a client that is already registered
 					{
 						// answer with an ACK packet so the player stops spamming us hopefully
@@ -243,25 +249,26 @@ void Server::update()
 	}
 	else if (state == ServerState_Ingame)
 	{
-		for (PlayerInfo *recipient : players)
+		float playerData[BUFLEN];
+
+		for (int i = 0; i < players.size(); ++i)
 		{
-			char playerDataPacket[BUFLEN];
+			int offset = i * 10;
 
-			for (PlayerInfo *playerInfo : players)
-			{
-				if (*recipient == *playerInfo)
-					continue;
-
-				float playerData[10] = { playerInfo->positionX, playerInfo->positionY,
-					playerInfo->forwardX, playerInfo->forwardY,
-					playerInfo->angle,
-					playerInfo->rocketPositionX, playerInfo->rocketPositionY,
-					playerInfo->rocketForwardX, playerInfo->rocketForwardY, playerInfo->isDead };
-
-				memcpy(playerDataPacket, playerData, sizeof(float)* 10);
-			}
-
-			sendToClient(*recipient, playerDataPacket, sizeof(float)* 10);
+			playerData[offset + 0] = players[i]->positionX;
+			playerData[offset + 1] = players[i]->positionY;
+			playerData[offset + 2] = players[i]->forwardX;
+			playerData[offset + 3] = players[i]->forwardY;
+			playerData[offset + 4] = players[i]->angle;
+			playerData[offset + 5] = players[i]->rocketPositionX;
+			playerData[offset + 6] = players[i]->rocketPositionY;
+			playerData[offset + 7] = players[i]->rocketForwardX;
+			playerData[offset + 8] = players[i]->rocketForwardY;
+			playerData[offset + 9] = players[i]->isDead;
 		}
+
+		char allPlayerData[BUFLEN];
+		memcpy(allPlayerData, playerData, maxPlayers * sizeof(float) * 10);
+		sendToAllClients(allPlayerData, maxPlayers * sizeof(float) * 10);
 	}
 }

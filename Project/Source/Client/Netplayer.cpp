@@ -5,11 +5,13 @@ Netplayer::Netplayer() : TransformCollidable(Vector2(0.0, 0.0), Vector2(0.0f, -1
 
 }
 
-Netplayer::Netplayer(Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(0.0f, 0.0f)){
+Netplayer::Netplayer(std::string name, Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(0.0f, 0.0f)){
 	sprite = new Sprite(/*"Sprites\\fighter4.png"*/"Sprites\\new_fighter.png", position, Vector2(/*200.f, 150.f*/80.f, 80.f));
 	netRocket = new NetRocket(this, Vector2(-100.0, -100.0), Vector2(0.0f, 0.0f));
 
 	boundingBox = new CircleBoundingBox(position, 25.0f);
+
+	this->name = name;
 
 	this->setTag("netPlayer");
 	netRocket->setTag("netRocket");
@@ -80,13 +82,11 @@ void Netplayer::update(){
 	netRocket->update(rocketPos, rocketForward);
 }
 
-/*
-void Netplayer::render(){
-
-	netRocket->render();
-
+void Netplayer::render()
+{
+	SDL_Color color = { 255, 127, 0 };
+	g_pFontRenderer->drawSmallText(name, Vector2(position.getX() - g_pFontRenderer->getSmallTextDimensions(name).getX() / 2.f, position.getY() + 30.f), color);
 }
-*/
 
 void Netplayer::updateNetData(Vector2 pos, Vector2 forward, float angle, Vector2 rocketPos, Vector2 rocketForward, bool isDead){
 	

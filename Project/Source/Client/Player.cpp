@@ -8,6 +8,7 @@
 #include "SpriteRenderer.hpp"
 #include "CircleBoundingBox.h"
 #include "AudioController.hpp"
+#include "MathUtil.h"
 
 const float Player::TOP_SPEED = 70.f;
 const float Player::ACCELERATION = 120.f;
@@ -207,9 +208,11 @@ void Player::reset(){
 	isDead = false;
 
 	this->acceleration = this->velocity = Vector2(0.0f, 0.0f);
-	this->forward = Vector2(0.0f, -1.0f);
 
-	sprite->setAngle(180.0f);
+	Vector2 lookAtVector = Vector2(g_pGame->getWindowWidth() / 2 - position.getX(), g_pGame->getWindowHeight() / 2 - position.getY());
+	lookAtVector.normalize();
+	this->forward = lookAtVector;
+	sprite->setAngle(angleFromVector<float>(forward));
 
 	if (!g_pInputObserver->isListening(this)){
 		g_pInputObserver->addListener(this);

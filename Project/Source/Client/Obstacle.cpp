@@ -27,8 +27,9 @@ void Obstacle::render()
 
 	glBegin(GL_POLYGON);
 	
-	for (std::vector<Vector2>::iterator i = vertices.begin(); i != vertices.end(); ++i){
-		glTexCoord2f((*i).getX() / g_pGame->getWindowWidth(), (*i).getY() / g_pGame->getWindowHeight());
+	for (std::vector<Vector2>::iterator i = vertices.begin(); i != vertices.end(); ++i)
+	{
+		glTexCoord2f((*i).getX() / g_pGame->getWindowWidth() * 4.f, (*i).getY() / g_pGame->getWindowHeight() * 4.f);
 		glVertex2f((*i).getX(), (*i).getY());
 	}
 

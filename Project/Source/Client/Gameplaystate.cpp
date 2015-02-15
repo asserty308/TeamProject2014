@@ -37,7 +37,7 @@ Gameplaystate::~Gameplaystate()
 }
 
 // TODO: hardcoded
-float spawnPoints[2][2] = { { 50.0f, 50.0f }, { 750.f, 550.f } };
+float spawnPoints[4][2] = { { 50.0f, 50.0f }, { 750.0f, 550.0f }, { 50.f, 550.f }, { 750.0f, 50.0f } };
 
 void Gameplaystate::init()
 {
@@ -49,10 +49,14 @@ void Gameplaystate::init()
 	map = MapParser::loadMap("Maps\\testmap2.xml");
 
 	Vector2 playerSpawn(spawnPoints[spawnPoint][0], spawnPoints[spawnPoint][1]);
-	player = new Player(playerSpawn, Vector2(0.f, -1.f));
+	player = new Player(playerSpawn, Vector2(0.0f, -1.0f));
 
-	for (int i = 0; i < g_pGame->getNumberOfPlayers() - 1; i++){
-		netplayers.push_back(new Netplayer(/*playerSpawn*/Vector2(500.f, 500.f), Vector2(0.0f, -1.0f)));
+	for (int i = 0; i < g_pGame->getNumberOfPlayers(); ++i)
+	{
+		if (i == spawnPoint)
+			continue;
+
+		netplayers.push_back(new Netplayer("Unknown Player", Vector2(spawnPoints[i][0], spawnPoints[i][1]), Vector2(0.0f, -1.0f)));
 	}
 
 
@@ -95,22 +99,17 @@ void Gameplaystate::sendOurStuffToServer()
 
 void Gameplaystate::receivePacket(char* packet)
 {
+	float *netPlayerData = new float[g_pGame->getNumberOfPlayers() * 10];
+	memcpy(netPlayerData, packet, g_pGame->getNumberOfPlayers() * sizeof(float) * 10);
 
-	//size_t numberOfFloatsInBUFLEN = BUFLEN / sizeof(float);
-	//float *allPlayerData = new float[(g_pGame->getNumberOfPlayers() - 1) * numberOfFloatsInBUFLEN];
-	//memcpy(allPlayerData, cstr, sizeof(float)* (g_pGame->getNumberOfPlayers() - 1) * numberOfFloatsInBUFLEN);
+	int netplayerID = 0;
 
-	float *netPlayerData = new float[10];
-	memcpy(netPlayerData, packet, sizeof(float)* 10);
-
-	//int offset = 0;
-	//char* defaultTest = "???";
-
-	for (int i = 0; i < g_pGame->getNumberOfPlayers() - 1; i++)
+	for (int i = 0; i < g_pGame->getNumberOfPlayers(); ++i)
 	{
-		//offset = i * numberOfFloatsInBUFLEN;
-
-		int offset = 0;
+		if (i == spawnPoint)
+			continue;
+		
+		int offset = i * 10;
 
 		Vector2 netPlayerPos(netPlayerData[offset + 0], netPlayerData[offset + 1]);
 		Vector2 netPlayerForward(netPlayerData[offset + 2], netPlayerData[offset + 3]);
@@ -119,13 +118,16 @@ void Gameplaystate::receivePacket(char* packet)
 		Vector2 netPlayerRocketForward(netPlayerData[offset + 7], netPlayerData[offset + 8]);
 		bool netPlayerIsDead = netPlayerData[offset + 9] > 0.0f ? true : false;
 
-		if (netPlayerIsDead > 1.5f || netPlayerIsDead < -1.5f)
-		{
+		//if (netPlayerIsDead > 1.5f || netPlayerIsDead < -1.5f)
+		//{
 			//g_pLogfile->fTextout("defaulting from %d", spawnPoint); NEVER HAPPENS
-			netplayers[i]->updateNetData(Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), 180.0f, Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), false);
-		}
-		else
-			netplayers[i]->updateNetData(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward, netPlayerIsDead);
+			//netplayers[i]->updateNetData(Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), 180.0f, Vector2(-100.0f, -100.0f), Vector2(0.0f, -1.0f), false);
+		//}
+		//else
+		
+		netplayers[/*i*/netplayerID]->updateNetData(netPlayerPos, netPlayerForward, netPlayerAngle, netPlayerRocketPos, netPlayerRocketForward, netPlayerIsDead);
+		
+		netplayerID++;
 	}
 
 	delete[] netPlayerData;
@@ -233,6 +235,9 @@ void Gameplaystate::render()
 
 			if (map)
 				map->render();
+
+			for (Netplayer* n : netplayers)
+				n->render();
 
 			renderScore();
 		}

@@ -4,7 +4,7 @@
 #include <winsock2.h>
 #include "Game.hpp"
 
-#define BUFLEN 128
+#define BUFLEN 160
 
 // check out http://johnnie.jerrata.com/winsocktutorial/
 

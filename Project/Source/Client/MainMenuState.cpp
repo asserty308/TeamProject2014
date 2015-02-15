@@ -3,6 +3,11 @@
 void MainMenuState::init()
 {
 	currentState = SPLASH_SCREEN;
+
+	name = "Unknown Player";
+	ip = "127.0.0.1";
+	port = "8888";
+	clPort = "54290";
 }
 
 void MainMenuState::receivePacket(char* data)

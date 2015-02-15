@@ -7,14 +7,14 @@
 FontRenderer::FontRenderer()
 {
 	std::string fontFilename = "Fonts\\font.ttf";
-	int pointSize = 28;
 
 	if (TTF_Init() < 0)
 		g_pLogfile->fLog("SDL_ttf could not be initialized: %s", TTF_GetError());
 
-	font = TTF_OpenFont(fontFilename.c_str(), pointSize);
+	font = TTF_OpenFont(fontFilename.c_str(), 28);
+	smallFont = TTF_OpenFont(fontFilename.c_str(), 11);
 
-	if (!font)
+	if (!font || !smallFont)
 		g_pLogfile->fLog("Failed to load font '%s': %s", fontFilename, TTF_GetError());
 
 	glGenTextures(1, &textureID);
@@ -31,14 +31,14 @@ FontRenderer::~FontRenderer()
 	TTF_Quit();
 }
 
-void FontRenderer::drawText(std::string text, Vector2 pos, SDL_Color color)
+void FontRenderer::drawFontText(TTF_Font *f, std::string text, Vector2 pos, SDL_Color color)
 {
 	// convert RGB color to BGR
 	int swap = color.r;
 	color.r = color.b;
 	color.b = swap;
 
-	SDL_Surface *sText = TTF_RenderUTF8_Blended(font, text.c_str(), color);
+	SDL_Surface *sText = TTF_RenderUTF8_Blended(f, text.c_str(), color);
 
 	if (!sText)
 	{
@@ -57,7 +57,7 @@ void FontRenderer::drawText(std::string text, Vector2 pos, SDL_Color color)
 	}
 
 	SDL_BlitSurface(sText, &area, temp, NULL);
-	
+
 	glEnable(GL_TEXTURE_2D);
 
 	glBindTexture(GL_TEXTURE_2D, textureID);
@@ -67,10 +67,10 @@ void FontRenderer::drawText(std::string text, Vector2 pos, SDL_Color color)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 
 	glBegin(GL_QUADS);
-		glTexCoord2d(0, 0); glVertex3f(pos.getX(), pos.getY(), 0);
-		glTexCoord2d(1, 0); glVertex3f(pos.getX() + sText->w, pos.getY(), 0);
-		glTexCoord2d(1, 1); glVertex3f(pos.getX() + sText->w, pos.getY() + sText->h, 0);
-		glTexCoord2d(0, 1); glVertex3f(pos.getX(), pos.getY() + sText->h, 0);
+	glTexCoord2d(0, 0); glVertex3f(pos.getX(), pos.getY(), 0);
+	glTexCoord2d(1, 0); glVertex3f(pos.getX() + sText->w, pos.getY(), 0);
+	glTexCoord2d(1, 1); glVertex3f(pos.getX() + sText->w, pos.getY() + sText->h, 0);
+	glTexCoord2d(0, 1); glVertex3f(pos.getX(), pos.getY() + sText->h, 0);
 	glEnd();
 
 	glDisable(GL_TEXTURE_2D);
@@ -79,9 +79,27 @@ void FontRenderer::drawText(std::string text, Vector2 pos, SDL_Color color)
 	SDL_FreeSurface(temp);
 }
 
+void FontRenderer::drawText(std::string text, Vector2 pos, SDL_Color color)
+{
+	drawFontText(font, text, pos, color);
+}
+
+void FontRenderer::drawSmallText(std::string text, Vector2 pos, SDL_Color color)
+{
+	drawFontText(smallFont, text, pos, color);
+}
+
 Vector2 FontRenderer::getTextDimensions(std::string text)
 {
 	SDL_Surface *sText = TTF_RenderUTF8_Blended(font, text.c_str(), SDL_Color());
+	Vector2 out = Vector2(sText->w, sText->h);
+	SDL_FreeSurface(sText);
+	return out;
+}
+
+Vector2 FontRenderer::getSmallTextDimensions(std::string text)
+{
+	SDL_Surface *sText = TTF_RenderUTF8_Blended(smallFont, text.c_str(), SDL_Color());
 	Vector2 out = Vector2(sText->w, sText->h);
 	SDL_FreeSurface(sText);
 	return out;
