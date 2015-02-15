@@ -17,8 +17,10 @@ class Rocket : public TransformCollidable, public Inputlistener
 		static const float SPEED;
 		static const float TURN_ACCELERATION;
 		static const float TURN_SPEED;
+		static const float MAX_TORQUE;
 
 		float torque;
+		float torqueDir;
 
 		bool controllable;
 		bool isLeftKeyDown, isRightKeyDown;

@@ -7,8 +7,9 @@
 #include <math.h>
 
 const float Rocket::SPEED = 400.f;
-const float Rocket::TURN_SPEED = 160.f;
+const float Rocket::TURN_SPEED = 5.f;
 const float Rocket::TURN_ACCELERATION = 50.f;
+const float Rocket::MAX_TORQUE = 4.f;
 
 Rocket::Rocket(Player* owner, Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(0.f, 0.f))
 {
@@ -20,7 +21,8 @@ Rocket::Rocket(Player* owner, Vector2 position, Vector2 forward) : TransformColl
 	controllable = true;
 	isLeftKeyDown = isRightKeyDown = false;
 
-	torque = 0.0;
+	torque = 0.0f;
+	torqueDir = 0.0f;
 
 	this->owner = owner;
 
@@ -48,18 +50,17 @@ void Rocket::inputReceived(SDL_KeyboardEvent *key)
 
 	if (key->type == SDL_KEYDOWN)
 	{
-		float playerAngle = atan2(owner->getForward().getY(), owner->getForward().getX()) / M_PI * 180.0f;
-
 		if (key->keysym.sym == SDLK_a && !isLeftKeyDown)
 		{
-			torque += -TURN_SPEED * g_pTimer->getDeltaTime();
+			torqueDir = -1.0f;
 			isLeftKeyDown = true;
 		}
 		else if (key->keysym.sym == SDLK_d && !isRightKeyDown)
 		{
-			torque += TURN_SPEED * g_pTimer->getDeltaTime();
+			torqueDir = 1.0f;
 			isRightKeyDown = true;
 		}
+
 	}
 	else if (key->type == SDL_KEYUP)
 	{
@@ -68,9 +69,18 @@ void Rocket::inputReceived(SDL_KeyboardEvent *key)
 		else if (key->keysym.sym == SDLK_a){
 			isLeftKeyDown = false;
 			torque = 0.0f;
+
+			if (isRightKeyDown){
+				torqueDir = 1.0f;
+			}
 		} else if (key->keysym.sym == SDLK_d){
 			isRightKeyDown = false;
 			torque = 0.0f;
+
+
+			if (isLeftKeyDown){
+				torqueDir = -1.0f;
+			}
 		}
 	}
 }
@@ -94,6 +104,14 @@ void Rocket::update()
 
 	// make sure the velocity of the rocket is constant
 	// and always towards the current forward vector
+	if (isLeftKeyDown || isRightKeyDown){
+		if (std::abs(torque) < MAX_TORQUE){
+			torque += torqueDir * TURN_SPEED * g_pTimer->getDeltaTime();
+		}
+	} else{
+		torque = 0.0f;
+	}
+
 	rotate(torque);
 	setVelocity(forward * SPEED);
 
