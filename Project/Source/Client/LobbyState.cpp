@@ -4,13 +4,10 @@ LobbyState::LobbyState(){
 }
 
 LobbyState::~LobbyState(){
-	delete[] receivedBuffer;
+	
 }
 
 void LobbyState::init(){
-	this->numberOfPlayers = g_pGame->getNumberOfPlayers() - 1;
-	receivedBuffer = new char[BUFLEN * numberOfPlayers];
-
 	isWelcomePacketAcknowledged = false;
 
 	client = g_pGame->getClient();
@@ -25,36 +22,62 @@ void LobbyState::sendWelcomePacketToServer()
 
 void LobbyState::receivePacket(char* packet)
 {
-	char *cmpString = "welcome:ack";
+	char *gameInfoString = "gameinfo";
+	char *gameStartString = "start";
 
-	if (memcmp(packet, cmpString, sizeof(char) * strlen(cmpString)) == 0)
-	// if we received a start packet from the server to let us know the welcome string was acknowledged
+	if (memcmp(packet, gameInfoString, sizeof(char) * strlen(gameInfoString)) == 0)
+	// if we received a gameinfo packet from the server to let us know the welcome string was acknowledged and how many players are connected
 	{
-		//g_pLogfile->fLog("Welcome packet acknowledged from server.");
+		std::string tmp = packet + sizeof(char) * (strlen(gameInfoString) + 1);
+		int playerCount = atoi(tmp.c_str());
+
+		//g_pLogfile->fLog("Gameinfo packet received from server, playercount received: %d", playerCount);
+		g_pGame->setNumberOfPlayers(playerCount);
+
 		isWelcomePacketAcknowledged = true;
 	}
-	//else
-		//g_pLogfile->fLog("Invalid packet \"%s\" received and discarded.", packet);
-
-	cmpString = "start";
-
-	if (memcmp(packet, cmpString, sizeof(char)* strlen(cmpString)) == 0)
+	else if (memcmp(packet, gameStartString, sizeof(char) * strlen(gameStartString)) == 0)
 	// if we received a start packet from the server to let us know the game is starting
 	{
-		std::string tmp = packet + sizeof(char) * (strlen(cmpString) + 1);
-		int spawnIndex = atoi(tmp.c_str());
+		// parse our player ID
 
-		g_pGame->getGameplayState()->spawnPoint = spawnIndex;
+		char *pID = packet + (strlen(gameStartString) + 1);
+		int playerID = atoi(pID);
+		//g_pLogfile->fLog("Start packet received from server, our player ID: %d", playerID);
+		g_pGame->getGameplayState()->playerID = playerID;
+
+
+		// parse list of player names
+
+		std::string tmp = packet + sizeof(char)* (strlen(gameStartString) + 3);
+
+		std::string playerName;
+		std::stringstream ss(tmp);
+		char j;
+		while (ss >> j)
+		{
+			playerName.push_back(j);
+			
+			if (ss.peek() == ':')
+			{
+				g_pGame->getGameplayState()->addNetplayer(playerName);
+				playerName.clear();
+				ss.ignore();
+			}
+		}
+
+		
+		// answer with an ack packet
 
 		if (!client->sendToServer("start:ack"))
 		// send an ack packet to the server
 			g_pLogfile->fLog("Failed to send ack start packet to server.");
 
-		g_pLogfile->fLog("Starting game (spawn point %d).", spawnIndex);
+		g_pLogfile->fLog("Starting game...");
 		g_pGame->setState(g_pGame->getGameplayState());
 	}
-	//else
-		//g_pLogfile->fLog("Invalid packet \"%s\" received and discarded.", packet);
+	else
+		g_pLogfile->fLog("Discarded malformed packet: \"%s\".", packet);
 }
 
 void LobbyState::update()

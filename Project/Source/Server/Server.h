@@ -31,6 +31,9 @@ private:
 
 	std::vector<PlayerInfo*> players;
 
+	void handleIncomingTraffic(std::string packet, sockaddr_in clientInfo);
+	void handleOutgoingTraffic();
+
 public:
 	Server();
 	~Server();

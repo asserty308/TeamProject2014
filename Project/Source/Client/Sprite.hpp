@@ -1,5 +1,6 @@
 #pragma once
 
+#include <string>
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SOIL.h>
@@ -11,6 +12,7 @@ class Sprite
 		GLuint textureID;
 		Vector2 position, dimensions;
 		float angle;
+		std::string filename;
 
 	public:
 		Sprite();
@@ -26,5 +28,7 @@ class Sprite
 
 		void setPosition(Vector2 newPos);
 		Vector2 getPosition();
+
+		std::string getFilename();
 };
 

@@ -1,5 +1,6 @@
 #include "SpriteRenderer.hpp"
 #include <SDL_opengl.h>
+#include "Logger.hpp"
 
 
 SpriteRenderer::SpriteRenderer()
@@ -27,6 +28,7 @@ void SpriteRenderer::renderScene()
 {
 	for each (Sprite *s in sprites)
 	{
+		g_pLogfile->fLog("Rendering sprite: \"%s\" @ %f/%f\n", s->getFilename().c_str(), s->getPosition().getX(), s->getPosition().getY());
 		s->render();
 	}
 

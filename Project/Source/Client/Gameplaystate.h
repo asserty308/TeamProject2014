@@ -29,9 +29,11 @@ public:
 	virtual void render();
 	virtual void quit();
 
-	int spawnPoint;
+	int playerID;
 
 	virtual void inputReceived(SDL_KeyboardEvent *key);
+
+	void addNetplayer(std::string name);
 
 private:
 	Client *client;
@@ -42,8 +44,7 @@ private:
 	Sprite *backgroundSprite;
 
 	int matchCount;
-	int scorePlayer;
-	std::vector<int> scoreNetplayers;
+	
 	MATCHSTATE matchstate;
 
 

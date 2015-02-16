@@ -103,129 +103,117 @@ void Server::sendToAllClients(char* data, int size)
 		sendToClient(*player, data, size);
 }
 
-void Server::update()
+void Server::handleIncomingTraffic(std::string packet, sockaddr_in clientInfo)
 {
-	//clear the buffer
-	memset(data, '\0', BUFLEN);
-
-	// read data from socket
-	sockaddr_in clientInfo;
-	int clientLen = sizeof(clientInfo);
-	int bytesReceived = recvfrom(s, data, BUFLEN, 0, (struct sockaddr*)&clientInfo, &clientLen);
-
-	while (bytesReceived > 0)
-	// if there was something to read
+	if (state == ServerState_Waiting)
 	{
-		std::string recString = data;
-
-		if (state == ServerState_Waiting)
+		if (packet.substr(0, 7).compare("welcome") == 0)
+		// if we received a welcome packet from a player signing up with their name
 		{
-			if (recString.substr(0, 7).compare("welcome") == 0)
-			// if we received a welcome packet from a player signing up with their name
+			bool skip = false;
+
+			// check if that player has already been marked as signed up
+			for (PlayerInfo *playerInfo : players)
 			{
-				bool skip = false;
-
-				// check if that player has already been marked as signed up
-				for (PlayerInfo *playerInfo : players)
+				if (*playerInfo == clientInfo)
+				// this means we received another welcome packet from a client that is already registered
 				{
-					if (*playerInfo == clientInfo)
-					// this means we received another welcome packet from a client that is already registered
-					{
-						// answer with an ACK packet so the player stops spamming us hopefully
-						sendToClient(*playerInfo, "welcome:ack");
-						skip = true;
-						break;
-					}
-				}
-
-				if (!skip)
-				// if we received a _new_ player
-				{
-					std::string nickname = recString.substr(8);
-					
-					std::cout << "Player \"" << nickname.c_str() << "\" (" << (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b1 << "."
-						<< (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b2 << "." << (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b3 << "."
-						<< (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b4 << ":" << clientInfo.sin_port << ") connected (" << connectedPlayers + 1
-						<< "/" << maxPlayers << ")" << std::endl;
-					
-					connectedPlayers++;
-
-					players.push_back(new PlayerInfo(clientInfo, nickname));
+					// answer with a gameinfo packet that also serves as an ack
+					std::stringstream msg;
+					msg << "gameinfo:" << maxPlayers;
+					sendToClient(*playerInfo, msg.str());
+					skip = true;
+					break;
 				}
 			}
-			else if (recString.substr(0, 9).compare("start:ack") == 0)
-			// if we received a start acknowledge packet from a player
+
+			if (!skip)
+			// if we received a NEW player
 			{
-				for (PlayerInfo *playerInfo : players)
-				// loop through all connected players
+				std::string nickname = packet.substr(8);
+
+				std::cout << "Player \"" << nickname.c_str() << "\" (" << (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b1 << "."
+					<< (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b2 << "." << (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b3 << "."
+					<< (USHORT)clientInfo.sin_addr.S_un.S_un_b.s_b4 << ":" << clientInfo.sin_port << ") connected (" << connectedPlayers + 1
+					<< "/" << maxPlayers << ")" << std::endl;
+
+				connectedPlayers++;
+
+				players.push_back(new PlayerInfo(clientInfo, nickname));
+			}
+		}
+		else if (packet.substr(0, 9).compare("start:ack") == 0)
+		// if we received a start acknowledge packet from a player
+		{
+			for (PlayerInfo *playerInfo : players)
+			// loop through all connected players
+			{
+				if (*playerInfo == clientInfo)
+				// if we found the player that send us the ack packet
 				{
-					if (*playerInfo == clientInfo)
-					// if we found the player that send us the ack packet
+					if (!playerInfo->hasAcknowledgedStartPacket)
+					// if the player has not acknowledged their start packet yet
 					{
-						if (!playerInfo->hasAcknowledgedStartPacket)
-						// if the player has not acknowledged their start packet yet
+						// mark the player as having acknowledged their start packet
+						playerInfo->hasAcknowledgedStartPacket = true;
+
+						//std::cout << "Player \"" << playerInfo->getName() << "\" is ready and has acknowledged their start packet." << std::endl;
+
+						readyPlayers++;
+
+						if (readyPlayers == maxPlayers)
 						{
-							// mark the player as having acknowledged their start packet
-							playerInfo->hasAcknowledgedStartPacket = true;
-
-							std::cout << "Player \"" << playerInfo->getName() << "\" is ready and has acknowledged their start packet." << std::endl;
-
-							readyPlayers++;
-
-							if (readyPlayers == maxPlayers)
-							{
-								std::cout << std::endl << "All players ready, starting game..." << std::endl << std::endl;
-								state = ServerState_Ingame;
-							}
+							std::cout << std::endl << "All players ready, starting game..." << std::endl << std::endl;
+							state = ServerState_Ingame;
 						}
 					}
 				}
 			}
-			else
-				std::cout << "Invalid packet received (\"" << data << "\") and discarded." << std::endl;
 		}
-		else if (state == ServerState_Ingame)
-		{
-			int index = 0;
-
-			for (PlayerInfo *playerInfo : players)
-			{
-				if (*playerInfo == clientInfo)
-				{
-					float *playerData = new float[10];
-					memcpy(playerData, data, sizeof(float)* 10);
-
-					playerInfo->positionX = playerData[0];
-					playerInfo->positionY = playerData[1];
-					playerInfo->forwardX = playerData[2];
-					playerInfo->forwardY = playerData[3];
-					playerInfo->angle = playerData[4];
-					playerInfo->rocketPositionX = playerData[5];
-					playerInfo->rocketPositionY = playerData[6];
-					playerInfo->rocketForwardX = playerData[7];
-					playerInfo->rocketForwardY = playerData[8];
-					playerInfo->isDead = playerData[9];
-
-					delete[] playerData;
-
-					break;
-				}
-
-				index++;
-			}
-		}
-
-		// read more data
-		bytesReceived = recvfrom(s, data, BUFLEN, 0, (struct sockaddr*)&clientInfo, &clientLen);
+		else
+			std::cout << "Invalid packet received (\"" << data << "\") and discarded." << std::endl;
 	}
+	else if (state == ServerState_Ingame)
+	{
+		int index = 0;
 
+		for (PlayerInfo *playerInfo : players)
+		{
+			if (*playerInfo == clientInfo)
+			{
+				float *playerData = new float[10];
+				memcpy(playerData, data, sizeof(float)* 10);
+
+				playerInfo->positionX = playerData[0];
+				playerInfo->positionY = playerData[1];
+				playerInfo->forwardX = playerData[2];
+				playerInfo->forwardY = playerData[3];
+				playerInfo->angle = playerData[4];
+				playerInfo->rocketPositionX = playerData[5];
+				playerInfo->rocketPositionY = playerData[6];
+				playerInfo->rocketForwardX = playerData[7];
+				playerInfo->rocketForwardY = playerData[8];
+				playerInfo->isDead = playerData[9];
+
+				delete[] playerData;
+
+				break;
+			}
+
+			index++;
+		}
+	}
+}
+
+void Server::handleOutgoingTraffic()
+{
 	if (state == ServerState_Waiting)
 	// if we are still in waiting/lobby mode
 	{
 		if (connectedPlayers == maxPlayers)
 		// and we are ready to go (all players have connected)
 		{
-			int startIndex = 0;
+			int playerID = 0;
 
 			for (PlayerInfo *i : players)
 			// loop through all connected players
@@ -236,14 +224,23 @@ void Server::update()
 					// send them a new one
 
 					std::stringstream msg;
-					msg << "start:";
-					msg << startIndex;
+					msg << "start:" << playerID << ":";
+					
+					for (PlayerInfo *tmp : players)
+					// append a list of nicknames for all players to the start packet
+					{
+						if (i == tmp)
+						// exclude the player himself
+							continue;
+
+						msg << tmp->getName() << ":";
+					}
 
 					if (!sendToClient(*i, msg.str()))
 						std::cout << "Failed to send start packet to a player." << std::endl;
 				}
 
-				startIndex++;
+				playerID++;
 			}
 		}
 	}
@@ -268,7 +265,30 @@ void Server::update()
 		}
 
 		char allPlayerData[BUFLEN];
-		memcpy(allPlayerData, playerData, maxPlayers * sizeof(float) * 10);
-		sendToAllClients(allPlayerData, maxPlayers * sizeof(float) * 10);
+		memcpy(allPlayerData, playerData, maxPlayers * sizeof(float)* 10);
+		sendToAllClients(allPlayerData, maxPlayers * sizeof(float)* 10);
 	}
+}
+
+void Server::update()
+{
+	//clear the buffer
+	memset(data, '\0', BUFLEN);
+
+	// read data from socket
+	sockaddr_in clientInfo;
+	int clientLen = sizeof(clientInfo);
+	int bytesReceived = recvfrom(s, data, BUFLEN, 0, (struct sockaddr*)&clientInfo, &clientLen);
+
+	while (bytesReceived > 0)
+	// if there was something to read
+	{
+		// handle read packet
+		handleIncomingTraffic(data, clientInfo);
+
+		// read more data
+		bytesReceived = recvfrom(s, data, BUFLEN, 0, (struct sockaddr*)&clientInfo, &clientLen);
+	}
+
+	handleOutgoingTraffic();
 }

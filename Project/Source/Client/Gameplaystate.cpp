@@ -36,6 +36,11 @@ Gameplaystate::~Gameplaystate()
 	dbc = nullptr;
 }
 
+void Gameplaystate::addNetplayer(std::string name)
+{
+	netplayers.push_back(new Netplayer(name, Vector2(0.f, 0.f), Vector2(1.0f, 0.0f)));
+}
+
 // TODO: hardcoded
 float spawnPoints[4][2] = { { 50.0f, 50.0f }, { 750.0f, 550.0f }, { 50.f, 550.f }, { 750.0f, 50.0f } };
 
@@ -48,27 +53,23 @@ void Gameplaystate::init()
 
 	map = MapParser::loadMap("Maps\\testmap2.xml");
 
-	Vector2 playerSpawn(spawnPoints[spawnPoint][0], spawnPoints[spawnPoint][1]);
+	Vector2 playerSpawn(spawnPoints[playerID][0], spawnPoints[playerID][1]);
 	player = new Player(playerSpawn, Vector2(0.0f, -1.0f));
+
+	int netplayerID = 0;
 
 	for (int i = 0; i < g_pGame->getNumberOfPlayers(); ++i)
 	{
-		if (i == spawnPoint)
+		if (i == playerID)
 			continue;
 
-		netplayers.push_back(new Netplayer("Unknown Player", Vector2(spawnPoints[i][0], spawnPoints[i][1]), Vector2(0.0f, -1.0f)));
+		netplayers[netplayerID]->setPosition(Vector2(spawnPoints[i][0], spawnPoints[i][1]));
+
+		netplayerID++;
 	}
-
-
 
 	matchstate = SPAWN;
 	matchCount = 0;
-
-	for (int i = 0; i < g_pGame->getNumberOfPlayers() - 1; i++){
-		scoreNetplayers.push_back(0);
-	}
-
-	scorePlayer = 0;
 
 	//initialize and play music
 	//g_pAudioController->playMusic(MusicFiles::THEME, true);
@@ -99,6 +100,13 @@ void Gameplaystate::sendOurStuffToServer()
 
 void Gameplaystate::receivePacket(char* packet)
 {
+	// check that this is an actual gameplay packet, not a lobby left-over
+	char *gameInfoString = "gameinfo";
+	char *gameStartString = "start";
+
+	if (memcmp(packet, gameInfoString, sizeof(char)* strlen(gameInfoString)) == 0 || memcmp(packet, gameStartString, sizeof(char)* strlen(gameStartString)) == 0)
+		return;
+
 	float *netPlayerData = new float[g_pGame->getNumberOfPlayers() * 10];
 	memcpy(netPlayerData, packet, g_pGame->getNumberOfPlayers() * sizeof(float) * 10);
 
@@ -106,7 +114,7 @@ void Gameplaystate::receivePacket(char* packet)
 
 	for (int i = 0; i < g_pGame->getNumberOfPlayers(); ++i)
 	{
-		if (i == spawnPoint)
+		if (i == playerID)
 			continue;
 		
 		int offset = i * 10;
@@ -133,19 +141,26 @@ void Gameplaystate::receivePacket(char* packet)
 	delete[] netPlayerData;
 }
 
-//TODO: Expand matchstructure to four players!
+//TODO: fix matchstructure
 void Gameplaystate::update()
 {
-	sendOurStuffToServer();
 	client->update();
 
 	g_pCollisionObserver->checkCollisionRoutine();
 
-	for (int i = 0; i < g_pGame->getNumberOfPlayers() - 1; i++){
-		netplayers[i]->update();
+	int netplayerID = 0;
+
+	for (int i = 0; i < g_pGame->getNumberOfPlayers(); ++i)
+	{
+		if (i == playerID)
+			continue;
+
+		netplayers[netplayerID]->update();
+
+		netplayerID++;
 	}
 
-	Vector2 playerSpawn(spawnPoints[spawnPoint][0], spawnPoints[spawnPoint][1]);
+	Vector2 playerSpawn(spawnPoints[playerID][0], spawnPoints[playerID][1]);
 
 	switch (matchstate)
 	{
@@ -182,20 +197,12 @@ void Gameplaystate::update()
 					//matchstate = MATCHOVER;
 				}
 			}
+
+			// send our stuff to the server if we're dead or alive
+			sendOurStuffToServer();
 		break;
 		case(MATCHOVER):
 			matchCount++;
-
-			if (!player->getIsDead())
-				scorePlayer++;
-			else
-			{
-				for (int i = 0; i < netplayers.size(); i++)
-				{
-					if (!netplayers[i]->getIsDead())
-						scoreNetplayers[i]++;
-				}
-			}
 
 			if (matchCount >= MATCHNUMBER)
 				matchstate = GAMEOVER;
@@ -237,7 +244,10 @@ void Gameplaystate::render()
 				map->render();
 
 			for (Netplayer* n : netplayers)
+			{
+				//g_pLogfile->fLog("x: %f y: %f\n", n->getSprite()->getPosition().getX(), n->getSprite()->getPosition().getY());
 				n->render();
+			}
 
 			renderScore();
 		}
@@ -270,6 +280,7 @@ void Gameplaystate::inputReceived(SDL_KeyboardEvent *key)
 
 //Render playerscores
 void Gameplaystate::renderScore(){
+	/*
 	std::stringstream scoreStream;
 	scoreStream << scorePlayer;
 	for (int i = 0; i < scoreNetplayers.size(); i++){
@@ -280,5 +291,6 @@ void Gameplaystate::renderScore(){
 	Vector2 textDimensions = g_pFontRenderer->getTextDimensions(scoreStream.str());
 	Vector2 textPos((g_pGame->getWindowWidth() / 2) - (textDimensions.getX() / 2), 0.0f);
 	g_pFontRenderer->drawText(scoreStream.str(), textPos, color);
+	*/
 }
 

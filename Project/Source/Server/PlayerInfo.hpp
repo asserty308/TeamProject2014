@@ -8,6 +8,7 @@ class PlayerInfo
 private:
 	sockaddr_in address;
 	std::string name;
+	int score;
 
 public:
 	PlayerInfo(sockaddr_in address, std::string name);
@@ -19,6 +20,9 @@ public:
 
 	sockaddr_in getAddress();
 	std::string getName();
+	
+	int getScore();
+	void setScore(int score);
 
 	float positionX, positionY;
 	float forwardX, forwardY;

@@ -22,9 +22,6 @@ public:
 
 private:
 	Client* client;
-	int numberOfPlayers;
-
-	char* receivedBuffer;
 
 	bool isWelcomePacketAcknowledged;
 

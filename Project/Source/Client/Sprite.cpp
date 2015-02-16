@@ -14,6 +14,7 @@ Sprite::Sprite(char* path, Vector2 position, Vector2 dimensions)
 {
 	this->position = position;
 	this->dimensions = dimensions;
+	this->filename = path;
 	angle = 180.f;
 
 	loadFromFile(path);
@@ -91,4 +92,9 @@ void Sprite::setPosition(Vector2 newPos)
 Vector2 Sprite::getPosition()
 {
 	return position;
+}
+
+std::string Sprite::getFilename()
+{
+	return filename;
 }

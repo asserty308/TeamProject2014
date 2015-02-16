@@ -11,7 +11,7 @@ Game::Game()
 	g_pCollisionObserver->setxAxis(Vector2(windowWidth, 0));
 	g_pCollisionObserver->setyAxis(Vector2(0, windowHeight));
 
-	numberofPlayers = 4;
+	//numberofPlayers = 4;
 
 	gameplayState = new Gameplaystate();
 	pauseState = new Pausestate();
@@ -144,7 +144,7 @@ int Game::getNumberOfPlayers(){
 }
 
 void Game::setNumberOfPlayers(int n){
-	this->numberofPlayers = numberofPlayers;
+	this->numberofPlayers = n;
 }
 
 void Game::setName(std::string n)

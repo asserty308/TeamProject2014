@@ -39,6 +39,8 @@ public:
 
 	bool getIsDead();
 
+	Sprite *getSprite();
+
 private:
 	Sprite *sprite;
 	NetRocket* netRocket;
