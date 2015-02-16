@@ -16,6 +16,11 @@ SpriteRenderer::~SpriteRenderer()
 
 void SpriteRenderer::addSprite(Sprite *sprite)
 {
+	if (strcmp(sprite->getFilename().c_str(), "Sprites\\new_background.png") == 0){
+		background = sprite;
+		return;
+	}
+
 	sprites.push_back(sprite);
 }
 
@@ -26,11 +31,11 @@ void SpriteRenderer::removeSprite(Sprite *sprite)
 
 void SpriteRenderer::renderScene()
 {
-	for each (Sprite *s in sprites)
+	background->render();
+	for each(Sprite* s in sprites)
 	{
-		g_pLogfile->fLog("Rendering sprite: \"%s\" @ %f/%f\n", s->getFilename().c_str(), s->getPosition().getX(), s->getPosition().getY());
+		//g_pLogfile->fLog("Rendering sprite: \"%s\" @ %f/%f\n", s->getFilename().c_str(), s->getPosition().getX(), s->getPosition().getY());
 		s->render();
 	}
-
 }
 
