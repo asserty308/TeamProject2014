@@ -13,9 +13,10 @@ class Obstacle :
 	private:
 		std::vector<Vector2> vertices;
 		GLuint* textureID;
+		GLuint* edgeTextureID;
 
 	public:
-		Obstacle(GLuint* textureID);
+		Obstacle(GLuint* textureID, GLuint* edgeTextureID);
 
 		~Obstacle(){
 			delete boundingBox;

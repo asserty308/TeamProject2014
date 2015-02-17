@@ -1,15 +1,14 @@
 #include "Map.hpp"
 
-Map::Map(){
-	textureID = SOIL_load_OGL_texture("Sprites\\metal_floor.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
-
+Map::Map()
+{
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	textureID = SOIL_load_OGL_texture("Sprites\\metal_floor.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
+	edgeTextureID = SOIL_load_OGL_texture("Sprites\\obstacle_edge.png", SOIL_LOAD_AUTO, SOIL_CREATE_NEW_ID, SOIL_FLAG_MIPMAPS);
 
-	if (textureID == 0)
+	if (textureID == 0 || edgeTextureID == 0)
 		g_pLogfile->fLog("SOIL loading error: %s", SOIL_last_result());
 
 }

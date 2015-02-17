@@ -41,7 +41,7 @@ Map *MapParser::loadMap(std::string filename)
 			}
 			else if (strcmp(element->Name(), "Obstacle") == 0)
 			{
-				Obstacle* obstacle = new Obstacle(map->getTextureID());
+				Obstacle* obstacle = new Obstacle(map->getTextureID(), map->getEdgeTextureID());
 
 				XMLElement *vertexElement = element->FirstChildElement();
 

@@ -44,7 +44,7 @@ private:
 	Sprite *backgroundSprite;
 
 	int matchCount;
-	
+	int scorePlayer;
 	MATCHSTATE matchstate;
 
 
