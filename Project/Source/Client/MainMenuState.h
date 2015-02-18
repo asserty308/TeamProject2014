@@ -2,6 +2,7 @@
 
 #include "Gamestate.h"
 #include "Game.hpp"
+#include "Sprite.hpp"
 #include <sstream>
 #include <iostream>
 #include <string>
@@ -15,6 +16,8 @@ class MainMenuState : public Gamestate
 
 		MenuState currentState;
 		std::stringstream stream;
+
+		Sprite *backgroundSprite;
 
 	public:
 		void init();

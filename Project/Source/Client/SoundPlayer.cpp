@@ -10,6 +10,7 @@ SoundPlayer::SoundPlayer()
 	sounds = new std::array<Mix_Chunk*, MAX_CHANNELS>();
 
 	loadFromFile(SoundFiles::ROCKET);
+	loadFromFile(SoundFiles::EXPLOSION);
 }
 
 

@@ -48,7 +48,7 @@ void Gameplaystate::addNetplayer(std::string name)
 void Gameplaystate::init()
 {
 	//create sprite
-	backgroundSprite = new Sprite("Sprites\\new_background.png", Vector2(g_pGame->getWindowWidth() / 2, g_pGame->getWindowHeight() / 2), Vector2(1280.f, 720.f), 1);
+	backgroundSprite = new Sprite("Sprites\\new_background.png", Vector2(g_pGame->getWindowWidth() / 2.f, g_pGame->getWindowHeight() / 2.f), Vector2(1280.f, 720.f), 1);
 
 	client = g_pGame->getClient();
 
@@ -216,12 +216,22 @@ void Gameplaystate::update()
 			
 		break;
 		case(MATCHOVER):
+		{
 			matchCount++;
 
-			if (matchCount >= g_pGame->getBestOfX() / 2 + 1)
+			int highestScore = scorePlayer;
+
+			for (Netplayer *n : netplayers)
+			{
+				if (n->getScore() > highestScore)
+					highestScore = n->getScore();
+			}
+
+			if (highestScore > g_pGame->getBestOfX() / 2)
 				matchstate = GAMEOVER;
 			else
 				matchstate = SPAWN;
+		}
 		break;
 		case(GAMEOVER) :
 		break;

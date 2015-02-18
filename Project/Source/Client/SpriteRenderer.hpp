@@ -10,7 +10,7 @@ class SpriteRenderer : public Singleton<SpriteRenderer>
 {
 	private:
 		std::vector<Sprite*> sprites;
-		Sprite* background;
+		Sprite* background[2];
 		
 	public:
 		SpriteRenderer();

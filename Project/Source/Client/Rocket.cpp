@@ -47,6 +47,7 @@ Rocket::~Rocket()
 	g_pInputObserver->removeListener(this);
 	g_pCollisionObserver->removeListener(this);
 
+	g_pAudioController->stopSoundByFile(SoundFiles::EXPLOSION);
 	g_pAudioController->stopSoundByFile(SoundFiles::ROCKET);
 }
 
@@ -103,6 +104,7 @@ void Rocket::CollisionDetected(TransformCollidable *other, Vector2 penetration){
 	if (!firstImpact){
 		sprite->playAnimation(0, 0.03f);
 		firstImpact = true;
+		g_pAudioController->playSound(SoundFiles::EXPLOSION, false);
 	}
 
 	speed = 0.0f;

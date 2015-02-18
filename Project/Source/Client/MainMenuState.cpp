@@ -1,4 +1,5 @@
 #include "MainMenuState.h"
+#include "SpriteRenderer.hpp"
 
 void MainMenuState::init()
 {
@@ -8,6 +9,11 @@ void MainMenuState::init()
 	ip = "127.0.0.1";
 	port = "8888";
 	clPort = "54290";
+
+	glEnable(GL_TEXTURE_2D);
+
+	//create sprite
+	backgroundSprite = new Sprite("Sprites\\menu_background.png", Vector2(g_pGame->getWindowWidth() / 2.f, g_pGame->getWindowHeight() / 2.f), Vector2(1280.f, 720.f), 1);
 }
 
 void MainMenuState::receivePacket(char* data)
@@ -146,6 +152,8 @@ void MainMenuState::render()
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+	g_pSpriteRenderer->renderScene();
+
 	glColor3f(1.f, 1.f, 1.f);
 	SDL_Color col = { 255, 127, 0 };
 	Vector2 dim = Vector2(0.f, 0.f);
@@ -220,5 +228,5 @@ void MainMenuState::render()
 
 void MainMenuState::quit()
 {
-
+	delete backgroundSprite;
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include "AudioFiles.hpp"
+#include "AudioController.hpp"
 #include "NetRocket.h"
 #include "Game.hpp"
 
@@ -29,6 +31,8 @@ NetRocket::NetRocket(Netplayer* owner, Vector2 position, Vector2 forward) : Tran
 NetRocket::~NetRocket(){
 	delete sprite;
 	delete boundingBox;
+
+	g_pAudioController->stopSoundByFile(SoundFiles::EXPLOSION);
 }
 
 void NetRocket::CollisionDetected(TransformCollidable *other, Vector2 penetration){
@@ -39,6 +43,7 @@ void NetRocket::CollisionDetected(TransformCollidable *other, Vector2 penetratio
 	if (!firstImpact){
 		sprite->playAnimation(0, 0.05f);
 		firstImpact = true;
+		g_pAudioController->playSound(SoundFiles::EXPLOSION, false);
 	}
 
 }

@@ -3,6 +3,7 @@
 struct SoundFiles
 {
 	static const std::string ROCKET;
+	static const std::string EXPLOSION;
 };
 
 struct MusicFiles
