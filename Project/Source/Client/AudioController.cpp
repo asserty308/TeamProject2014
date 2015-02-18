@@ -41,7 +41,7 @@ void AudioController::removeSound(std::string path)
 
 void AudioController::playSound(std::string path, bool loop)
 {
-	soundPlayer->play(path, true);
+	soundPlayer->play(path, loop);
 }
 
 void AudioController::stopSoundByFile(std::string path)
