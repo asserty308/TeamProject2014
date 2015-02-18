@@ -41,11 +41,15 @@ public:
 
 	Sprite *getSprite();
 
+	int getScore();
+	void setScore(int score);
+
 private:
 	Sprite *sprite;
 	NetRocket* netRocket;
 	bool isDead;
 	std::string name;
+	int score;
 
 	NetplayerData frontHistoryCache;
 	NetplayerData backHistoryCache;

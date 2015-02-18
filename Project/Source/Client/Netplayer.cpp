@@ -18,6 +18,8 @@ Netplayer::Netplayer(std::string name, Vector2 position, Vector2 forward) : Tran
 
 	isDead = false;
 	
+	score = 0;
+
 	updateElapsed = 0;
 
 	g_pCollisionObserver->addListener(this);
@@ -113,4 +115,14 @@ bool Netplayer::getIsDead(){
 Sprite *Netplayer::getSprite()
 {
 	return sprite;
+}
+
+int Netplayer::getScore()
+{
+	return score;
+}
+
+void Netplayer::setScore(int score)
+{
+	this->score = score;
 }

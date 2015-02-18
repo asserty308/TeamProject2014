@@ -8,6 +8,7 @@ class Map
 		Vector2 playerSpawn;
 		std::vector<Obstacle*> obstacles;
 		GLuint textureID;
+		GLuint edgeTextureID;
 
 	public:
 		Map();
@@ -18,6 +19,10 @@ class Map
 
 		GLuint* getTextureID(){
 			return &textureID;
+		}
+
+		GLuint* getEdgeTextureID(){
+			return &edgeTextureID;
 		}
 
 		void addObstacle(Obstacle* obstacle);

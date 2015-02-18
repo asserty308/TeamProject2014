@@ -70,6 +70,7 @@ void Gameplaystate::init()
 
 	matchstate = SPAWN;
 	matchCount = 0;
+	scorePlayer = 0;
 
 	//initialize and play music
 	//g_pAudioController->playMusic(MusicFiles::THEME, true);
@@ -177,10 +178,13 @@ void Gameplaystate::update()
 			}
 		break;
 		case(MATCH):
-			if (player)
+			//if (player)
 			{
 				player->updatePosition(g_pTimer->getDeltaTime());
 				player->update();
+
+				// send our stuff to the server if we're dead or alive
+				sendOurStuffToServer();
 
 				int deadNetplayers = 0;
 				for (Netplayer* n : netplayers)
@@ -194,12 +198,22 @@ void Gameplaystate::update()
 				if (deadNetplayers == g_pGame->getNumberOfPlayers() - 1 && !player->getIsDead() ||
 					deadNetplayers == g_pGame->getNumberOfPlayers() - 2 && player->getIsDead())
 				{
-					//matchstate = MATCHOVER;
+					matchstate = MATCHOVER;
+
+					if (deadNetplayers == g_pGame->getNumberOfPlayers() - 1 && !player->getIsDead())
+						scorePlayer++;
+					else
+					{
+						for (Netplayer* n : netplayers)
+						{
+							if (!n->getIsDead())
+								n->setScore(n->getScore() + 1);
+						}
+					}
 				}
 			}
 
-			// send our stuff to the server if we're dead or alive
-			sendOurStuffToServer();
+			
 		break;
 		case(MATCHOVER):
 			matchCount++;
@@ -279,18 +293,16 @@ void Gameplaystate::inputReceived(SDL_KeyboardEvent *key)
 }
 
 //Render playerscores
-void Gameplaystate::renderScore(){
-	/*
+void Gameplaystate::renderScore()
+{
 	std::stringstream scoreStream;
 	scoreStream << scorePlayer;
-	for (int i = 0; i < scoreNetplayers.size(); i++){
-		scoreStream << "    " << scoreNetplayers[i];
-	}
+	for (Netplayer *n : netplayers)
+		scoreStream << "    " << n->getScore();
 
 	SDL_Color color = { 255, 127, 0 };
 	Vector2 textDimensions = g_pFontRenderer->getTextDimensions(scoreStream.str());
 	Vector2 textPos((g_pGame->getWindowWidth() / 2) - (textDimensions.getX() / 2), 0.0f);
 	g_pFontRenderer->drawText(scoreStream.str(), textPos, color);
-	*/
 }
 
