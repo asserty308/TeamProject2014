@@ -81,16 +81,16 @@ void Sprite::render()
 
 	glBegin(GL_QUADS);
 		//top right
-		glTexCoord2f(texCoordsFrameX[1], 1.f);
+		glTexCoord2f(texCoordsFrameX[0], 1.f);
 		glVertex2f(position.getX() + (dimensions.getX() / 2.f), position.getY() - (dimensions.getY() / 2.f));
 		//bottom right
-		glTexCoord2f(texCoordsFrameX[1], 0.f);
+		glTexCoord2f(texCoordsFrameX[0], 0.f);
 		glVertex2f(position.getX() + (dimensions.getX() / 2.f), position.getY() + (dimensions.getY() / 2.f));
 		//bottom left
-		glTexCoord2f(texCoordsFrameX[0], 0.f);
+		glTexCoord2f(texCoordsFrameX[1], 0.f);
 		glVertex2f(position.getX() - (dimensions.getX() / 2.f), position.getY() + (dimensions.getY() / 2.f));
 		//top left
-		glTexCoord2f(texCoordsFrameX[0], 1.f);
+		glTexCoord2f(texCoordsFrameX[1], 1.f);
 		glVertex2f(position.getX() - (dimensions.getX() / 2.f), position.getY() - (dimensions.getY() / 2.f));
 	glEnd();
 
