@@ -29,6 +29,9 @@ private:
 	int connectedPlayers;
 	int readyPlayers; // number of players which have acknowledged the start packet
 
+	int bestOfX;
+	int mapID;
+
 	std::vector<PlayerInfo*> players;
 
 	void handleIncomingTraffic(std::string packet, sockaddr_in clientInfo);

@@ -16,15 +16,6 @@ Server::Server()
 		return;
 	}
 
-	do
-	{
-		std::cout << "Please enter player count (2-4): ";
-		std::cin >> maxPlayers;
-	} while (maxPlayers < 2 || maxPlayers > 4);
-
-	connectedPlayers = 0;
-	readyPlayers = 0;
-
 	// create the listening socket
 	if ((s = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP)) == INVALID_SOCKET)
 	{
@@ -63,6 +54,28 @@ Server::Server()
 		std::cout << "Please enter tickrate (16-128): ";
 		std::cin >> tickrate;
 	} while (tickrate < 16 || tickrate > 128);
+
+	do
+	{
+		std::cout << "Please enter player count (2-4): ";
+		std::cin >> maxPlayers;
+	} while (maxPlayers < 2 || maxPlayers > 4);
+
+	connectedPlayers = 0;
+	readyPlayers = 0;
+
+	do
+	{
+		std::cout << "Please enter round limit (best of 3-31): ";
+		std::cin >> bestOfX;
+	} while (bestOfX < 3 || bestOfX > 31);
+
+	do
+	{
+		std::cout << "Please enter mapID (0-1): ";
+		std::cin >> mapID;
+	} while (mapID < 0 || mapID > 1);
+
 
 	data = new char[BUFLEN];
 
@@ -120,7 +133,7 @@ void Server::handleIncomingTraffic(std::string packet, sockaddr_in clientInfo)
 				{
 					// answer with a gameinfo packet that also serves as an ack
 					std::stringstream msg;
-					msg << "gameinfo:" << maxPlayers;
+					msg << "gameinfo:" << maxPlayers << ":" << bestOfX << ":" << mapID;
 					sendToClient(*playerInfo, msg.str());
 					skip = true;
 					break;

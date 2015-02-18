@@ -9,6 +9,10 @@
 
 #include <sstream>
 
+// TODO: hardcoded
+float spawnPoints[4][2] = { { 50.0f, 50.0f }, { 750.0f, 550.0f }, { 50.f, 550.f }, { 750.0f, 50.0f } };
+std::string maps[2] = { "Maps\\testmap.xml", "Maps\\testmap2.xml" };
+
 Gameplaystate::Gameplaystate() :
 countdown(3)
 {
@@ -41,9 +45,6 @@ void Gameplaystate::addNetplayer(std::string name)
 	netplayers.push_back(new Netplayer(name, Vector2(0.f, 0.f), Vector2(1.0f, 0.0f)));
 }
 
-// TODO: hardcoded
-float spawnPoints[4][2] = { { 50.0f, 50.0f }, { 750.0f, 550.0f }, { 50.f, 550.f }, { 750.0f, 50.0f } };
-
 void Gameplaystate::init()
 {
 	//create sprite
@@ -51,7 +52,7 @@ void Gameplaystate::init()
 
 	client = g_pGame->getClient();
 
-	map = MapParser::loadMap("Maps\\testmap2.xml");
+	map = MapParser::loadMap(maps[g_pGame->getMapID()]);
 
 	Vector2 playerSpawn(spawnPoints[playerID][0], spawnPoints[playerID][1]);
 	player = new Player(playerSpawn, Vector2(0.0f, -1.0f));
@@ -142,7 +143,6 @@ void Gameplaystate::receivePacket(char* packet)
 	delete[] netPlayerData;
 }
 
-//TODO: fix matchstructure
 void Gameplaystate::update()
 {
 	client->update();
@@ -218,7 +218,7 @@ void Gameplaystate::update()
 		case(MATCHOVER):
 			matchCount++;
 
-			if (matchCount >= MATCHNUMBER)
+			if (matchCount >= g_pGame->getBestOfX() / 2 + 1)
 				matchstate = GAMEOVER;
 			else
 				matchstate = SPAWN;

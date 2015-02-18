@@ -28,11 +28,19 @@ void LobbyState::receivePacket(char* packet)
 	if (memcmp(packet, gameInfoString, sizeof(char) * strlen(gameInfoString)) == 0)
 	// if we received a gameinfo packet from the server to let us know the welcome string was acknowledged and how many players are connected
 	{
-		std::string tmp = packet + sizeof(char) * (strlen(gameInfoString) + 1);
-		int playerCount = atoi(tmp.c_str());
+		char *tmp = packet + sizeof(char) * (strlen(gameInfoString) + 1);
+		int playerCount = atoi(tmp);
 
-		//g_pLogfile->fLog("Gameinfo packet received from server, playercount received: %d", playerCount);
+		tmp = packet + sizeof(char) * (strlen(gameInfoString) + 3);
+		int bestOfX = atoi(tmp);
+
+		tmp = packet + sizeof(char) * (strlen(gameInfoString) + 5);
+		int mapID = atoi(tmp);
+
+		//g_pLogfile->fLog("Gameinfo packet received from server, playercount received: %d, best of %d, map id: %d", playerCount, bestOfX, mapID);
 		g_pGame->setNumberOfPlayers(playerCount);
+		g_pGame->setBestOfX(bestOfX);
+		g_pGame->setMapID(mapID);
 
 		isWelcomePacketAcknowledged = true;
 	}

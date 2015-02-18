@@ -147,6 +147,26 @@ void Game::setNumberOfPlayers(int n){
 	this->numberofPlayers = n;
 }
 
+int Game::getBestOfX()
+{
+	return bestOfX;
+}
+
+void Game::setBestOfX(int x)
+{
+	bestOfX = x;
+}
+
+int Game::getMapID()
+{
+	return mapID;
+}
+
+void Game::setMapID(int mapID)
+{
+	this->mapID = mapID;
+}
+
 void Game::setName(std::string n)
 {
 	name = n;

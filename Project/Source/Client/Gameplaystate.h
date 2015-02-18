@@ -10,8 +10,6 @@
 #include "Countdown.h"
 #include "Sprite.hpp"
 
-#define MATCHNUMBER 5
-
 enum MATCHSTATE{ SPAWN, MATCH, MATCHOVER, GAMEOVER };
 
 class Client;

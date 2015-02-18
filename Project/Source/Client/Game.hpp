@@ -43,7 +43,9 @@ private:
 
 	Client* client;
 
-	int numberofPlayers; 
+	int numberofPlayers;
+	int bestOfX;
+	int mapID;
 
 	std::string name, serverIP;
 	int serverPort, clientPort;
@@ -72,6 +74,10 @@ public:
 
 	int getNumberOfPlayers();
 	void setNumberOfPlayers(int n);
+	int getBestOfX();
+	void setBestOfX(int x);
+	int getMapID();
+	void setMapID(int mapID);
 
 	void setName(std::string n);
 	void setServerIP(std::string i);
