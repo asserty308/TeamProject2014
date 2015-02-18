@@ -6,7 +6,6 @@
 #include "MathUtil.h"
 #include <math.h>
 
-const float Rocket::SPEED = 400.f;
 const float Rocket::TURN_SPEED = 5.f;
 const float Rocket::TURN_ACCELERATION = 50.f;
 const float Rocket::MAX_TORQUE = 4.f;
@@ -20,14 +19,22 @@ Rocket::Rocket(Player* owner, Vector2 position, Vector2 forward) : TransformColl
 
 	controllable = true;
 	isLeftKeyDown = isRightKeyDown = false;
+	firstImpact = false;
 
+	speed = 400.0f;
 	torque = 0.0f;
 	torqueDir = 0.0f;
 
 	this->owner = owner;
 
 	//create sprite
-	sprite = new Sprite("Sprites\\new_rocket.png", position, Vector2(14.f, 24.f));
+	sprite = new Sprite("Sprites\\new_rocket_explosion.png", position, Vector2(14.f, 24.f), 4);
+	std::vector<int> explosionAnimation;
+	explosionAnimation.push_back(0);
+	explosionAnimation.push_back(1);
+	explosionAnimation.push_back(2);
+	explosionAnimation.push_back(3);
+	sprite->addAnimation(explosionAnimation);
 
 	g_pAudioController->playSound(SoundFiles::ROCKET, false);
 }
@@ -90,7 +97,15 @@ void Rocket::CollisionDetected(TransformCollidable *other, Vector2 penetration){
 		return;
 	}
 
-	owner->rocketDestroyed();
+	this->velocity = Vector2(0.0f, 0.0f);
+	this->acceleration = Vector2(0.0f, 0.0f);
+
+	if (!firstImpact){
+		sprite->playAnimation(0, 0.05f);
+		firstImpact = true;
+	}
+
+	speed = 0.0f;
 }
 
 bool Rocket::getControllable()
@@ -100,8 +115,6 @@ bool Rocket::getControllable()
 
 void Rocket::update()
 {
-	//setAcceleration(forward * TURN_ACCELERATION);
-
 	// make sure the velocity of the rocket is constant
 	// and always towards the current forward vector
 	if (isLeftKeyDown || isRightKeyDown){
@@ -113,36 +126,14 @@ void Rocket::update()
 	}
 
 	rotate(torque);
-	setVelocity(forward * SPEED);
+	setVelocity(forward * speed);
 
 	updatePosition(g_pTimer->getDeltaTime());
 	sprite->setPosition(position);
 	sprite->setAngle(angleFromVector<float>(forward));
-}
 
-/*
-void Rocket::render()
-{
-	glColor3f(0.f, 0.f, 1.f);
-	glLineWidth(2.f);
-
-	glBegin(GL_POLYGON);
-	glVertex2f(position.getX() + forward.getX() * 10.f, position.getY() + forward.getY() * 10.f);
-	glVertex2f(position.getX() - forward.getX() * 10.f - getRight().getX() * 6.f, position.getY() - forward.getY() * 10.f - getRight().getY() * 6.f);
-	glVertex2f(position.getX() - forward.getX() * 6.f, position.getY() - forward.getY() * 6.f);
-	glVertex2f(position.getX() - forward.getX() * 10.f + getRight().getX() * 6.f, position.getY() - forward.getY() * 10.f + getRight().getY() * 6.f);
-	glEnd();
-	
-	glBegin(GL_LINES);
-
-	for (int i = 0; i < 36; ++i)
-	{
-		float angle = (i * M_PI / 180.0) * 10.0;
-		glVertex2f(getPosition().getX() + sin(angle) * r, getPosition().getY() + cos(angle) * r);
-		angle = ((i + 1) * M_PI / 180.0) * 10.0;
-		glVertex2f(getPosition().getX() + sin(angle) * r, getPosition().getY() + cos(angle) * r);
+	if (firstImpact && !sprite->isPlayingAnimation()){
+		owner->rocketDestroyed();
 	}
 
-	glEnd();
 }
-*/

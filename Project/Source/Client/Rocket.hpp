@@ -14,16 +14,17 @@ class Player;
 class Rocket : public TransformCollidable, public Inputlistener
 {
 	private:
-		static const float SPEED;
 		static const float TURN_ACCELERATION;
 		static const float TURN_SPEED;
 		static const float MAX_TORQUE;
 
+		float speed;
 		float torque;
 		float torqueDir;
 
 		bool controllable;
 		bool isLeftKeyDown, isRightKeyDown;
+		bool firstImpact;
 
 		Player *owner;
 

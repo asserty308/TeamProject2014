@@ -4,6 +4,7 @@
 #include <SDL.h>
 #include <SDL_opengl.h>
 #include <SOIL.h>
+#include <vector>
 #include "Vector2.hpp"
 
 class Sprite
@@ -14,13 +15,25 @@ class Sprite
 		float angle;
 		std::string filename;
 
+		bool animationPlaying;
+		float sheetWidth;
+		float animationTimer;
+		int animFrameWidth;
+		int indexOfActiveAnimation;
+		int indexOfActiveAnimationFrame;
+		float animationSpeed;
+		std::vector<std::vector<int>> animations;
+
 	public:
 		Sprite();
-		Sprite(char* path, Vector2 position, Vector2 dimensions);
+		Sprite(char* path, Vector2 position, Vector2 dimensions, int numberOfFrames);
 		~Sprite();
 
 		void loadFromFile(const char* path);
 		void render();
+
+		void addAnimation(std::vector<int> frames);
+		void playAnimation(int index, float speed);
 
 		void addAngle(float r);
 		float getAngle();
@@ -30,5 +43,7 @@ class Sprite
 		Vector2 getPosition();
 
 		std::string getFilename();
+
+		bool isPlayingAnimation();
 };
 

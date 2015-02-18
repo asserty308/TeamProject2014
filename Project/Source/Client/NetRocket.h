@@ -24,4 +24,6 @@ private:
 	Netplayer* owner;
 
 	Sprite *sprite;
+
+	bool firstImpact;
 };

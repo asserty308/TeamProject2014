@@ -13,7 +13,15 @@ NetRocket::NetRocket(Netplayer* owner, Vector2 position, Vector2 forward) : Tran
 	boundingBox = new CircleBoundingBox(position, 10.0f);
 
 	//create sprite
-	sprite = new Sprite("Sprites\\new_rocket.png", position, Vector2(14.f, 24.f));
+	sprite = new Sprite("Sprites\\new_rocket_explosion.png", position, Vector2(14.f, 24.f), 4);
+	std::vector<int> explosionAnimation;
+	explosionAnimation.push_back(0);
+	explosionAnimation.push_back(1);
+	explosionAnimation.push_back(2);
+	explosionAnimation.push_back(3);
+	sprite->addAnimation(explosionAnimation);
+
+	firstImpact = false;
 
 	this->owner = owner;
 }
@@ -28,7 +36,11 @@ void NetRocket::CollisionDetected(TransformCollidable *other, Vector2 penetratio
 		return;
 	}
 
-	owner->rocketDestroyed();
+	if (!firstImpact){
+		sprite->playAnimation(0, 0.05f);
+		firstImpact = true;
+	}
+
 }
 
 void NetRocket::update(Vector2 position, Vector2 forward){
@@ -39,26 +51,13 @@ void NetRocket::update(Vector2 position, Vector2 forward){
 
 	sprite->setPosition(position);
 	sprite->setAngle(angleFromVector<float>(forward));
-}
 
-/*
-void NetRocket::render()
-{
-	if (position.getX() > 0 && position.getX() < g_pGame->getWindowWidth() &&
-		position.getY() > 0 && position.getY() < g_pGame->getWindowHeight() ){
-	
-		glColor3f(0.f, 0.f, 1.f);
-		glLineWidth(2.f);
-
-		glBegin(GL_POLYGON);
-		glVertex2f(position.getX() + forward.getX() * 10.f, position.getY() + forward.getY() * 10.f);
-		glVertex2f(position.getX() - forward.getX() * 10.f - getRight().getX() * 6.f, position.getY() - forward.getY() * 10.f - getRight().getY() * 6.f);
-		glVertex2f(position.getX() - forward.getX() * 6.f, position.getY() - forward.getY() * 6.f);
-		glVertex2f(position.getX() - forward.getX() * 10.f + getRight().getX() * 6.f, position.getY() - forward.getY() * 10.f + getRight().getY() * 6.f);
-		glEnd();
+	if (firstImpact && !sprite->isPlayingAnimation()){
+		firstImpact = false;
+		owner->rocketDestroyed();
 	}
 }
-*/
+
 
 
 	

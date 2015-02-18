@@ -47,7 +47,7 @@ float spawnPoints[4][2] = { { 50.0f, 50.0f }, { 750.0f, 550.0f }, { 50.f, 550.f 
 void Gameplaystate::init()
 {
 	//create sprite
-	backgroundSprite = new Sprite("Sprites\\new_background.png", Vector2(g_pGame->getWindowWidth() / 2, g_pGame->getWindowHeight() / 2), Vector2(1280.f, 720.f));
+	backgroundSprite = new Sprite("Sprites\\new_background.png", Vector2(g_pGame->getWindowWidth() / 2, g_pGame->getWindowHeight() / 2), Vector2(1280.f, 720.f), 1);
 
 	client = g_pGame->getClient();
 
