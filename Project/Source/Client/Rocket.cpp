@@ -101,7 +101,7 @@ void Rocket::CollisionDetected(TransformCollidable *other, Vector2 penetration){
 	this->acceleration = Vector2(0.0f, 0.0f);
 
 	if (!firstImpact){
-		sprite->playAnimation(0, 0.05f);
+		sprite->playAnimation(0, 0.03f);
 		firstImpact = true;
 	}
 

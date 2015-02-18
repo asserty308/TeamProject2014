@@ -195,8 +195,8 @@ void Gameplaystate::update()
 
 				//if every netplayer is dead and the player is alive OR every netplayer but one is dead and the player is also dead
 				//the match is over
-				if (deadNetplayers == g_pGame->getNumberOfPlayers() - 1 && !player->getIsDead() ||
-					deadNetplayers == g_pGame->getNumberOfPlayers() - 2 && player->getIsDead())
+				if (deadNetplayers == g_pGame->getNumberOfPlayers() - 1 && !player->getIsDead() && !player->getRocket() ||
+					deadNetplayers == g_pGame->getNumberOfPlayers() - 2 && player->getIsDead()  && !player->getRocket())
 				{
 					matchstate = MATCHOVER;
 
