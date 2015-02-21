@@ -18,9 +18,11 @@ Sprite::Sprite(char* path, Vector2 position, Vector2 dimensions, int numberOfFra
 	this->filename = path;
 	angle = 180.f;
 
+	indexOfActiveAnimation = 0;
+	indexOfActiveAnimationFrame = 0;
 	this->animFrameWidth = dimensions.getX();
 	sheetWidth = dimensions.getX() * numberOfFrames;
-	animationPlaying = false;
+	animationPlaying = loopAnimation = false;
 
 	loadFromFile(path);
 }
@@ -67,16 +69,25 @@ void Sprite::render()
 		if (animationTimer > animationSpeed){
 			indexOfActiveAnimationFrame++;
 			animationTimer = 0.0f;
-			if (indexOfActiveAnimationFrame >= animations[indexOfActiveAnimation].size()){
-				animationPlaying = false;
-				indexOfActiveAnimationFrame = 0;
+			if (indexOfActiveAnimationFrame >= animations[indexOfActiveAnimation].size() - 1){
+				if (loopAnimation){
+					animationPlaying = true;
+					indexOfActiveAnimationFrame = 0;
+				} else{
+					animationPlaying = false;
+				}
 			}
 		
 		}
 		
 	} else{
-		texCoordsFrameX[0] = 0.0f;
-		texCoordsFrameX[1] = animFrameWidth / sheetWidth;
+		if (indexOfActiveAnimationFrame == 0){
+			texCoordsFrameX[0] = 0.0f;
+			texCoordsFrameX[1] = animFrameWidth / sheetWidth;
+		} else{
+			texCoordsFrameX[0] = animations[indexOfActiveAnimation][indexOfActiveAnimationFrame] * animFrameWidth / sheetWidth;
+			texCoordsFrameX[1] = texCoordsFrameX[0] + animFrameWidth / sheetWidth;
+		}
 	}
 
 	glBegin(GL_QUADS);
@@ -103,10 +114,11 @@ void Sprite::addAnimation(std::vector<int> frames){
 	animations.push_back(frames);
 }
 
-void Sprite::playAnimation(int index, float speed){
+void Sprite::playAnimation(int index, float speed, bool loop){
 	indexOfActiveAnimation = index;
 	animationSpeed = speed;
 	animationPlaying = true;
+	loopAnimation = loop;
 	animationTimer = 0.0f;
 	indexOfActiveAnimationFrame = 0;
 }

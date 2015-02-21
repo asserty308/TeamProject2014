@@ -28,13 +28,23 @@ Rocket::Rocket(Player* owner, Vector2 position, Vector2 forward) : TransformColl
 	this->owner = owner;
 
 	//create sprite
-	sprite = new Sprite("Sprites\\new_rocket_explosion.png", position, Vector2(14.f, 24.f), 4);
+	sprite = new Sprite("Sprites\\new_rocket_sheet.png", position, Vector2(14.f, 24.f), 8);
 	std::vector<int> explosionAnimation;
 	explosionAnimation.push_back(0);
 	explosionAnimation.push_back(1);
 	explosionAnimation.push_back(2);
 	explosionAnimation.push_back(3);
 	sprite->addAnimation(explosionAnimation);
+
+	std::vector<int> travelAnimation;
+	travelAnimation.push_back(4);
+	travelAnimation.push_back(5);
+	travelAnimation.push_back(6);
+	travelAnimation.push_back(7);
+	sprite->addAnimation(travelAnimation);
+
+	sprite->playAnimation(1, 0.2f, false); //play travel animation on instancing
+
 
 	g_pAudioController->playSound(SoundFiles::ROCKET, false);
 }
@@ -102,7 +112,7 @@ void Rocket::CollisionDetected(TransformCollidable *other, Vector2 penetration){
 	this->acceleration = Vector2(0.0f, 0.0f);
 
 	if (!firstImpact){
-		sprite->playAnimation(0, 0.03f);
+		sprite->playAnimation(0, 0.05f, false);
 		firstImpact = true;
 		g_pAudioController->playSound(SoundFiles::EXPLOSION, false);
 	}

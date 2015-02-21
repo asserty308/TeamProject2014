@@ -16,6 +16,7 @@ class Sprite
 		std::string filename;
 
 		bool animationPlaying;
+		bool loopAnimation;
 		float sheetWidth;
 		float animationTimer;
 		int animFrameWidth;
@@ -33,7 +34,7 @@ class Sprite
 		void render();
 
 		void addAnimation(std::vector<int> frames);
-		void playAnimation(int index, float speed);
+		void playAnimation(int index, float speed, bool loop);
 
 		void addAngle(float r);
 		float getAngle();

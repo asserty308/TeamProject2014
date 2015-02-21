@@ -18,7 +18,8 @@ public:
 	virtual void CollisionDetected(TransformCollidable *other, Vector2 penetration);
 
 	void update(Vector2 position, Vector2 forward);
-	//void render();
+	
+	void playAnimation(int index, float speed, bool loop);
 
 private:
 	Netplayer* owner;
