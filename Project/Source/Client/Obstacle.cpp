@@ -3,7 +3,7 @@
 #include "Obstacle.hpp"
 #include "Game.hpp"
 
-#define EDGE_WIDTH 5.f
+#define EDGE_WIDTH 3.f
 
 Obstacle::Obstacle(GLuint* textureID, GLuint* edgeTextureID) : TransformCollidable(Vector2(0, 0), Vector2(0, 0), Vector2(0, 0)){
 	

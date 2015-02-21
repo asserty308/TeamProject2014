@@ -21,7 +21,7 @@ Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position
 	g_pInputObserver->addListener(this);
 	g_pCollisionObserver->addListener(this);
 
-	boundingBox = new CircleBoundingBox(position, 25.0f);
+	boundingBox = new CircleBoundingBox(position, 30.0f);
 
 	//create sprite
 	sprite = new Sprite(/*"Sprites\\fighter4_2.png"*/"Sprites\\new_fighter.png", position, Vector2(/*75.f, 56.25f*/80.f, 80.f), 1);
@@ -105,23 +105,25 @@ void Player::update()
 	}
 
 	if (!isDead){
-		if (getPosition().getX() < 0.f)
+		float playerRadius = dynamic_cast<CircleBoundingBox*> (boundingBox)->getRadius();
+
+		if (getPosition().getX() < playerRadius)
 		{
-			position.setX(0.f);
+			position.setX(playerRadius);
 			velocity.setX(-velocity.getX() * .25f);
-		} else if (getPosition().getX() > g_pGame->getWindowWidth())
+		} else if (getPosition().getX() > g_pGame->getWindowWidth() - playerRadius)
 		{
-			position.setX(g_pGame->getWindowWidth());
+			position.setX(g_pGame->getWindowWidth() - playerRadius);
 			velocity.setX(-velocity.getX() * .25f);
 		}
 
-		if (getPosition().getY() < 0.f)
+		if (getPosition().getY() < playerRadius)
 		{
-			position.setY(0.f);
+			position.setY(playerRadius);
 			velocity.setY(-velocity.getY() *.25f);
-		} else if (getPosition().getY() > g_pGame->getWindowHeight())
+		} else if (getPosition().getY() > g_pGame->getWindowHeight() - playerRadius)
 		{
-			position.setY(g_pGame->getWindowHeight());
+			position.setY(g_pGame->getWindowHeight() - playerRadius);
 			velocity.setY(-velocity.getY() *.25f);
 		}
 	}
@@ -129,34 +131,6 @@ void Player::update()
 	//set sprite position to player position
 	sprite->setPosition(position);
 }
-
-/*
-void Player::render()
-{
-	glColor3f(0.f, 1.f, 0.f);
-	
-	glLineWidth(2.f);
-
-	glBegin(GL_LINES);
-
-	for (int i = 0; i < 36; ++i)
-	{
-		float angle = (i * M_PI / 180.0) * 25.0;
-		glVertex2f(getPosition().getX() + sin(angle) * 25.f, getPosition().getY() + cos(angle) * 25.f);
-		angle = ((i + 1) * M_PI / 180.0) * 25.0;
-		glVertex2f(getPosition().getX() + sin(angle) * 25.f, getPosition().getY() + cos(angle) * 25.f);
-	}
-
-	glVertex2f(getPosition().getX() + getForward().getX() * 5.f, getPosition().getY() + getForward().getY() * 5.f);
-	glVertex2f(getPosition().getX() + getForward().getX() * 15.f, getPosition().getY() + getForward().getY() * 15.f);
-
-	glEnd();
-	
-
-	if (rocket != nullptr)
-		rocket->render();	
-}
-*/
 
 void Player::handleRocket()
 {
