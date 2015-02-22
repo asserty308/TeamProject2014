@@ -20,16 +20,12 @@ int main(int argc, char* args[])
 	unsigned int startTime, endTime, workTime;
 	unsigned int cycleLength = 1000 / server->getTickrate();
 
-	while (true)
+	bool quit = false;
+
+	while (!quit)
 	{
-		/*
-		SDL_Event *e;
-
-		while (SDL_PollEvent(e))
-		{
-
-		}
-		*/
+		if (GetAsyncKeyState(VK_ESCAPE) && GetAsyncKeyState(VK_CONTROL))
+			quit = true;
 
 		startTime = SDL_GetTicks();
 
@@ -45,7 +41,11 @@ int main(int argc, char* args[])
 			std::cout << "Server is stalling (max cycle: " << cycleLength << "ms time taken: " << workTime << "ms)." << std::endl;
 	}
 
+	std::cout << std::endl << "Closing down server in 3 seconds..." << std::endl;
+
 	delete server;
+
+	SDL_Delay(3000);
 
 	SDL_Quit();
 

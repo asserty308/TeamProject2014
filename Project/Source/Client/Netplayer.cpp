@@ -82,8 +82,8 @@ void Netplayer::update(){
 	}
 
 	if (backHistoryCache.rocketPos.getX() < 0.0f && frontHistoryCache.rocketPos.getX() > 0.0f){
-		g_pLogfile->fLog("\n%f %f\n", backHistoryCache.rocketPos.getX(), backHistoryCache.rocketPos.getY());
-		g_pLogfile->fLog("%f %f\n", frontHistoryCache.rocketPos.getX(), frontHistoryCache.rocketPos.getY());
+		//g_pLogfile->fLog("\n%f %f\n", backHistoryCache.rocketPos.getX(), backHistoryCache.rocketPos.getY());
+		//g_pLogfile->fLog("%f %f\n", frontHistoryCache.rocketPos.getX(), frontHistoryCache.rocketPos.getY());
 		netRocket->playAnimation(1, 0.5f, false);
 	}
 	

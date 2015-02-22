@@ -46,7 +46,7 @@ public:
 
 	bool sendToClient(PlayerInfo player, std::string data);
 	bool sendToClient(PlayerInfo player, char* data, int size);
-	void sendToAllClients(char* data, int size);
+	bool sendToAllClients(char* data, int size);
 
 	void update();
 };

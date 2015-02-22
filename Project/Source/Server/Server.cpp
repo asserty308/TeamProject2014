@@ -3,6 +3,8 @@
 
 #include "Server.h"
 
+#include <SDL.h>
+
 Server::Server()
 {
 	// we want winsock version 2.2
@@ -84,7 +86,12 @@ Server::Server()
 
 Server::~Server()
 {
-	closesocket(s);
+	if (!sendToAllClients("shutdown", strlen("shutdown")))
+		std::cout << "Failed to send shutdown packet to a player." << std::endl;
+	
+	if (closesocket(s) != 0)
+		std::cout << "Error shutting down socket." << std::endl;
+
 	WSACleanup();
 }
 
@@ -110,10 +117,17 @@ bool Server::sendToClient(PlayerInfo player, char* data, int size)
 	return sendto(s, data, size, 0, (struct sockaddr*)&player.getAddress(), sizeof(player.getAddress())) != SOCKET_ERROR;
 }
 
-void Server::sendToAllClients(char* data, int size)
+bool Server::sendToAllClients(char* data, int size)
 {
+	bool success = true;
+
 	for (PlayerInfo *player : players)
-		sendToClient(*player, data, size);
+	{
+		if (!sendToClient(*player, data, size))
+			success = false;
+	}
+
+	return success;
 }
 
 void Server::handleIncomingTraffic(std::string packet, sockaddr_in clientInfo)

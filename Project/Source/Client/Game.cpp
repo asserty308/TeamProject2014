@@ -59,7 +59,7 @@ void Game::eventLoop()
 {
 	SDL_Event event;
 
-	while ((!quit))
+	while (!quit)
 	{
 		while (SDL_PollEvent(&event))
 		{

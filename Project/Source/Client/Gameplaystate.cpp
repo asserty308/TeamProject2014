@@ -102,12 +102,18 @@ void Gameplaystate::sendOurStuffToServer()
 
 void Gameplaystate::receivePacket(char* packet)
 {
-	// check that this is an actual gameplay packet, not a lobby left-over
+	// check that this is an actual gameplay packet, not a lobby left-over or a shutdown packet
 	char *gameInfoString = "gameinfo";
 	char *gameStartString = "start";
+	char *gameEndString = "shutdown";
 
 	if (memcmp(packet, gameInfoString, sizeof(char)* strlen(gameInfoString)) == 0 || memcmp(packet, gameStartString, sizeof(char)* strlen(gameStartString)) == 0)
 		return;
+	else if (memcmp(packet, gameEndString, sizeof(char)* strlen(gameEndString)) == 0)
+	{
+		matchstate = GAMEOVER;
+		return;
+	}
 
 	float *netPlayerData = new float[g_pGame->getNumberOfPlayers() * 10];
 	memcpy(netPlayerData, packet, g_pGame->getNumberOfPlayers() * sizeof(float) * 10);
