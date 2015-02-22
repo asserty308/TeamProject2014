@@ -10,7 +10,7 @@
 #include "Countdown.h"
 #include "Sprite.hpp"
 
-enum MATCHSTATE{ SPAWN, MATCH, MATCHOVER, GAMEOVER };
+enum MATCHSTATE{ SPAWN, MATCH, MATCHOVER, GAMEOVER, CONNECTIONLOST };
 
 class Client;
 
@@ -44,6 +44,7 @@ private:
 	int matchCount;
 	int scorePlayer;
 	MATCHSTATE matchstate;
+	bool wonGame;
 
 
 	//TEMP

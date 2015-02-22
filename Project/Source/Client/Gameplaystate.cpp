@@ -20,6 +20,8 @@ countdown(3)
 	map = nullptr;
 	dbc = nullptr;
 
+	wonGame = false;
+
 	//Just to make sure the Audiocontroller exists. Creating one during Gameplay causes Lags!
 	g_pAudioController->stopMusic();
 }
@@ -111,7 +113,7 @@ void Gameplaystate::receivePacket(char* packet)
 		return;
 	else if (memcmp(packet, gameEndString, sizeof(char)* strlen(gameEndString)) == 0)
 	{
-		matchstate = GAMEOVER;
+		matchstate = CONNECTIONLOST;
 		return;
 	}
 
@@ -184,7 +186,6 @@ void Gameplaystate::update()
 			}
 		break;
 		case(MATCH):
-			//if (player)
 			{
 				player->updatePosition(g_pTimer->getDeltaTime());
 				player->update();
@@ -217,9 +218,7 @@ void Gameplaystate::update()
 						}
 					}
 				}
-			}
-
-			
+			}	
 		break;
 		case(MATCHOVER):
 		{
@@ -233,13 +232,16 @@ void Gameplaystate::update()
 					highestScore = n->getScore();
 			}
 
-			if (highestScore > g_pGame->getBestOfX() / 2)
+			if (highestScore > g_pGame->getBestOfX() / 2){
+				wonGame = highestScore == scorePlayer;
 				matchstate = GAMEOVER;
-			else
+			}else
 				matchstate = SPAWN;
 		}
 		break;
 		case(GAMEOVER) :
+		break;
+		case(CONNECTIONLOST) :
 		break;
 	}
 
@@ -284,7 +286,16 @@ void Gameplaystate::render()
 		break;
 		case(GAMEOVER) :
 		{
-			std::string gameOverText = "Game Over! Thanks for playing!";
+			std::string gameOverText = wonGame ? "You won! Thanks for playing!" : "You lost. Thanks for playing!";
+			SDL_Color color = { 255, 127, 0 };
+			Vector2 textDimensions = g_pFontRenderer->getTextDimensions(gameOverText);
+			Vector2 textPos((g_pGame->getWindowWidth() / 2) - (textDimensions.getX() / 2), (g_pGame->getWindowHeight() / 2) - (textDimensions.getY() / 2));
+			g_pFontRenderer->drawText(gameOverText, textPos, color);
+		}
+		break;
+		case(CONNECTIONLOST) : 
+		{
+			std::string gameOverText = "The connection to the server was lost.";
 			SDL_Color color = { 255, 127, 0 };
 			Vector2 textDimensions = g_pFontRenderer->getTextDimensions(gameOverText);
 			Vector2 textPos((g_pGame->getWindowWidth() / 2) - (textDimensions.getX() / 2), (g_pGame->getWindowHeight() / 2) - (textDimensions.getY() / 2));
