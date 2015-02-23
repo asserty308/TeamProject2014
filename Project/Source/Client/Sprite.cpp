@@ -46,8 +46,11 @@ void Sprite::loadFromFile(const char* path)
 	g_pSpriteRenderer->addSprite(this);
 }
 
-void Sprite::render()
+void Sprite::render(int frameOverride)
 {
+	if (frameOverride >= 0)
+		indexOfActiveAnimationFrame = frameOverride;
+
 	glEnable(GL_TEXTURE_2D);
 
 	glColor3f(1.f, 1.f, 1.f);

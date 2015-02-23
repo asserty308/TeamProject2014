@@ -4,6 +4,7 @@
 #include "CollisionObserver.h"
 #include "AudioFiles.hpp"
 #include "MathUtil.h"
+#include "ParticleSystem.hpp"
 #include <math.h>
 
 const float Rocket::TURN_SPEED = 5.f;
@@ -139,7 +140,14 @@ void Rocket::update()
 
 	if (!firstImpact)
 	// don't rotate the rocket when it's already exploding
+	{
 		rotate(torque);
+
+		Vector2 exhaustVector = forward * -1.f;
+		exhaustVector.setX(exhaustVector.getX() + ((rand() % 100) / 100.f - .5f) * .6f);
+		exhaustVector.setY(exhaustVector.getY() + ((rand() % 100) / 100.f - .5f) * .6f);
+		g_pParticleSystem->spawnParticle(ParticleType::Smoke, position, exhaustVector, 55);
+	}
 
 	setVelocity(forward * speed);
 
@@ -147,7 +155,14 @@ void Rocket::update()
 	sprite->setPosition(position);
 	sprite->setAngle(angleFromVector<float>(forward));
 
-	if (firstImpact && !sprite->isPlayingAnimation()){
+	if (firstImpact && !sprite->isPlayingAnimation())
+	{
+		// spawn four diagonal explosions
+		g_pParticleSystem->spawnParticle(ParticleType::Explosion, position, Vector2(-.3f, -.3f), 50);
+		g_pParticleSystem->spawnParticle(ParticleType::Explosion, position, Vector2(-.3f, .3f), 50);
+		g_pParticleSystem->spawnParticle(ParticleType::Explosion, position, Vector2(.3f, -.3f), 50);
+		g_pParticleSystem->spawnParticle(ParticleType::Explosion, position, Vector2(.3f, .3f), 50);
+
 		owner->rocketDestroyed();
 	}
 

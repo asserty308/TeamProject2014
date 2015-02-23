@@ -4,6 +4,7 @@
 #include "AudioController.hpp"
 #include "NetRocket.h"
 #include "Game.hpp"
+#include "ParticleSystem.hpp"
 
 NetRocket::NetRocket() : TransformCollidable(Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f), Vector2(0.0f, 0.0f)){
 	// TODO: delete?
@@ -64,8 +65,21 @@ void NetRocket::update(Vector2 position, Vector2 forward){
 	sprite->setPosition(position);
 	sprite->setAngle(angleFromVector<float>(forward));
 
-	if (firstImpact && !sprite->isPlayingAnimation()){
+	Vector2 exhaustVector = forward * -1.f;
+	exhaustVector.setX(exhaustVector.getX() + ((rand() % 100) / 100.f - .5f) * .6f);
+	exhaustVector.setY(exhaustVector.getY() + ((rand() % 100) / 100.f - .5f) * .6f);
+	g_pParticleSystem->spawnParticle(ParticleType::Smoke, position, exhaustVector, 55);
+
+	if (firstImpact && !sprite->isPlayingAnimation())
+	{
+		// spawn four diagonal explosions
+		g_pParticleSystem->spawnParticle(ParticleType::Explosion, position, Vector2(-.3f, -.3f), 50);
+		g_pParticleSystem->spawnParticle(ParticleType::Explosion, position, Vector2(-.3f, .3f), 50);
+		g_pParticleSystem->spawnParticle(ParticleType::Explosion, position, Vector2(.3f, -.3f), 50);
+		g_pParticleSystem->spawnParticle(ParticleType::Explosion, position, Vector2(.3f, .3f), 50);
+
 		firstImpact = false;
+
 		owner->rocketDestroyed();
 	}
 }

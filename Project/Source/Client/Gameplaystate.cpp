@@ -6,6 +6,7 @@
 #include "FontRenderer.h"
 #include "AudioController.hpp"
 #include "AudioFiles.hpp"
+#include "ParticleSystem.hpp"
 
 #include <sstream>
 
@@ -157,6 +158,8 @@ void Gameplaystate::update()
 
 	g_pCollisionObserver->checkCollisionRoutine();
 
+	g_pParticleSystem->update();
+
 	int netplayerID = 0;
 
 	for (int i = 0; i < g_pGame->getNumberOfPlayers(); ++i)
@@ -280,6 +283,8 @@ void Gameplaystate::render()
 				//g_pLogfile->fLog("x: %f y: %f\n", n->getSprite()->getPosition().getX(), n->getSprite()->getPosition().getY());
 				n->render();
 			}
+
+			g_pParticleSystem->render();
 
 			renderScore();
 		}

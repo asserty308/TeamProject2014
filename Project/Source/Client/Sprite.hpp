@@ -31,7 +31,7 @@ class Sprite
 		~Sprite();
 
 		void loadFromFile(const char* path);
-		void render();
+		void render(int frameOverride = -1);
 
 		void addAnimation(std::vector<int> frames);
 		void playAnimation(int index, float speed, bool loop);
