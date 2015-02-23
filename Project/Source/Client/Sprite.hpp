@@ -36,6 +36,8 @@ class Sprite
 		void addAnimation(std::vector<int> frames);
 		void playAnimation(int index, float speed, bool loop);
 
+		int getAnimationIndex();
+
 		void addAngle(float r);
 		float getAngle();
 		void setAngle(float a);

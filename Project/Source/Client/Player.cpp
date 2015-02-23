@@ -1,4 +1,5 @@
 #include <SDL_opengl.h>
+#include "AudioFiles.hpp"
 #include "Logger.hpp"
 #include "InputObserver.h"
 #include "CollisionObserver.h"
@@ -24,7 +25,15 @@ Player::Player(Vector2 position, Vector2 forward) : TransformCollidable(position
 	boundingBox = new CircleBoundingBox(position, 30.0f);
 
 	//create sprite
-	sprite = new Sprite(/*"Sprites\\fighter4_2.png"*/"Sprites\\new_fighter.png", position, Vector2(/*75.f, 56.25f*/80.f, 80.f), 1);
+	sprite = new Sprite("Sprites\\new_fighter_sheet.png", position, Vector2(80.f, 80.f), 4);
+	std::vector<int> idleAnimation;
+	idleAnimation.push_back(0);
+	sprite->addAnimation(idleAnimation);
+	std::vector<int> thrustingAnimation;
+	thrustingAnimation.push_back(1);
+	thrustingAnimation.push_back(2);
+	thrustingAnimation.push_back(3);
+	sprite->addAnimation(thrustingAnimation);
 
 	rocket = nullptr;
 
@@ -79,9 +88,25 @@ void Player::update()
 	// only control the player if there is no rocket or it's not controlled
 	{
 		if (isThrustKeyDown)
+		{
 			setAcceleration(forward * ACCELERATION);
+			
+			if (sprite->getAnimationIndex() != 1)
+			{
+				sprite->playAnimation(1, 0.05f, true);
+				g_pAudioController->playSound(SoundFiles::BOOST, true);
+			}
+		}
 		else
+		{
 			setAcceleration(Vector2(0.0f, 0.0f));
+
+			if (sprite->getAnimationIndex() != 0)
+			{
+				sprite->playAnimation(0, 0.05f, true);
+				g_pAudioController->stopSoundByFile(SoundFiles::BOOST);
+			}
+		}
 
 		if (isLeftKeyDown && !isRightKeyDown)
 		{

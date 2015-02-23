@@ -6,7 +6,17 @@ Netplayer::Netplayer() : TransformCollidable(Vector2(0.0, 0.0), Vector2(0.0f, -1
 }
 
 Netplayer::Netplayer(std::string name, Vector2 position, Vector2 forward) : TransformCollidable(position, forward, Vector2(0.0f, 0.0f)){
-	sprite = new Sprite("Sprites\\new_fighter_enemy.png", position, Vector2(80.f, 80.f), 1);
+	//create sprite
+	sprite = new Sprite("Sprites\\new_fighter_enemy_sheet.png", position, Vector2(80.f, 80.f), 4);
+	std::vector<int> idleAnimation;
+	idleAnimation.push_back(0);
+	sprite->addAnimation(idleAnimation);
+	std::vector<int> thrustingAnimation;
+	thrustingAnimation.push_back(1);
+	thrustingAnimation.push_back(2);
+	thrustingAnimation.push_back(3);
+	sprite->addAnimation(thrustingAnimation);
+
 	netRocket = new NetRocket(this, Vector2(-100.0, -100.0), Vector2(0.0f, 0.0f));
 
 	boundingBox = new CircleBoundingBox(position, 25.0f);
@@ -60,6 +70,14 @@ void Netplayer::update(){
 
 	Vector2 forward = lerp(backHistoryCache.forward, frontHistoryCache.forward, alpha);
 	this->setForward(forward);
+
+	if (/*forward.getLength() > 0.99f*/abs(backHistoryCache.pos.getX() - frontHistoryCache.pos.getX()) > 3.0f || abs(backHistoryCache.pos.getY() - frontHistoryCache.pos.getY()) > 3.0f)
+	{
+		if (sprite->getAnimationIndex() != 1)
+			sprite->playAnimation(1, 0.05f, true);
+	}
+	else if (sprite->getAnimationIndex() != 0)
+		sprite->playAnimation(0, 0.05f, true);
 
 	float angle = lerp(backHistoryCache.angle, frontHistoryCache.angle, alpha);
 	sprite->setAngle(angle);

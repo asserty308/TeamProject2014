@@ -137,7 +137,10 @@ void Rocket::update()
 		torque = 0.0f;
 	}
 
-	rotate(torque);
+	if (!firstImpact)
+	// don't rotate the rocket when it's already exploding
+		rotate(torque);
+
 	setVelocity(forward * speed);
 
 	updatePosition(g_pTimer->getDeltaTime());

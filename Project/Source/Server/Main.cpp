@@ -3,15 +3,30 @@
 
 #include "Server.h"
 
+bool quit = false;
+
+BOOL CtrlHandler(DWORD fdwCtrlType)
+{
+	if (fdwCtrlType == CTRL_C_EVENT)
+	{
+		quit = true;
+		return TRUE;
+	}
+
+	return FALSE;
+}
+
 int main(int argc, char* args[])
 {
+	SetConsoleCtrlHandler((PHANDLER_ROUTINE)CtrlHandler, TRUE);
+
 	if (SDL_Init(SDL_INIT_TIMER) != 0)
 	{
 		std::cout << "Failed to initialize SDL: " << SDL_GetError() << std::endl;
 		return -1;
 	}
 
-	std::cout << "Alpha Strike Server" << std::endl << std::endl;
+	std::cout << "Alpha Strike Server (close with ctrl+c)" << std::endl << std::endl;
 
 	Server *server = new Server();
 
@@ -20,13 +35,8 @@ int main(int argc, char* args[])
 	unsigned int startTime, endTime, workTime;
 	unsigned int cycleLength = 1000 / server->getTickrate();
 
-	bool quit = false;
-
 	while (!quit)
 	{
-		if (GetAsyncKeyState(VK_ESCAPE) && GetAsyncKeyState(VK_CONTROL))
-			quit = true;
-
 		startTime = SDL_GetTicks();
 
 		server->update();

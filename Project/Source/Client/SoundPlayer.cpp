@@ -11,6 +11,7 @@ SoundPlayer::SoundPlayer()
 
 	loadFromFile(SoundFiles::ROCKET);
 	loadFromFile(SoundFiles::EXPLOSION);
+	loadFromFile(SoundFiles::BOOST);
 }
 
 

@@ -127,6 +127,11 @@ bool Sprite::isPlayingAnimation(){
 	return animationPlaying;
 }
 
+int Sprite::getAnimationIndex()
+{
+	return indexOfActiveAnimation;
+}
+
 void Sprite::addAngle(float r)
 {
 	angle += r;

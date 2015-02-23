@@ -29,7 +29,10 @@ void SpriteRenderer::addSprite(Sprite *sprite)
 
 void SpriteRenderer::removeSprite(Sprite *sprite)
 {
-	sprites.erase(std::find(sprites.begin(), sprites.end(), sprite));
+	std::vector<Sprite*>::iterator i = std::find(sprites.begin(), sprites.end(), sprite);
+	
+	if (i != sprites.end())
+		sprites.erase(i);
 }
 
 void SpriteRenderer::renderScene()
