@@ -39,7 +39,7 @@ int main(int argc, char* args[])
 	{
 		startTime = SDL_GetTicks();
 
-		server->update();
+		quit = server->update();
 
 		endTime = SDL_GetTicks();
 

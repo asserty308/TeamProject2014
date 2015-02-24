@@ -108,13 +108,17 @@ void Gameplaystate::receivePacket(char* packet)
 	// check that this is an actual gameplay packet, not a lobby left-over or a shutdown packet
 	char *gameInfoString = "gameinfo";
 	char *gameStartString = "start";
-	char *gameEndString = "shutdown";
+	char *gameEndString = "ack:gameover";
+	char *gameLostConnectionString = "shutdown";
 
 	if (memcmp(packet, gameInfoString, sizeof(char)* strlen(gameInfoString)) == 0 || memcmp(packet, gameStartString, sizeof(char)* strlen(gameStartString)) == 0)
 		return;
-	else if (memcmp(packet, gameEndString, sizeof(char)* strlen(gameEndString)) == 0)
+	else if (memcmp(packet, gameLostConnectionString, sizeof(char)* strlen(gameLostConnectionString)) == 0)
 	{
 		matchstate = CONNECTIONLOST;
+		return;
+	} else if (memcmp(packet, gameEndString, sizeof(char)* strlen(gameEndString)) == 0){
+		matchstate = GAMEOVER;
 		return;
 	}
 
@@ -237,13 +241,16 @@ void Gameplaystate::update()
 
 			if (highestScore > g_pGame->getBestOfX() / 2){
 				wonGame = highestScore == scorePlayer;
-				matchstate = GAMEOVER;
+				matchstate = GAMEOVERPENDING;
 			}else
 				matchstate = SPAWN;
 		}
 		break;
-		case(GAMEOVER) :
+		case(GAMEOVERPENDING) :
+			sendOurStuffToServer();
+			client->sendToServer("gameover");
 		break;
+		case(GAMEOVER) :
 		case(CONNECTIONLOST) :
 		break;
 	}
@@ -289,6 +296,7 @@ void Gameplaystate::render()
 			renderScore();
 		}
 		break;
+		case(GAMEOVERPENDING) : 
 		case(GAMEOVER) :
 		{
 			std::string gameOverText = wonGame ? "You won! Thanks for playing!" : "You lost. Thanks for playing!";

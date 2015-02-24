@@ -32,7 +32,10 @@ private:
 	int bestOfX;
 	int mapID;
 
+	bool gameOver;
+
 	std::vector<PlayerInfo*> players;
+	std::vector<PlayerInfo*> finishedPlayers;
 
 	void handleIncomingTraffic(std::string packet, sockaddr_in clientInfo);
 	void handleOutgoingTraffic();
@@ -48,5 +51,5 @@ public:
 	bool sendToClient(PlayerInfo player, char* data, int size);
 	bool sendToAllClients(char* data, int size);
 
-	void update();
+	bool update();
 };

@@ -82,12 +82,23 @@ Server::Server()
 	data = new char[BUFLEN];
 
 	state = ServerState_Waiting;
+	gameOver = false;
 }
 
 Server::~Server()
 {
-	if (!sendToAllClients("shutdown", strlen("shutdown")))
-		std::cout << "Failed to send shutdown packet to a player." << std::endl;
+	if (!gameOver){
+		if (!sendToAllClients("shutdown", strlen("shutdown")))
+			std::cout << "Failed to send shutdown packet to a player." << std::endl;
+	}
+
+	for (int i = 0; i < players.size(); i++){
+		delete players[i];
+	}
+
+	for (int i = 0; i < finishedPlayers.size(); i++){
+		delete finishedPlayers[i];
+	}
 	
 	if (closesocket(s) != 0)
 		std::cout << "Error shutting down socket." << std::endl;
@@ -204,6 +215,26 @@ void Server::handleIncomingTraffic(std::string packet, sockaddr_in clientInfo)
 	{
 		int index = 0;
 
+		if (packet.substr(0, 8).compare("gameover") == 0){
+		
+			bool newFinishedPlayer = true;
+
+			for (PlayerInfo* playerInfo : finishedPlayers){
+				if (*playerInfo == clientInfo){
+					newFinishedPlayer = false;
+				}
+			}
+
+			if (newFinishedPlayer){
+				finishedPlayers.push_back(new PlayerInfo(clientInfo, ""));
+				sendToClient(*finishedPlayers.back(), "ack:gameover");
+			}
+
+			if (finishedPlayers.size() >= connectedPlayers){
+				gameOver = true;
+			}
+		}
+
 		for (PlayerInfo *playerInfo : players)
 		{
 			if (*playerInfo == clientInfo)
@@ -297,7 +328,7 @@ void Server::handleOutgoingTraffic()
 	}
 }
 
-void Server::update()
+bool Server::update()
 {
 	//clear the buffer
 	memset(data, '\0', BUFLEN);
@@ -318,4 +349,6 @@ void Server::update()
 	}
 
 	handleOutgoingTraffic();
+
+	return gameOver;
 }
