@@ -48,7 +48,7 @@ void NetRocket::CollisionDetected(TransformCollidable *other, Vector2 penetratio
 		return;
 	}
 
-	if (!firstImpact){
+	if (!firstImpact && std::strcmp(other->getTag().c_str(), "netRocket") != 0){
 		sprite->playAnimation(0, 0.05f, false);
 		firstImpact = true;
 		g_pAudioController->playSound(SoundFiles::EXPLOSION, false);
