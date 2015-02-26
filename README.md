@@ -23,7 +23,7 @@ To test the game, please follow these steps:
   choose 127.0.0.1 as Server IP, or else, the IP of the Machine the server runs on. At last,
   choose a client port and press enter.
   
-3) Repeate step 2) with different (!) client ports each time until the number of connecting clients
+3) Repeat step 2) with different (!) client ports each time until the number of connecting clients
    is equal to the playercount you specified when starting the server. The game will automatically
    start. 
    
