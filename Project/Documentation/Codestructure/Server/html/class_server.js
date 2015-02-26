@@ -1,0 +1,26 @@
+var class_server =
+[
+    [ "Server", "class_server.html#ad5ec9462b520e59f7ea831e157ee5e59", null ],
+    [ "~Server", "class_server.html#a4b3aa2579cb1c8cd1d069582c14d0fa6", null ],
+    [ "getMaxPlayers", "class_server.html#a4aa2fbab31001e1147ecd2c221ffb465", null ],
+    [ "getTickrate", "class_server.html#a3570b7511ad750b8b730275a274757a1", null ],
+    [ "handleIncomingTraffic", "class_server.html#a416e95e738ea4256ef6816f7656a68d3", null ],
+    [ "handleOutgoingTraffic", "class_server.html#a899759a5ed4c22346b435ebf79746815", null ],
+    [ "sendToAllClients", "class_server.html#aacf25f46dac711adbc08e25731facec3", null ],
+    [ "sendToClient", "class_server.html#af7b84f82883afcb403155546352a2342", null ],
+    [ "sendToClient", "class_server.html#a79b22b32b1f9426efb67e0f3b302c5d3", null ],
+    [ "update", "class_server.html#aa085de184446ae71dd78d8cf883a6896", null ],
+    [ "bestOfX", "class_server.html#ae32b6f4595c39f373371414e8ea100c7", null ],
+    [ "connectedPlayers", "class_server.html#a0d7fe617c4493a41f1a234185f45a83b", null ],
+    [ "data", "class_server.html#addf8cda6865c541ce0ab836b7f3207ad", null ],
+    [ "finishedPlayers", "class_server.html#acf37b50c6f6c48ac032c394e560ed913", null ],
+    [ "gameOver", "class_server.html#a65733e77f8509fcc86d2784eab6c62ed", null ],
+    [ "mapID", "class_server.html#a2fd759ad2a2fbc5d86a5369c53b8ee57", null ],
+    [ "maxPlayers", "class_server.html#a5bf79ae5c50397e70e0a0ad243a73ef8", null ],
+    [ "players", "class_server.html#a33accd389da4b11ad7b4a6d2543b7bde", null ],
+    [ "port", "class_server.html#a926c9dae229a62b6d33fdbb41dca6d82", null ],
+    [ "readyPlayers", "class_server.html#ab0eda38b2958c3bcb688c058072e59dd", null ],
+    [ "s", "class_server.html#a804076f28628efe1e274d3a0eceaa5d0", null ],
+    [ "state", "class_server.html#af764bc03d66ebc72d7c6521dc0f74b34", null ],
+    [ "tickrate", "class_server.html#a94d722ec2182a3fc85a8234fb60ec299", null ]
+];
